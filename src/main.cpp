@@ -1,10 +1,11 @@
 #include <iostream>
+#include "login.h"
 
 using namespace std;
 
 int main()
 {
-    cout << "Hello world" << '\n';
+    login();
 
     return 0;
 }
