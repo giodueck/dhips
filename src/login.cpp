@@ -2,8 +2,10 @@
 #include <crypt.h>
 #include <shadow.h>
 #include <string>
-#include "web.h"
+#include <unistd.h>
 #include "login.h"
+#include "web.h"
+#include "pgsql.h"
 
 using namespace std;
 
@@ -14,34 +16,21 @@ int login()
 	char *user = web_get_from_query_string(qs, (char*)"user");
 	char *password = web_get_from_query_string(qs, (char*)"password");
 
-	web_print_header();
-	printf("<body>");
+    web_print_header();
+    cout << "<body>";
 
 	if (user && user[0] != '\0')
     {
-        FILE *output = popen(string("/usr/bin/id -u " + string(user)).c_str(), "r");
-        char buffer[1024];
-        buffer[0] = '\0';
-        fgets(buffer, sizeof(buffer), output);
-
-        printf("<h1>");
-        if (buffer[0] == '\0')
-        {
-            printf("%c", buffer[0]);
-            printf("No such user");
-        } else
-        {
-            printf("Welcome: %s", user);
-        }
-        printf("</h1>");
-
-        pclose(output);
+        char connstr[] = "dbname=dhips user=apache password=apache";
+        cout << "<h1>";
+        check_pwd(connstr, user, password);
+        cout << "</h1>";
 	} else
     {
-		printf("<h1>No username given</h1>");
+		cout << "<h1>No username given</h1>";
 	}
 
-	printf("</body>");
+    cout << "</body>";
 
     return 0;
 }
