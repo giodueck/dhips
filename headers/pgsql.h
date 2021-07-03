@@ -8,10 +8,11 @@ static int exit_nicely (PGconn *conn);
 
 // Opens a connection
 // If the connection fails, returns NULL
-static PGconn *open_conn(char *conninfo);
+static PGconn *open_conn(const char *conninfo);
 
-// Returns 1 if the password is correct, 0 of not
-// If the connection fails, returns -1
-int check_pwd(char *conninfo, char *username, char *hashpass);
+// Copies the hashed passphrase stored for username into dest
+// Returns 0 if successful, other if not
+// If the resulting dest string is NULL, returns 2
+int get_hashed_passphrase(const char *conninfo, char *username, char *dest);
 
 #endif // PGSQL_H

@@ -1,5 +1,6 @@
 #include "pgsql.h"
 #include <stdlib.h>
+#include <string.h>
 
 static int exit_nicely(PGconn *conn)
 {
@@ -8,7 +9,7 @@ static int exit_nicely(PGconn *conn)
 }
 
 // Start db connection
-static PGconn *open_conn(char *conninfo)
+static PGconn *open_conn(const char *conninfo)
 {
     PGconn     *conn;
     PGresult   *res;
@@ -19,8 +20,7 @@ static PGconn *open_conn(char *conninfo)
     /* Check to see that the backend connection was successfully made */
     if (PQstatus(conn) != CONNECTION_OK)
     {
-        fprintf(stderr, "Connection to database failed: %s",
-                PQerrorMessage(conn));
+        fprintf(stderr, "Connection to database failed: %s", PQerrorMessage(conn));
         exit_nicely(conn);
         return NULL;
     }
@@ -44,13 +44,14 @@ static PGconn *open_conn(char *conninfo)
     return conn;
 }
 
-int check_pwd(char *conninfo, char *username, char *hashpass)
+int get_hashed_passphrase(const char *conninfo, char *username, char *dest)
 {
     PGconn     *conn;
     PGresult   *res;
-    int         nFields;
     int         i,
                 j;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
 
     /* Make a connection to the database */
     conn = open_conn(conninfo);
@@ -67,7 +68,26 @@ int check_pwd(char *conninfo, char *username, char *hashpass)
     }
     PQclear(res);
 
-    printf("Accessed db\n");
+    // Retrieve the stored hashphrase for username
+    // sprintf(cmd, "SELECT VERSION();");
+    sprintf(cmd, "SELECT * FROM public.login WHERE username = '%s';", username);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        dest[0] = '\0';
+        printf("No data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return 1;
+    }
+    int rows = PQntuples(res);
+    if (rows)
+        sprintf(dest, "%s\n", PQgetvalue(res, 0, 1));
+    else dest = NULL;
+    PQclear(res);
 
     /* end the transaction */
     res = PQexec(conn, "END");
@@ -76,5 +96,6 @@ int check_pwd(char *conninfo, char *username, char *hashpass)
     /* close the connection to the database and cleanup */
     PQfinish(conn);
 
+    if (!dest) return 2;
     return 0;
 }
