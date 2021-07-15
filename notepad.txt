@@ -1,0 +1,30 @@
+Installation
+- create config files with 740 permissions and root:www-data owner
+    connstring: dbname=dhips user=postgres password=postgres
+
+Manual
+
+Documentation
+- config files
+
+Login
+- index.html redirects to the login script
+- login script asks for login info, and takes post argument to display errors like invalid user/password
+- login script opens the main script which verifies if the login info is good, if not redirects back to login script
+- main script page will be logged in through one of 2 mechanisms:
+    1. login: on successful login, main will create a new session, which will be stored in a file.
+    2. session: a session will have an expiration date, set to 5 minutes from login. Every time the main script or
+        a subpage is opened and the expiration date has not been reached, it will be reset to 5 minutes from then.
+        If the session has expired or no session is active, the main script will redirect to the login script with
+        the current path and user as arguments, and the user will need to log in again. If logged in with the same user
+        the page given by the path argument will load, otherwise the main page loads.
+
+Logout
+- main page will have a logout button, which will close the session immediately.
+- a session expires after 5 minutes of inactivity, after which login will be needed again.
+
+User creation and password editing
+- main script will have a section for changing password
+- main script will have a section for assigning permissions, default user will have admin
+- main script will have a secion for admin tasks
+- main script sections should either be collapsible or different pages alltogether
