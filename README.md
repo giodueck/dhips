@@ -1,5 +1,5 @@
 # DHIPS - TP HIPS - SO2
-Dueck's Host-based Intrusion Detection System
+Giovanni Dueck's Host-based Intrusion Detection System
 
 Un proyecto C/C++ con interfaz web para la materia de Sistemas Operativos 2
 
