@@ -34,9 +34,8 @@
 # VSCode
 .vscode
 
-# TODO and notepad
+# TODO
 TODO.txt
-notepad.txt
 
 # Scripts
 *.sh
