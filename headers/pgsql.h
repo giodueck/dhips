@@ -13,6 +13,6 @@ static PGconn *open_conn(const char *conninfo);
 // Copies the hashed passphrase stored for username into dest
 // Returns 0 if successful, other if not
 // If the resulting dest string is NULL, returns 2
-int get_hashed_passphrase(const char *conninfo, char *username, char *dest);
+int get_hashed_passphrase(char *username, char *dest);
 
 #endif // PGSQL_H

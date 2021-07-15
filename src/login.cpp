@@ -23,16 +23,19 @@ int login()
 
 	if (user && user[0] != '\0')
     {
-        string connstr = "dbname=dhips user=apache password=apache";
         char hashpass[129];
 
         cout << "<p>";
 
-        res = get_hashed_passphrase(connstr.c_str(), user, hashpass);
+        res = get_hashed_passphrase(user, hashpass);
         if (res == 0)
-            cout << hashpass;
+            cout << "Hashed passphrase: " << hashpass;
         else if (res == 2)
             cout << user << " is not a registered user";
+        else if (res == -1)
+            cout << "Connection to database unsuccessful";
+        else if (res == -2)
+            cout << "Config file could not be opened";
 
         cout << "</p>";
 	} else

@@ -1,6 +1,7 @@
 #include "pgsql.h"
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 static int exit_nicely(PGconn *conn)
 {
@@ -44,8 +45,11 @@ static PGconn *open_conn(const char *conninfo)
     return conn;
 }
 
-int get_hashed_passphrase(const char *conninfo, char *username, char *dest)
+int get_hashed_passphrase(char *username, char *dest)
 {
+    char *connstring;
+    FILE *file;
+
     PGconn     *conn;
     PGresult   *res;
     int         i,
@@ -53,8 +57,20 @@ int get_hashed_passphrase(const char *conninfo, char *username, char *dest)
     char cmd[512] = "";
     char buf[BUFSIZ];
 
+    // Get connection string from config file
+    file = fopen("/var/www/config/connstring", "r");    // connstring is restricted to root:www-data, apache should be able to access it
+    if (!file)
+    {
+        fprintf(stderr, "fopen failed: %s", strerror(errno));
+        return -2;
+    }
+    connstring = (char*)malloc(sizeof(char) * BUFSIZ);
+    fgets(connstring, BUFSIZ, file);
+    fclose(file);
+
     /* Make a connection to the database */
-    conn = open_conn(conninfo);
+    conn = open_conn(connstring);
+    free(connstring);   // avoid memory leaks
     if (!conn) return -1;
 
     /* Start a transaction block */
