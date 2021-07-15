@@ -38,4 +38,6 @@
 TODO.txt
 notepad.txt
 
+# Scripts
 *.sh
+cgi-bin
