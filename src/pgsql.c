@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <crypt.h>
 
 static int exit_nicely(PGconn *conn)
 {
@@ -93,15 +94,17 @@ int get_hashed_passphrase(char *username, char *dest)
 
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
+        // error retrieving data
         dest[0] = '\0';
-        printf("No data retrieved: %s\n", PQresultErrorMessage(res));
+        fprintf(stderr, "No data retrieved: %s\n", PQresultErrorMessage(res));
         PQclear(res);
         exit_nicely(conn);
         return 1;
     }
+
     int rows = PQntuples(res);
     if (rows)
-        sprintf(dest, "%s\n", PQgetvalue(res, 0, 1));
+        sprintf(dest, "%s", PQgetvalue(res, 0, 1));
     else dest = NULL;
     PQclear(res);
 
@@ -114,4 +117,32 @@ int get_hashed_passphrase(char *username, char *dest)
 
     if (!dest) return 2;
     return 0;
+}
+
+int check_pass(char *user, char *password)
+{
+    char pwd[SBUFSIZ];
+    char hash[SBUFSIZ];
+    int res;
+
+    // get hash from database
+    res = get_hashed_passphrase(user, pwd);
+    if (res == 2) return -1;    // user does not exist
+    else if (res == 0)          // user exists
+    {
+        // hash password using pwd as the setting
+        strcpy(hash, crypt(password, pwd));
+
+        // // debugging
+        // printf("password: %s<br>hash phrase: %s (length %d)<br>stored hash: %s (length %d)<br>", password, hash, (int)strlen(hash), pwd, (int)strlen(pwd));
+        // printf("strcmp(hash, pwd) = %d<br>", strcmp(hash, pwd));
+
+        // compare hashes
+        if (strcmp(hash, pwd) == 0)
+        {
+            // valid password
+            return 1;
+        } else return 0;
+    }
+    else return -2;             // other error, check stderr
 }
