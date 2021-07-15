@@ -7,6 +7,11 @@ Manual
 Documentation
 - config files
 
+Pages
+- index.html: redirects to /cgi-bin/login
+- /cgi-bin/login: login form
+- /cgi-bin/main: main page
+
 Login
 - index.html redirects to the login script
 - login script asks for login info, and takes post argument to display errors like invalid user/password
