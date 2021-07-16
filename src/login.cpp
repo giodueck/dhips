@@ -1,11 +1,46 @@
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <unistd.h>
 #include "login.h"
 #include "web.h"
 #include "pgsql.h"
 
 using namespace std;
+
+int verify_session()
+{
+    // get username from query string
+    char **qs = web_get_query_string();
+    char *user = web_get_from_query_string(qs, (char*)"u");
+
+    // page was incorrectly accessed, redirect to login
+    if (!user)
+    {
+        cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login\" />";
+        return 1;   // no session
+    }
+
+    // check database for session
+    int res = check_session(user, SESSION_LIFETIME);
+    if (res == -1)  // misc error
+    {
+        cout << "<p>An error occurred, check the error log</p>";
+        return 1;
+    } else if (res == 0)
+    {
+        cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?u=" << user << "\" />";
+        return 1;   // no session found
+    } else if (res == 2)
+    {
+        cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?e=3&u=" << user << "\" />";
+        return 1;   // session expired
+    } else // if (res == 1)
+    {
+        cout << "<p>Logged in!</p>";
+        return 0;   // session found
+    }
+}
 
 int login()
 {
@@ -15,9 +50,6 @@ int login()
 	char *password = web_get_from_query_string(qs, (char*)"password");
 
     int res;
-
-    web_print_header();
-    cout << "<body>";
 
 	if (user && user[0] != '\0')
     {
@@ -31,7 +63,8 @@ int login()
         } else if (res == 1)
         {
             // successful login
-            cout << "Logged in";
+            create_session(user, SESSION_LIFETIME);
+            cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "\" />";
         } else if (res == -1)
         {
             // Invalid user
@@ -46,10 +79,9 @@ int login()
 	} else
     {
         // html should prevent this
-		cout << "<h1>No username given</h1>";
+        printf("<p>user == NULL: %d; user[0] != '\\0': </p>", user == NULL);
+		cout << "<p>No username given</p>";
 	}
-
-    cout << "</body>";
 
     return 0;
 }

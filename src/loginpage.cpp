@@ -38,6 +38,9 @@ void print_error(char *e)
     } else if (strcmp(e, "2") == 0)
     {
         cout << "User does not exist";
+    } else if (strcmp(e, "3") == 0)
+    {
+        cout << "Session expired";
     }
 }
 
