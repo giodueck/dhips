@@ -12,7 +12,7 @@ Manual
 Documentation
 - config files
 
-Pages
+Web Pages
 - index.html: redirects to /cgi-bin/login
 - /cgi-bin/login: login form
 - /cgi-bin/main: main page
@@ -43,3 +43,46 @@ Roles
 - admin: full privileges. Can add/edit users, edit dhips configurations, view process status, start/restart and stop process
 - user: normal privileges. Can edit own password, edit dhips configurations, view process status and start/restart process
 - spectator: restricted privileges. Can edit own password and view dhips configurations and process status
+
+HIDPS
+- alert flags:
+    - regular: reporting of regular activity
+    - important: reporting of important activity, advise
+    - warning: reporting of suspicious activity, take note
+    - caution: reporting of dangerous activity, take action
+- warnings will cause the system to log an event into a watchlist, which will make less suspicious but related events
+    also show up as warnings. Repeated warnings will escalate to caution alerts.
+- caution alerts will cause the system to take action, requiring an admin to revert if necesary
+- important alerts will involve anything that is of importance but not necesarily suspicious, like the addition of a user
+
+List and description of tasks:
+i:      IDS:
+            important: changes to binaries and system files, new users
+            warning: changes to system binaries and system files
+ii:     IDS:
+            regular: user connected from localhost
+            important: user connected remotely
+iii:    IDS:
+            important: system in promiscuous mode
+            caution: sniffers running
+iv:     IDS:
+            warning: repeated authentication failure in a short time
+            caution: massive authentication failure in a short time
+            warning: repeated 404 from the same ip in a short time
+            caution: massive mail from one account
+v:      IDS:
+            warning: repeated mail from one account in a short time
+            caution: massive mail from one account in a short time
+vi:     IDS:
+            warning: process with high memory usage
+            caution: process with high memory usage for a long time
+vii:    IDS:
+            caution: script or executable found in /tmp
+            caution: process running from /tmp
+viii:   IDS:
+            caution: DDOS attack detected
+ix:     IDS:
+            important: cron job running
+x:      IDS:
+            warning: repeated authentication failure in a short time
+            caution: massive authentication failure in a short time
