@@ -9,6 +9,6 @@ create table session (
     username varchar(8) not null,
     expiration timestamp not null,
     creation timestamp not null,
-    constraint session_pkey primary key (username),
+    constraint session_pkey primary key (session_id),
     constraint username_fkey foreign key (username) references login(username)
 );

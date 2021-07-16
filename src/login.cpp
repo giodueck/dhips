@@ -13,6 +13,7 @@ int verify_session()
     // get username from query string
     char **qs = web_get_query_string();
     char *user = web_get_from_query_string(qs, (char*)"u");
+    char *sid = web_get_from_query_string(qs, (char*)"s");
 
     // page was incorrectly accessed, redirect to login
     if (!user)
@@ -22,7 +23,7 @@ int verify_session()
     }
 
     // check database for session
-    int res = check_session(user, SESSION_LIFETIME);
+    int res = check_session(user, atoi(sid), SESSION_LIFETIME);
     if (res == -1)  // misc error
     {
         cout << "<p>An error occurred, check the error log</p>";
@@ -63,8 +64,11 @@ int login()
         } else if (res == 1)
         {
             // successful login
-            create_session(user, SESSION_LIFETIME);
-            cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "\" />";
+            res = create_session(user, SESSION_LIFETIME);
+            if (res)
+                cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << res << "\" />";
+            else
+                cout << "An error occurred, check the error log";
         } else if (res == -1)
         {
             // Invalid user
@@ -79,7 +83,6 @@ int login()
 	} else
     {
         // html should prevent this
-        printf("<p>user == NULL: %d; user[0] != '\\0': </p>", user == NULL);
 		cout << "<p>No username given</p>";
 	}
 

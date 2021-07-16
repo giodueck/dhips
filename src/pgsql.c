@@ -144,7 +144,7 @@ int check_pass(char *user, char *password)
     else return -2;             // other error, check stderr
 }
 
-int check_session(char *username, int lifetime)
+int check_session(char *username, int session, int lifetime)
 {
     PGconn     *conn;
     PGresult   *res;
@@ -153,7 +153,7 @@ int check_session(char *username, int lifetime)
 
     double exp_epoch;
     double current_epoch;
-    long sid;
+    int sid;
     int result;
 
     /* Make a connection to the database */
@@ -172,7 +172,7 @@ int check_session(char *username, int lifetime)
     PQclear(res);
 
     // Retrieve the last session for username
-    sprintf(cmd, "SELECT session_id, EXTRACT(EPOCH FROM expiration) FROM public.session WHERE username = '%s' ORDER BY expiration DESC LIMIT 1;", username);
+    sprintf(cmd, "SELECT EXTRACT(EPOCH FROM expiration) FROM public.session WHERE username = '%s' and session_id = %d;", username, session);
     // Set stderr buffer to be buf
     setbuf(stderr, buf);
     res = PQexec(conn, cmd);
@@ -189,8 +189,7 @@ int check_session(char *username, int lifetime)
     int rows = PQntuples(res);
     if (rows)
     {
-        sid = atol(PQgetvalue(res, 0, 0));
-        exp_epoch = atof(PQgetvalue(res, 0, 1));
+        exp_epoch = atof(PQgetvalue(res, 0, 0));
     }
     else exp_epoch = 0;
     PQclear(res);
@@ -224,7 +223,7 @@ int check_session(char *username, int lifetime)
     else if (exp_epoch > current_epoch) // not expired
     {
         // renew session
-        sprintf(cmd, "UPDATE public.session SET expiration = LOCALTIMESTAMP + INTERVAL '%d minutes' WHERE session_id = %ld;", lifetime, sid);
+        sprintf(cmd, "UPDATE public.session SET expiration = LOCALTIMESTAMP + INTERVAL '%d minutes' WHERE session_id = %d;", lifetime, session);
         res = PQexec(conn, cmd);
         result = 1;
     } else result = 2;  // expired
@@ -246,9 +245,11 @@ int create_session(char *username, int lifetime)
     char cmd[512] = "";
     char buf[BUFSIZ];
 
+    int sid;
+
     /* Make a connection to the database */
     conn = open_conn();
-    if (!conn) return 1;
+    if (!conn) return -1;
 
     /* Start a transaction block */
     res = PQexec(conn, "BEGIN");
@@ -257,13 +258,22 @@ int create_session(char *username, int lifetime)
         fprintf(stderr, "BEGIN command failed: %s", PQerrorMessage(conn));
         PQclear(res);
         exit_nicely(conn);
-        return 1;
+        return -1;
     }
     PQclear(res);
 
     // Insert new session with current timestamp
-    sprintf(cmd, "INSERT INTO public.session (username, expiration, creation) VALUES ('%s', LOCALTIMESTAMP + INTERVAL '%d minutes', LOCALTIMESTAMP);", username, lifetime);
+    sprintf(cmd, "INSERT INTO public.session (username, expiration, creation) VALUES ('%s', LOCALTIMESTAMP + INTERVAL '%d minutes', LOCALTIMESTAMP) RETURNING session_id;", username, lifetime);
     res = PQexec(conn, cmd);
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "No data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    sid = atoi(PQgetvalue(res, 0, 0));
 
     /* end the transaction */
     res = PQexec(conn, "END");
@@ -272,5 +282,5 @@ int create_session(char *username, int lifetime)
     /* close the connection to the database and cleanup */
     PQfinish(conn);
 
-    return 0;
+    return sid;
 }

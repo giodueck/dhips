@@ -26,7 +26,7 @@ int check_pass(char *user, char *password);
 // Checks if a session for user exists and is valid. If one is found, the expiration
 // timestamp is updated to lifetime minutes + current time and the return value is 1.
 // If no active session was found returns 0, if an expired session was found returns 2
-int check_session(char *username, int lifetime);
+int check_session(char *username, int session, int lifetime);
 
 // Creates a new session for user with the given lifetime in minutes
 // Returns 0 if successful, other if not
