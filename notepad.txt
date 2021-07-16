@@ -1,4 +1,9 @@
 Installation
+- create database
+- create default user, prompt user to change the default password
+    username: admin
+    password: admin
+- create config directory with 740 permissions and root:www-data owner
 - create config files with 740 permissions and root:www-data owner
     connstring: dbname=dhips user=postgres password=postgres
 
@@ -21,8 +26,8 @@ Login
     2. session (get): a session will have an expiration date, set to 5 minutes from login. Every time the main script or
         a subpage is opened and the expiration date has not been reached, it will be reset to 5 minutes from then.
         If the session has expired or no session is active, the main script will redirect to the login script with
-        the current path and user as arguments, and the user will need to log in again. If logged in with the same user
-        the page given by the path argument will load, otherwise the main page loads.
+        the current user as an argument, and the user will need to log in again.
+failed login attempts should be logged in the dhips log
 
 Logout
 - main page will have a logout button, which will close the session immediately.
