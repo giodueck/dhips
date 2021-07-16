@@ -8,11 +8,11 @@
 
 using namespace std;
 
-int verify_session()
+int verify_session(int &session, char *user)
 {
     // get username from query string
     char **qs = web_get_query_string();
-    char *user = web_get_from_query_string(qs, (char*)"u");
+    user = web_get_from_query_string(qs, (char*)"u");
     char *sid = web_get_from_query_string(qs, (char*)"s");
 
     // page was incorrectly accessed, redirect to login
@@ -23,7 +23,7 @@ int verify_session()
     }
 
     // check database for session
-    int res = check_session(user, atoi(sid), SESSION_LIFETIME);
+    int res = check_session(user, session = atoi(sid), SESSION_LIFETIME);
     if (res == -1)  // misc error
     {
         cout << "<p>An error occurred, check the error log</p>";

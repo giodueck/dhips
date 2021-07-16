@@ -6,14 +6,10 @@
 // Time in minutes before a session expires
 #define SESSION_LIFETIME 5
 
-struct session {
-    time_t expiration;
-};
-
 // Checks to see if the session for the current user exists and is valid
 // Returns 0 and renews it if a valid session is found, else returns 1 and redirects to
 // the login page
-int verify_session();
+int verify_session(int &session, char *user);
 
 // Fetches POST data and uses it to log in.
 // If successful creates a session and reloads the page with a GET request,

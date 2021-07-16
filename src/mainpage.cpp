@@ -16,11 +16,15 @@ bool is_post()
 
 int main()
 {
+    // The main page should not be accessible without being logged in as a registered account
     // if post, call login
     // if get and no user given, redirect to login
     // if get and user given, check sessions
     //  if session active, renew and continue
     //  if no session or not active, redirect to login
+
+    int session;
+    char *user;
 
     web_print_header();
     cout << "<head><title>DHIPS Config</title></head>\n";
@@ -31,8 +35,11 @@ int main()
         login();
     } else
     {
-        verify_session();
+        verify_session(session, user);
     }
+
+    // Log out to end session manually
+    cout << "<br><br><a href=\"/cgi-bin/logout?s=" << session << "\">Log out</a>";
 
     cout << "</body>";
     return 0;

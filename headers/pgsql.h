@@ -32,4 +32,8 @@ int check_session(char *username, int session, int lifetime);
 // Returns 0 if successful, other if not
 int create_session(char *username, int lifetime);
 
+// Ends session
+// Returns 0 if successful, other if errors occur
+int terminate_session(int session);
+
 #endif // PGSQL_H
