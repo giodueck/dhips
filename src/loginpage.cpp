@@ -41,6 +41,9 @@ void print_error(char *e)
     } else if (strcmp(e, "3") == 0)
     {
         cout << "Session expired";
+    } else if (strcmp(e, "4") == 0)
+    {
+        cout << "Session ended";
     }
 }
 

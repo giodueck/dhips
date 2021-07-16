@@ -130,10 +130,6 @@ int check_pass(char *user, char *password)
         // hash password using pwd as the setting
         strcpy(hash, crypt(password, pwd));
 
-        // // debugging
-        // printf("password: %s<br>hash phrase: %s (length %d)<br>stored hash: %s (length %d)<br>", password, hash, (int)strlen(hash), pwd, (int)strlen(pwd));
-        // printf("strcmp(hash, pwd) = %d<br>", strcmp(hash, pwd));
-
         // compare hashes
         if (strcmp(hash, pwd) == 0)
         {
@@ -151,6 +147,7 @@ int check_session(char *username, int session, int lifetime)
     char cmd[512] = "";
     char buf[BUFSIZ];
 
+    char retstr[64];
     double exp_epoch;
     double current_epoch;
     int sid;
@@ -189,7 +186,11 @@ int check_session(char *username, int session, int lifetime)
     int rows = PQntuples(res);
     if (rows)
     {
-        exp_epoch = atof(PQgetvalue(res, 0, 0));
+        sprintf(retstr, "%s", PQgetvalue(res, 0, 0));
+        if (strcmp(retstr, "(null)") == 0)
+            exp_epoch = -1; // session ended
+        else
+            exp_epoch = atof(retstr);
     }
     else exp_epoch = 0;
     PQclear(res);
@@ -226,6 +227,9 @@ int check_session(char *username, int session, int lifetime)
         sprintf(cmd, "UPDATE public.session SET expiration = LOCALTIMESTAMP + INTERVAL '%d minutes' WHERE session_id = %d;", lifetime, session);
         res = PQexec(conn, cmd);
         result = 1;
+    } else if (exp_epoch == -1) // session ended
+    {
+        result = 3;
     } else result = 2;  // expired
 
     /* end the transaction */

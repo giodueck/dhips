@@ -16,14 +16,15 @@ Web Pages
 - index.html: redirects to /cgi-bin/login
 - /cgi-bin/login: login form
 - /cgi-bin/main: main page
+- /cgi-bin/logout: redirects to /cgi-bin/login
 
 Login
 - index.html redirects to the login script
-- login script asks for login info, and takes post argument to display errors like invalid user/password
+- login script asks for login info, and takes query argument to display errors like invalid user/password
 - login script opens the main script which verifies if the login info is good, if not redirects back to login script
 - main script page will be logged in through one of 2 modes:
     1. login (post): on successful login, main will create a new session, which will be stored in a file, and reload in session mode.
-    2. session (get): a session will have an expiration date, set to 5 minutes from login. Every time the main script or
+    2. session (get): a session will have an expiration date, set to 5 minutes from login originally. Every time the main script or
         a subpage is opened and the expiration date has not been reached, it will be reset to 5 minutes from then.
         If the session has expired or no session is active, the main script will redirect to the login script with
         the current user as an argument, and the user will need to log in again.

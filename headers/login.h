@@ -6,10 +6,17 @@
 // Time in minutes before a session expires
 #define SESSION_LIFETIME 5
 
-// Checks to see if the session for the current user exists and is valid
+// Checks to see if the session for the current user exists and is valid.
+// Use this version to set the session and user variables
 // Returns 0 and renews it if a valid session is found, else returns 1 and redirects to
 // the login page
-int verify_session(int &session, char *user);
+int verify_session(int *session, char *user);
+
+// Checks to see if the session for the current user exists and is valid.
+// Use this version to use the session and user variables
+// Returns 0 and renews it if a valid session is found, else returns 1 and redirects to
+// the login page
+// int verify_session(int session, char *user);
 
 // Fetches POST data and uses it to log in.
 // If successful creates a session and reloads the page with a GET request,

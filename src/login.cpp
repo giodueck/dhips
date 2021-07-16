@@ -8,7 +8,7 @@
 
 using namespace std;
 
-int verify_session(int &session, char *user)
+int verify_session(int *session, char *user)
 {
     // get username from query string
     char **qs = web_get_query_string();
@@ -23,7 +23,7 @@ int verify_session(int &session, char *user)
     }
 
     // check database for session
-    int res = check_session(user, session = atoi(sid), SESSION_LIFETIME);
+    int res = check_session(user, *session = atoi(sid), SESSION_LIFETIME);
     if (res == -1)  // misc error
     {
         cout << "<p>An error occurred, check the error log</p>";
@@ -36,12 +36,41 @@ int verify_session(int &session, char *user)
     {
         cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?e=3&u=" << user << "\" />";
         return 1;   // session expired
+    } else if (res == 3)
+    {
+        cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?e=4&u=" << user << "\" />";
+        return 1;   // session ended
     } else // if (res == 1)
     {
-        cout << "<p>Logged in!</p>";
         return 0;   // session found
     }
 }
+
+// int verify_session(int session, char *user)
+// {
+//     // check database for session
+//     int res = check_session(user, session, SESSION_LIFETIME);
+//     if (res == -1)  // misc error
+//     {
+//         cout << "<p>An error occurred, check the error log</p>";
+//         return 1;
+//     } else if (res == 0)
+//     {
+//         cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?u=" << user << "\" />";
+//         return 1;   // no session found
+//     } else if (res == 2)
+//     {
+//         cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?e=3&u=" << user << "\" />";
+//         return 1;   // session expired
+//     } else if (res == 3)
+//     {
+//         cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?e=4&u=" << user << "\" />";
+//         return 1;   // session ended
+//     } else // if (res == 1)
+//     {
+//         return 0;   // session found
+//     }
+// }
 
 int login()
 {

@@ -35,7 +35,8 @@ int main()
         login();
     } else
     {
-        verify_session(session, user);
+        verify_session(&session, user);
+        cout << "<p>Logged in!</p>";
     }
 
     // Log out to end session manually
