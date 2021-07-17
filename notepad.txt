@@ -2,6 +2,12 @@ TODO:
     - Add user roles
     - Add user creation and editing
     - Add instalation routine to help with testing
+    - Create alarm table, add alarm insertion to script
+    - Create ruleset tables, add default ruleset insertion to script
+        - define a parent table from which they inherit
+
+Model:
+    https://www.researchgate.net/publication/271070098_Host-based_Intrusion_Detection_and_Prevention_System_HIDPS
 
 Installation
 - create database
@@ -51,44 +57,52 @@ Roles
 - spectator: restricted privileges. Can edit own password and view dhips configurations and process status
 
 HIDPS
-- alert flags:
-    - regular: reporting of regular activity
-    - important: reporting of important activity, advise
-    - warning: reporting of suspicious activity, take note
-    - caution: reporting of dangerous activity, take action
+- alarm types:
+    - notice/aviso: reporting of regular activity
+    - important/importante: reporting of important activity
+    - warning/advertencia: reporting of suspicious activity, take note
+    - alert/alerta: reporting of dangerous activity, take action
 - warnings will cause the system to log an event into a watchlist, which will make less suspicious but related events
-    also show up as warnings. Repeated warnings will escalate to caution alerts.
-- caution alerts will cause the system to take action, requiring an admin to revert if necesary
-- important alerts will involve anything that is of importance but not necesarily suspicious, like the addition of a user
+    also show up as warnings. Repeated warnings will escalate to alerts.
+- alerts will cause the system to take action, requiring an admin to revert if necesary
+- important alarms will involve anything that is of importance but not necesarily suspicious, like the addition of a user
 
-List and description of tasks:
+List and description of tasks/modules:
 i:      IDS:
             important: changes to binaries and system files, new users
             warning: changes to system binaries and system files
+            important: password change
 ii:     IDS:
             regular: user connected from localhost
             important: user connected remotely
 iii:    IDS:
             important: system in promiscuous mode
-            caution: sniffers running
+            alert: sniffers running
 iv:     IDS:
             warning: repeated authentication failure in a short time
-            caution: massive authentication failure in a short time
+            alert: massive authentication failure in a short time
             warning: repeated 404 from the same ip in a short time
-            caution: massive mail from one account
+            alert: massive mail from one account
 v:      IDS:
             warning: repeated mail from one account in a short time
-            caution: massive mail from one account in a short time
+            alert: massive mail from one account in a short time
 vi:     IDS:
             warning: process with high memory usage
-            caution: process with high memory usage for a long time
+            alert: process with high memory usage for a long time
 vii:    IDS:
-            caution: script or executable found in /tmp
-            caution: process running from /tmp
+            alert: script or executable found in /tmp
+            alert: process running from /tmp
 viii:   IDS:
-            caution: DDOS attack detected
+            alert: DDOS attack detected
 ix:     IDS:
             important: cron job running
 x:      IDS:
             warning: repeated authentication failure in a short time
-            caution: massive authentication failure in a short time
+            alert: massive authentication failure in a short time
+
+Alarm path:     /var/log/hips/alarmas.log
+Alarm format:   timestamp                       :: description      :: location         :: code     :: severity
+                [dd]/[mm]/[yyyy] [hh]:[mm]:[ss] :: [description]    :: [IP/localhost]   :: [code]   :: [severity]
+Alarm codes:    task/module(roman).ID(decimal)
+                    The roman part makes it clear which task/module caused the alarm, and the decimal ID uniquely identifies it.
+                    Alarms are stored in the database and identified by these IDs.
