@@ -10,7 +10,7 @@ int main()
     char **qs = web_get_query_string();
     char *sid = web_get_from_query_string(qs, (char*)"s");
 
-    terminate_session(atoi(sid));
+    pg_terminate_session(atoi(sid));
 
     web_print_header();
     printf("<html><body>\n");

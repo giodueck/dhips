@@ -5,13 +5,15 @@
 #include <crypt.h>
 #include <time.h>
 
+// Close the connection to exit
 static int exit_nicely(PGconn *conn)
 {
     PQfinish(conn);
     return 1;
 }
 
-// Start db connection
+// Opens a connection
+// If the connection fails, returns NULL
 static PGconn *open_conn()
 {
     PGconn     *conn;
@@ -61,7 +63,7 @@ static PGconn *open_conn()
     return conn;
 }
 
-int get_hashed_passphrase(char *username, char *dest)
+int pg_get_hashed_passphrase(char *username, char *dest)
 {
     PGconn     *conn;
     PGresult   *res;
@@ -116,14 +118,14 @@ int get_hashed_passphrase(char *username, char *dest)
     return 0;
 }
 
-int check_pass(char *user, char *password)
+int pg_check_pass(char *user, char *password)
 {
     char pwd[SBUFSIZ];
     char hash[SBUFSIZ];
     int res;
 
     // get hash from database
-    res = get_hashed_passphrase(user, pwd);
+    res = pg_get_hashed_passphrase(user, pwd);
     if (res == 2) return -1;    // user does not exist
     else if (res == 0)          // user exists
     {
@@ -140,7 +142,7 @@ int check_pass(char *user, char *password)
     else return -2;             // other error, check stderr
 }
 
-int check_session(char *username, int session, int lifetime)
+int pg_check_session(char *username, int session, int lifetime)
 {
     PGconn     *conn;
     PGresult   *res;
@@ -242,7 +244,7 @@ int check_session(char *username, int session, int lifetime)
     return result;
 }
 
-int create_session(char *username, int lifetime)
+int pg_create_session(char *username, int lifetime)
 {
     PGconn     *conn;
     PGresult   *res;
@@ -289,7 +291,7 @@ int create_session(char *username, int lifetime)
     return sid;
 }
 
-int terminate_session(int session)
+int pg_terminate_session(int session)
 {
     PGconn     *conn;
     PGresult   *res;

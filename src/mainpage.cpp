@@ -27,7 +27,7 @@ int main()
     char *user;
 
     web_print_header();
-    cout << "<head><title>DHIPS Config</title></head>\n";
+    cout << "<head><title>DHIPS Main Page</title></head>\n";
     cout << "<body>\n";
 
     if (is_post())

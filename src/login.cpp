@@ -23,7 +23,7 @@ int verify_session(int *session, char *user)
     }
 
     // check database for session
-    int res = check_session(user, *session = atoi(sid), SESSION_LIFETIME);
+    int res = pg_check_session(user, *session = atoi(sid), SESSION_LIFETIME);
     if (res == -1)  // misc error
     {
         cout << "<p>An error occurred, check the error log</p>";
@@ -49,7 +49,7 @@ int verify_session(int *session, char *user)
 // int verify_session(int session, char *user)
 // {
 //     // check database for session
-//     int res = check_session(user, session, SESSION_LIFETIME);
+//     int res = pg_check_session(user, session, SESSION_LIFETIME);
 //     if (res == -1)  // misc error
 //     {
 //         cout << "<p>An error occurred, check the error log</p>";
@@ -85,7 +85,7 @@ int login()
     {
         cout << "<p>";
 
-        res = check_pass(user, password);
+        res = pg_check_pass(user, password);
         if (res == 0)
         {
             // invalid password
@@ -93,7 +93,7 @@ int login()
         } else if (res == 1)
         {
             // successful login
-            res = create_session(user, SESSION_LIFETIME);
+            res = pg_create_session(user, SESSION_LIFETIME);
             if (res)
                 cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << res << "\" />";
             else
