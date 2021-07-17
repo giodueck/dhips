@@ -6,7 +6,7 @@
 #define SBUFSIZ 1024
 
 // Copies the hashed passphrase stored for username into dest
-// Returns 0 if successful, other if not
+//  Returns 0 if successful, other if not
 // If the resulting dest string is NULL, returns 2
 int pg_get_hashed_passphrase(char *username, char *dest);
 
@@ -22,11 +22,16 @@ int pg_check_pass(char *user, char *password);
 int pg_check_session(char *username, int session, int lifetime);
 
 // Creates a new session for user with the given lifetime in minutes
-// Returns 0 if successful, other if not
+//  Returns 0 if successful, other if not
 int pg_create_session(char *username, int lifetime);
 
 // Ends session
-// Returns 0 if successful, other if errors occur
+//  Returns 0 if successful, other if errors occur
 int pg_terminate_session(int session);
+
+// Checks the ruleset for the severity of the given alarm.
+//  Returns 0 for "notice", 1 for "important", 2 for "warning", and 3 for "alert" if successful,
+// returns negatives otherwise.
+int pg_check_alarm_severity(int alarm_id);
 
 #endif // PGSQL_H
