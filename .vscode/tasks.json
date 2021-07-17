@@ -54,7 +54,7 @@
 			"command": "/usr/bin/g++",
 			"args": [
 				"-g",
-				"/home/giodueck/vscode/dhips/src/logout.c",
+				"/home/giodueck/vscode/dhips/src/logoutpage.c",
 				"/home/giodueck/vscode/dhips/src/web.c",
 				"/home/giodueck/vscode/dhips/src/pgsql.c",
 				"-o",
