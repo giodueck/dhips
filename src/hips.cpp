@@ -7,8 +7,9 @@ int main(int argc, char *argv[])
     AlarmGenerator alarm = AlarmGenerator();
 
     // Startup procedure
-    startup();
+    int s = startup();
 
+    // test code
     alarm.generate("XVII", 1234, "localhost");
 
     return 0;

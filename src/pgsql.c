@@ -25,7 +25,7 @@ static PGconn *open_conn()
     file = fopen("/var/www/config/connstring", "r");    // connstring is restricted to root:www-data, apache should be able to access it
     if (!file)
     {
-        fprintf(stderr, "dhips//pgsql: fopen failed: %s", strerror(errno));
+        fprintf(stderr, "dhips//pgsql: could not open /var/www/config/connstring: %s", strerror(errno));
         return NULL;
     }
     conninfo = (char*)malloc(sizeof(char) * BUFSIZ);
@@ -352,7 +352,7 @@ int pg_get_alarm_severity(int alarm_id)
     }
     PQclear(res);
 
-    // Retrieve the last session for username
+    // Retrieve severity
     sprintf(cmd, "SELECT severity FROM public.alarm WHERE alarm_id = %d;", alarm_id);
     // Set stderr buffer to be buf
     setbuf(stderr, buf);
@@ -409,8 +409,8 @@ char *pg_get_alarm_description(int alarm_id)
     }
     PQclear(res);
 
-    // Retrieve the last session for username
-    sprintf(cmd, "SELECT description, alarm_id FROM public.alarm WHERE alarm_id = %d;", alarm_id);
+    // Retrieve description
+    sprintf(cmd, "SELECT description FROM public.alarm WHERE alarm_id = %d;", alarm_id);
     // Set stderr buffer to be buf
     setbuf(stderr, buf);
     res = PQexec(conn, cmd);
@@ -429,6 +429,78 @@ char *pg_get_alarm_description(int alarm_id)
     {
         description = PQgetvalue(res, 0, 0);
         strcpy(ret, description);
+    }
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}
+
+int pg_check_db()
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+
+    // Test every table
+    
+    res = PQexec(conn, "SELECT * FROM public.login LIMIT 1;");
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql: error: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    res = PQexec(conn, "SELECT * FROM public.session LIMIT 1;");
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql: error: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    res = PQexec(conn, "SELECT * FROM public.alarm LIMIT 1;");
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql: error: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
     }
     PQclear(res);
 
