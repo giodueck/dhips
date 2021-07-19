@@ -29,3 +29,8 @@ int Preventer::log(const char *module, const char *msg)
 
     return 0;
 }
+
+int Preventer::log(const char *msg)
+{
+    return this->log(this->module.c_str(), msg);
+}

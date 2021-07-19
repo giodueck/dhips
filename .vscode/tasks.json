@@ -80,7 +80,7 @@
 			"args": [
 				"-g",
 				"/home/giodueck/vscode/dhips/src/hips.cpp",
-				"/home/giodueck/vscode/dhips/src/alarm.cpp",
+				"/home/giodueck/vscode/dhips/src/detector.cpp",
 				"/home/giodueck/vscode/dhips/src/preventer.cpp",
 				"/home/giodueck/vscode/dhips/src/dhipslib.cpp",
 				"/home/giodueck/vscode/dhips/src/pgsql.c",

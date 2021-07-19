@@ -59,6 +59,7 @@ Roles
 - spectator: restricted privileges. Can edit own password and view dhips configurations and process status
 
 HIDPS
+- modules will have detector and preventer objects which will handle log writing and module functionality
 - alarm types:
     - notice/aviso: reporting of regular activity
     - important/importante: reporting of important activity

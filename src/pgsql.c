@@ -425,11 +425,11 @@ char *pg_get_alarm_description(int alarm_id)
     }
 
     int rows = PQntuples(res);
-    if (rows)
+    if (rows > 0)
     {
         description = PQgetvalue(res, 0, 0);
         strcpy(ret, description);
-    }
+    } else ret = NULL;
     PQclear(res);
 
     /* end the transaction */

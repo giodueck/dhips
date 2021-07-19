@@ -1,6 +1,5 @@
 #include <iostream>
-#include "detector.h"
-#include "preventer.h"
+#include "module.h"
 #include "startup.h"
 
 int main(int argc, char *argv[])
@@ -12,8 +11,10 @@ int main(int argc, char *argv[])
     int s = startup();
 
     // test code
-    alarm.log("XVII", 1234, "localhost");
-    preventer.log("XVII", "This is a text description");
+    alarm.log("XVII", 12345, "localhost");
+    alarm.log(12345, "localhost");
+    // alarm.log("XVII", 1234, "localhost");
+    // preventer.log("XVII", "This is a text description");
 
     return 0;
 }

@@ -57,3 +57,16 @@ int Detector::log(const char *module, int id, const char *location)
 
     return severity;
 }
+
+int Detector::log(int id, const char *location)
+{
+    if (module.length())
+        return this->log(this->module.c_str(), id, location);
+    else 
+    {
+        char msg[128];
+        sprintf(msg, "module not set");
+        dhips_perror_no_errno(msg);
+        return -1;
+    }
+}
