@@ -8,7 +8,7 @@
 
 using namespace std;
 
-int Alarm::generate(const char *task, int id, const char *location)
+int Alarm::generate(const char *module, int id, const char *location)
 {
     char *description = NULL;
     int severity = 0, res;
@@ -49,8 +49,8 @@ int Alarm::generate(const char *task, int id, const char *location)
     // write to log
     unixtime = time(NULL);
     ts = localtime(&unixtime);
-    fprintf(f, "%02d/%02d/%04d %02d:%02d:%02d :: %s\t:: %s\t:: %s.%d\n",
-        ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, description, location, task, id);
+    fprintf(f, "%02d/%02d/%04d %02d:%02d:%02d :: %s.%d: %s\t:: %s\t\n",
+        ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module, id, description, location);
 
     // close file and free description
     fclose(f);

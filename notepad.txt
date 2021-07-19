@@ -102,8 +102,12 @@ x:      IDS:
             alert: massive authentication failure in a short time
 
 Alarm path:     /var/log/hips/alarmas.log
-Alarm format:   timestamp                       :: description      :: location         :: code
-                [dd]/[mm]/[yyyy] [hh]:[mm]:[ss] :: [description]    :: [IP/localhost]   :: [code]
-Alarm codes:    task/module(roman).ID(decimal)
+Alarm format:   timestamp                       :: code: description            :: location
+                [dd]/[mm]/[yyyy] [hh]:[mm]:[ss] :: [module.code]: [description] :: [IP/localhost]
+Alarm code:     module(roman).ID(decimal)
                     The roman part makes it clear which task/module caused the alarm, and the decimal ID uniquely identifies it.
                     Alarms are stored in the database and identified by these IDs.
+
+Prevetion path:     /var/log/hips/prevencion.log
+Prevetion format:   timestamp                       :: module: description
+                    [dd]/[mm]/[yyyy] [hh]:[mm]:[ss] :: [module]: [description]
