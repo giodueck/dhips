@@ -25,7 +25,7 @@ static PGconn *open_conn()
     file = fopen("/var/www/config/connstring", "r");    // connstring is restricted to root:www-data, apache should be able to access it
     if (!file)
     {
-        fprintf(stderr, "fopen failed: %s", strerror(errno));
+        fprintf(stderr, "dhips//pgsql: fopen failed: %s", strerror(errno));
         return NULL;
     }
     conninfo = (char*)malloc(sizeof(char) * BUFSIZ);
@@ -39,7 +39,7 @@ static PGconn *open_conn()
     /* Check to see that the backend connection was successfully made */
     if (PQstatus(conn) != CONNECTION_OK)
     {
-        fprintf(stderr, "Connection to database failed: %s", PQerrorMessage(conn));
+        fprintf(stderr, "dhips//pgsql: connection to database failed: %s", PQerrorMessage(conn));
         exit_nicely(conn);
         return NULL;
     }
@@ -48,7 +48,7 @@ static PGconn *open_conn()
     res = PQexec(conn, "SELECT pg_catalog.set_config('search_path', '', false)");
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
-        fprintf(stderr, "SET failed: %s", PQerrorMessage(conn));
+        fprintf(stderr, "dhips//pgsql: SET failed: %s", PQerrorMessage(conn));
         PQclear(res);
         exit_nicely(conn);
         return NULL;
@@ -78,7 +78,7 @@ int pg_get_hashed_passphrase(char *username, char *dest)
     res = PQexec(conn, "BEGIN");
     if (PQresultStatus(res) != PGRES_COMMAND_OK)
     {
-        fprintf(stderr, "BEGIN command failed: %s", PQerrorMessage(conn));
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
         PQclear(res);
         exit_nicely(conn);
         return -1;
@@ -95,7 +95,7 @@ int pg_get_hashed_passphrase(char *username, char *dest)
     {
         // error retrieving data
         dest[0] = '\0';
-        fprintf(stderr, "No data retrieved: %s\n", PQresultErrorMessage(res));
+        fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
         PQclear(res);
         exit_nicely(conn);
         return 1;
@@ -163,7 +163,7 @@ int pg_check_session(char *username, int session, int lifetime)
     res = PQexec(conn, "BEGIN");
     if (PQresultStatus(res) != PGRES_COMMAND_OK)
     {
-        fprintf(stderr, "BEGIN command failed: %s", PQerrorMessage(conn));
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
         PQclear(res);
         exit_nicely(conn);
         return -1;
@@ -179,7 +179,7 @@ int pg_check_session(char *username, int session, int lifetime)
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
         // error retrieving data
-        fprintf(stderr, "No data retrieved: %s\n", PQresultErrorMessage(res));
+        fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
         PQclear(res);
         exit_nicely(conn);
         return -1;
@@ -207,7 +207,7 @@ int pg_check_session(char *username, int session, int lifetime)
         if (PQresultStatus(res) != PGRES_TUPLES_OK)
         {
             // error retrieving data
-            fprintf(stderr, "No data retrieved: %s\n", PQresultErrorMessage(res));
+            fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
             PQclear(res);
             exit_nicely(conn);
             return -1;
@@ -261,7 +261,7 @@ int pg_create_session(char *username, int lifetime)
     res = PQexec(conn, "BEGIN");
     if (PQresultStatus(res) != PGRES_COMMAND_OK)
     {
-        fprintf(stderr, "BEGIN command failed: %s", PQerrorMessage(conn));
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
         PQclear(res);
         exit_nicely(conn);
         return -1;
@@ -274,7 +274,7 @@ int pg_create_session(char *username, int lifetime)
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
         // error retrieving data
-        fprintf(stderr, "No data retrieved: %s\n", PQresultErrorMessage(res));
+        fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
         PQclear(res);
         exit_nicely(conn);
         return -1;
@@ -306,7 +306,7 @@ int pg_terminate_session(int session)
     res = PQexec(conn, "BEGIN");
     if (PQresultStatus(res) != PGRES_COMMAND_OK)
     {
-        fprintf(stderr, "BEGIN command failed: %s", PQerrorMessage(conn));
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
         PQclear(res);
         exit_nicely(conn);
         return -1;
@@ -326,4 +326,118 @@ int pg_terminate_session(int session)
     PQfinish(conn);
 
     return 0;
+}
+
+int pg_get_alarm_severity(int alarm_id)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Retrieve the last session for username
+    sprintf(cmd, "SELECT severity FROM public.alarm WHERE alarm_id = %d;", alarm_id);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    int rows = PQntuples(res);
+    if (rows)
+    {
+        ret = atoi(PQgetvalue(res, 0, 0));
+    }
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}
+
+char *pg_get_alarm_description(int alarm_id)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+    
+    char *description;
+    char *ret = (char*)malloc(513); // description is varchar(512)
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return NULL;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return NULL;
+    }
+    PQclear(res);
+
+    // Retrieve the last session for username
+    sprintf(cmd, "SELECT description, alarm_id FROM public.alarm WHERE alarm_id = %d;", alarm_id);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return NULL;
+    }
+
+    int rows = PQntuples(res);
+    if (rows)
+    {
+        description = PQgetvalue(res, 0, 0);
+        strcpy(ret, description);
+    }
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
 }

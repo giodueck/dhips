@@ -5,6 +5,7 @@ TODO:
     - Create alarm table, add alarm insertion to script
     - Create ruleset tables, add default ruleset insertion to script
         - define a parent table from which they inherit
+    - Startup function should check integrity of database and all config
 
 Model:
     https://www.researchgate.net/publication/271070098_Host-based_Intrusion_Detection_and_Prevention_System_HIDPS
@@ -101,8 +102,8 @@ x:      IDS:
             alert: massive authentication failure in a short time
 
 Alarm path:     /var/log/hips/alarmas.log
-Alarm format:   timestamp                       :: description      :: location         :: code     :: severity
-                [dd]/[mm]/[yyyy] [hh]:[mm]:[ss] :: [description]    :: [IP/localhost]   :: [code]   :: [severity]
+Alarm format:   timestamp                       :: description      :: location         :: code
+                [dd]/[mm]/[yyyy] [hh]:[mm]:[ss] :: [description]    :: [IP/localhost]   :: [code]
 Alarm codes:    task/module(roman).ID(decimal)
                     The roman part makes it clear which task/module caused the alarm, and the decimal ID uniquely identifies it.
                     Alarms are stored in the database and identified by these IDs.
