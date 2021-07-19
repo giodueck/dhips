@@ -4,20 +4,20 @@ TODO:
     - Add instalation routine to help with testing
     - Create alarm table, add alarm insertion to script
     - Create ruleset tables, add default ruleset insertion to script
-        - define a parent table from which they inherit
-    - Startup function should check integrity of database and all config
+        - define a parent table from which they inherit\
 
 Model:
     https://www.researchgate.net/publication/271070098_Host-based_Intrusion_Detection_and_Prevention_System_HIDPS
 
 Installation
-- create database
+- create database (with default inserts)
 - create default user, prompt user to change the default password
     username: admin
     password: admin
 - create config directory with 740 permissions and root:www-data owner
 - create config files with 740 permissions and root:www-data owner
     connstring: dbname=dhips user=postgres password=postgres
+- create /var/log/hips
 
 Manual
 

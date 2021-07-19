@@ -1,10 +1,10 @@
 #include <iostream>
-#include "alarmgenerator.h"
+#include "alarm.h"
 #include "startup.h"
 
 int main(int argc, char *argv[])
 {
-    AlarmGenerator alarm = AlarmGenerator();
+    Alarm alarm = Alarm();
 
     // Startup procedure
     int s = startup();
