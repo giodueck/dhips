@@ -1,4 +1,4 @@
-#include "alarmgenerator.h"
+#include "alarm.h"
 #include "dhipslib.h"
 #include "pgsql.h"
 #include <stdio.h>
@@ -8,7 +8,7 @@
 
 using namespace std;
 
-int AlarmGenerator::generate(const char *task, int id, const char *location)
+int Alarm::generate(const char *task, int id, const char *location)
 {
     char *description = NULL;
     int severity = 0, res;

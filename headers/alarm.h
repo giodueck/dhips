@@ -1,18 +1,18 @@
-#ifndef ALARMGENERATOR_H
-#define ALARMGENERATOR_H
+#ifndef ALARM_H
+#define ALARM_H
 
 #include <string>
 
 enum AlarmType { notice, important, warning, alert };
 
-class AlarmGenerator
+class Alarm
 {
     private:
         const char *filename = "/var/log/hips/alarmas.log";
 
     public:
     
-    AlarmGenerator(){}
+    Alarm(){}
 
     /* Generates an alarm and logs it in alarmas.log along with a timestamp.
        The task is used for readability of the logs, the id is used to recover the description
@@ -26,4 +26,4 @@ class AlarmGenerator
     int generate(const char *task, int id, const char *location);
 };
 
-#endif // ALARMGENERATOR_H
+#endif // ALARM_H
