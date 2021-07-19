@@ -8,6 +8,7 @@ enum AlarmType { notice, important, warning, alert };
 class AlarmGenerator
 {
     private:
+        const char *filename = "/var/log/hips/alarmas.log";
 
     public:
     
@@ -15,12 +16,14 @@ class AlarmGenerator
 
     /* Generates an alarm and logs it in alarmas.log along with a timestamp.
        The task is used for readability of the logs, the id is used to recover the description
-       of the alarm to add to the log. The severity is determined by the rulesets.
-        R: enum AlarmType for the alarm if successful, negatives otherwise
-        P:  int task: number in the range 1-10
+       of the alarm to add to the log. The severity is determined by the rulesets and only used
+       internally.
+        R: int corresponding to an enum AlarmType for the alarm if successful, negatives otherwise
+        P:  const char *task: roman numeral in the range I-X
             int id: unique identifier of alarm
+            char *location: the IP address that originated the alarm, or localhost
     */
-    int generate(int task, int id);
+    int generate(const char *task, int id, const char *location);
 };
 
 #endif // ALARMGENERATOR_H

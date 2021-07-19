@@ -72,6 +72,32 @@
 			],
 			"group": "build",
 			"detail": "compiler: /usr/bin/g++"
+		},
+		{
+			"type": "cppbuild",
+			"label": "C/C++: g++ build debug hips",
+			"command": "/usr/bin/g++",
+			"args": [
+				"-g",
+				"/home/giodueck/vscode/dhips/src/hips.cpp",
+				"/home/giodueck/vscode/dhips/src/alarmgenerator.cpp",
+				"/home/giodueck/vscode/dhips/src/dhipslib.cpp",
+				"/home/giodueck/vscode/dhips/src/pgsql.c",
+				"-o",
+				"/home/giodueck/vscode/dhips/build/debug/dhips",
+				"-I/home/giodueck/vscode/dhips/headers",
+				"-I/usr/include/postgresql",
+				"-lcrypt",
+				"-lpq"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "compiler: /usr/bin/g++"
 		}
 	]
 }
