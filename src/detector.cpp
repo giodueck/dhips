@@ -1,4 +1,4 @@
-#include "alarm.h"
+#include "detector.h"
 #include "dhipslib.h"
 #include "pgsql.h"
 #include <stdio.h>
@@ -8,7 +8,7 @@
 
 using namespace std;
 
-int Alarm::generate(const char *module, int id, const char *location)
+int Detector::log(const char *module, int id, const char *location)
 {
     char *description = NULL;
     int severity = 0, res;

@@ -1,20 +1,20 @@
-#ifndef ALARM_H
-#define ALARM_H
+#ifndef DETECTOR_H
+#define DETECTOR_H
 
 #include <string>
 
 enum AlarmType { notice, important, warning, alert };
 
-class Alarm
+class Detector
 {
     private:
         const char *filename = "/var/log/hips/alarmas.log";
 
     public:
     
-    Alarm(){}
+    Detector(){}
 
-    /* Generates an alarm and logs it in alarmas.log along with a timestamp.
+    /* Logs an alarm in alarmas.log along with a timestamp.
        The module is used for readability of the logs, the id is used to recover the description
        of the alarm to add to the log. The severity is determined by the rulesets and only used
        internally.
@@ -23,7 +23,7 @@ class Alarm
             int id: unique identifier of alarm
             char *location: the IP address that originated the alarm, or localhost
     */
-    int generate(const char *module, int id, const char *location);
+    int log(const char *module, int id, const char *location);
 };
 
-#endif // ALARM_H
+#endif // DETECTOR_H

@@ -4,7 +4,8 @@ TODO:
     - Add instalation routine to help with testing
     - Create alarm table, add alarm insertion to script
     - Create ruleset tables, add default ruleset insertion to script
-        - define a parent table from which they inherit\
+        - define a parent table from which they inherit
+    - Create db user for dhips with editing permissions, but no adding tables or creating DBs
 
 Model:
     https://www.researchgate.net/publication/271070098_Host-based_Intrusion_Detection_and_Prevention_System_HIDPS
@@ -105,7 +106,7 @@ Alarm path:     /var/log/hips/alarmas.log
 Alarm format:   timestamp                       :: code: description            :: location
                 [dd]/[mm]/[yyyy] [hh]:[mm]:[ss] :: [module.code]: [description] :: [IP/localhost]
 Alarm code:     module(roman).ID(decimal)
-                    The roman part makes it clear which task/module caused the alarm, and the decimal ID uniquely identifies it.
+                    The roman part makes it clear which module caused the alarm, and the decimal ID uniquely identifies it.
                     Alarms are stored in the database and identified by these IDs.
 
 Prevetion path:     /var/log/hips/prevencion.log
