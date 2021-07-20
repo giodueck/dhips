@@ -23,6 +23,10 @@ int pg_check_pass(char *user, char *password);
 //  Returns 0 if successful, other if not
 int pg_change_pass(char *user, char *hash);
 
+// Updates the role for the given user
+//  Returns 0 if successful, other if not
+int pg_change_role(char *user, char *role);
+
 // Adds a user.
 //  Returns 0 if successful, other if not
 int pg_add_user(char *username, char *hash, char *role);

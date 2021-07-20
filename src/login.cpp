@@ -51,7 +51,7 @@ char **verify_session(int *session, char *user)
 //         // no session
 //         cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login\" />";
 //     }
-
+//
 //     // check database for session
 //     int res = pg_check_session(user, session, SESSION_LIFETIME);
 //     if (res == -1)  // misc error
@@ -145,7 +145,123 @@ int change_passwd(char *user, int session, int e)
             cout << "</p>";
         } else
         {
-            cout << "<p>Password updated!</p>";
+            cout << "<p>Password updated</p>";
+        }
+    }
+
+    return 0;
+}
+
+int get_role(char *user)
+{
+    int r = pg_get_role(user);
+
+    if (r < 0)
+        return -1;
+    else 
+        return r;
+}
+
+int add_user(char *user, int session, int e)
+{
+    if (!user) // whose?
+        return -1;
+
+    cout << "<form action=\"/cgi-bin/user_mgmt\" method=\"post\">";
+    cout << "<label for=\"nuser\">Username<br></label>";
+    cout << "<input type=\"text\" name=\"nuser\" required><br>";
+    cout << "<label for=\"npass\">Password<br></label>";
+    cout << "<input type=\"password\" name=\"npass\" required><br>";
+    cout << "<label for=\"admin\">Admin</label>";
+    cout << "<input type=\"radio\" name=\"role\" value=\"admin\" required>";
+    cout << "<label for=\"user\"><br>User</label>";
+    cout << "<input type=\"radio\" name=\"role\" value=\"user\" required>";
+    cout << "<label for=\"spectator\"><br>Spectator</label>";
+    cout << "<input type=\"radio\" name=\"role\" value=\"spectator\" required>";
+
+    cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
+    cout << "<input type=\"hidden\" name=\"session\" value=" << session << ">";
+    cout << "<input type=\"hidden\" name=\"action\" value=adduser>";
+
+    cout << "<br><br><input type=\"submit\" value=\"Add user\">";
+    cout << "</form>";
+
+    if (e)
+    {
+        if (e == -1)
+        {
+            cout << "<p>User added</p>";
+        } else if (e == -2)
+        {
+            cout << "<p style=\"color:Tomato;\">";
+            cout << "An error occurred! Check the eror log";
+            cout << "</p>";
+        } else if (e == 1)
+        {
+            cout << "<p style=\"color:Tomato;\">";
+            cout << "A user with that name already exists";
+            cout << "</p>";
+        }
+    }
+
+    return 0;
+}
+
+int edit_user(char *user, int session, int e)
+{
+    if (!user) // whose?
+        return -1;
+
+    cout << "<form action=\"/cgi-bin/user_mgmt\" method=\"post\">";
+
+    // Username
+    cout << "<label for=\"u\">Username<br></label>";
+    cout << "<input type=\"text\" name=\"u\" required><br><br>";
+
+    // hidden input
+    cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
+    cout << "<input type=\"hidden\" name=\"session\" value=" << session << ">";
+
+    // edit password
+    cout << "<label for=\"npass\">Password<br></label>";
+    cout << "<input type=\"password\" name=\"npass\">";
+
+    cout << "<br><input type=\"submit\" name=\"action\" value=\"Update password\"><br><br>";
+
+    // edit role
+    cout << "<label for=\"admin\">Admin</label>";
+    cout << "<input type=\"radio\" name=\"role\" value=\"admin\">";
+    cout << "<label for=\"user\"><br>User</label>";
+    cout << "<input type=\"radio\" name=\"role\" value=\"user\">";
+    cout << "<label for=\"spectator\"><br>Spectator</label>";
+    cout << "<input type=\"radio\" name=\"role\" value=\"spectator\">";
+
+    cout << "<br><input type=\"submit\" name=\"action\" value=\"Update role\">";
+    cout << "</form>";
+
+    if (e)
+    {
+        if (e == 1)
+        {
+            cout << "<p>Password changed</p>";
+        } else if (e == 2)
+        {
+            cout << "<p>Role changed</p>";
+        } else if (e == -1)
+        {
+            cout << "<p style=\"color:Tomato;\">";
+            cout << "Password unchanged";
+            cout << "</p>";
+        } else if (e == -2)
+        {
+            cout << "<p style=\"color:Tomato;\">";
+            cout << "Role unchanged";
+            cout << "</p>";
+        } else
+        {
+            cout << "<p style=\"color:Tomato;\">";
+            cout << "An error occurred! Check the eror log";
+            cout << "</p>";
         }
     }
 

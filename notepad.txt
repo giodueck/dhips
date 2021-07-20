@@ -1,11 +1,9 @@
 TODO:
-    - Add user roles
-    - Add user creation and editing
+    - Add user editing
     - Add instalation routine to help with testing
     - Create alarm table, add alarm insertion to script
     - Create ruleset tables, add default ruleset insertion to script
         - define a parent table from which they inherit
-    - Create db user for dhips with editing permissions, but no adding tables or creating DBs
     - Develop main page:
         - control panel
         - config pages
@@ -22,6 +20,8 @@ Installation
 - create config files with 740 permissions and root:www-data owner
     connstring: dbname=dhips user=postgres password=postgres
 - create /var/log/hips
+- install auditd: yum install audit
+    start on boot: sudo chkconfig auditd on
 
 Manual
 

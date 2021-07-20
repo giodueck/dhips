@@ -164,8 +164,46 @@ int pg_change_pass(char *user, char *hash)
     }
     PQclear(res);
 
-    // Retrieve the stored hashphrase for username
+    // Update the stored hashphrase for user
     sprintf(cmd, "UPDATE public.login SET pwd = '%s' WHERE username = '%s';", hash, user);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+    return 0;
+}
+
+int pg_change_role(char *user, char *role)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Update the role for user
+    sprintf(cmd, "UPDATE public.login SET role = '%s' WHERE username = '%s';", role, user);
     // Set stderr buffer to be buf
     setbuf(stderr, buf);
     res = PQexec(conn, cmd);

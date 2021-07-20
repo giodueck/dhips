@@ -7,7 +7,7 @@
 using namespace std;
 
 char **qs;
-int session, e = 0;
+int session, e = 0, role;
 char *user, *section;
 
 bool is_post()
@@ -30,11 +30,32 @@ void change_passwd_link()
     cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=pass\">Change password</a>";
 }
 
+void add_user_link()
+{
+    user = web_get_from_query_string(qs, (char*)"u");
+    cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=addu\">Add user</a>";
+}
+
+void edit_user_link()
+{
+    user = web_get_from_query_string(qs, (char*)"u");
+    cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=editu\">Edit user</a>";
+}
+
 void show_account_mgmt_links()
 {
     logout_link();
     cout << " | ";
     change_passwd_link();
+
+    // admin
+    if (role == 0)
+    {
+        cout << "<br>";
+        add_user_link();
+        cout << " | ";
+        edit_user_link();
+    }
 }
 
 void show_section()
@@ -52,6 +73,33 @@ void show_section()
 
         // show change password form
         change_passwd(user, session, e);
+
+    } else if (strcmp(section, "addu") == 0 && role == 0)
+    {
+        cout << "<h2>Add user</h2>";
+        
+        // get query variables
+        user = web_get_from_query_string(qs, (char*)"u");
+        char *session_s = web_get_from_query_string(qs, (char*)"s");
+        if (session_s) session = atoi(session_s);
+        char *e_s = web_get_from_query_string(qs, (char*)"e");
+        if (e_s) e = atoi(e_s);
+
+        // show change password form
+        add_user(user, session, e);
+    } else if (strcmp(section, "editu") == 0 && role == 0)
+    {
+        cout << "<h2>Edit user</h2>";
+        
+        // get query variables
+        user = web_get_from_query_string(qs, (char*)"u");
+        char *session_s = web_get_from_query_string(qs, (char*)"s");
+        if (session_s) session = atoi(session_s);
+        char *e_s = web_get_from_query_string(qs, (char*)"e");
+        if (e_s) e = atoi(e_s);
+
+        // show change password form
+        edit_user(user, session, e);
     }
 
     // Back to home section
@@ -87,6 +135,8 @@ int main()
         qs = verify_session(&session, user);
 
         section = web_get_from_query_string(qs, (char*)"section");
+        user = web_get_from_query_string(qs, (char*)"u");
+        role = get_role(user);
         if (section)
         {
             // show elements for the current section
