@@ -18,6 +18,14 @@ int main()
 
     printf("<body>");
 
+    // check if logged in
+    if (pg_check_session(user, atoi(session), SESSION_LIFETIME) != 1)
+    {
+        printf("<meta http-equiv=\"refresh\" content=\"0; URL=/\" />");
+        printf ("<body>");
+        return 1;
+    }
+
     // check current password
     if (pg_check_pass(user, cpass) == 1)    // password correct
     {
@@ -34,4 +42,6 @@ int main()
     }
 
     printf("</body>");
+
+    return 0;
 }

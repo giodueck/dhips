@@ -43,30 +43,34 @@ char **verify_session(int *session, char *user)
     return qs;
 }
 
-// int verify_session(int session, char *user)
+// char **verify_session(char **qs, int session, char *user)
 // {
+//     // page was incorrectly accessed, redirect to login
+//     if (!user)
+//     {
+//         // no session
+//         cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login\" />";
+//     }
+
 //     // check database for session
 //     int res = pg_check_session(user, session, SESSION_LIFETIME);
 //     if (res == -1)  // misc error
 //     {
 //         cout << "<p>An error occurred, check the error log</p>";
-//         return 1;
 //     } else if (res == 0)
 //     {
+//         // no session found
 //         cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?u=" << user << "\" />";
-//         return 1;   // no session found
 //     } else if (res == 2)
 //     {
+//         // session expired
 //         cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?e=3&u=" << user << "\" />";
-//         return 1;   // session expired
 //     } else if (res == 3)
 //     {
+//         // session ended
 //         cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?e=4&u=" << user << "\" />";
-//         return 1;   // session ended
-//     } else // if (res == 1)
-//     {
-//         return 0;   // session found
 //     }
+//     return qs;
 // }
 
 int login()
