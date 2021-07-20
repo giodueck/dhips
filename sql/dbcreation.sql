@@ -1,8 +1,17 @@
 create table login (
-    username varchar(8) not null,
+    username varchar(16) not null,
     pwd varchar(128) not null,
+    "role" varchar(16) not null,
     constraint login_pkey primary key (username)
 );
+
+insert into login values ('admin',
+    '$6$0nLTuzHmB9pJSGFn$KrLO2VIj7ZFhlAtyUnDLgY0nZvjCq1UVZnO8cvZrgvOxp9mxZdS9UDM5AmkWogJMX11pXifQ9KV5dak7dVlW//',
+    'admin'),
+    ('user', '$6$0nLTuzHmB9pJSGFn$KrLO2VIj7ZFhlAtyUnDLgY0nZvjCq1UVZnO8cvZrgvOxp9mxZdS9UDM5AmkWogJMX11pXifQ9KV5dak7dVlW//',
+    'user'),
+    ('spectator', '$6$0nLTuzHmB9pJSGFn$KrLO2VIj7ZFhlAtyUnDLgY0nZvjCq1UVZnO8cvZrgvOxp9mxZdS9UDM5AmkWogJMX11pXifQ9KV5dak7dVlW//',
+    'spectator');
 
 create table session (
     session_id serial not null,

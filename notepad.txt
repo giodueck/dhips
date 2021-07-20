@@ -6,6 +6,9 @@ TODO:
     - Create ruleset tables, add default ruleset insertion to script
         - define a parent table from which they inherit
     - Create db user for dhips with editing permissions, but no adding tables or creating DBs
+    - Develop main page:
+        - control panel
+        - config pages
 
 Model:
     https://www.researchgate.net/publication/271070098_Host-based_Intrusion_Detection_and_Prevention_System_HIDPS
