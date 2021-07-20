@@ -180,6 +180,174 @@ int pg_change_pass(char *user, char *hash)
     return 0;
 }
 
+int pg_add_user(char *username, char *hash, char *role)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    char *rets;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Insert new user
+    sprintf(cmd, "INSERT INTO public.login VALUES ('%s', '%s', '%s');", username, hash, role);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    rets = PQcmdStatus(res);
+    if (strcmp(rets, "INSERT 0 1") != 0)
+    {
+        fprintf(stderr, "dhips//pgsql: no data inserted: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return 1;
+    }
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+    return 0;
+}
+
+int pg_delete_user(char *username)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    char *rets;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Insert new user
+    sprintf(cmd, "DELETE FROM public.login WHERE username = '%s';", username);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    // check if delete was successful
+    rets = PQcmdStatus(res);
+    if (strcmp(rets, "DELETE 1") != 0)
+    {
+        fprintf(stderr, "dhips//pgsql: no data deleted: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+    return 0;
+}
+
+int pg_get_role(char *user)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    char *rets;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Retrieve role
+    sprintf(cmd, "SELECT \"role\" FROM public.login WHERE username = '%s';", user);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    int rows = PQntuples(res);
+    if (rows)
+    {
+        rets = PQgetvalue(res, 0, 0);
+    }
+    PQclear(res);
+
+    // determine role
+    if (strcmp(rets, "admin") == 0)
+        ret = 0;
+    else if (strcmp(rets, "user") == 0)
+        ret = 1;
+    else if (strcmp(rets, "spectator") == 0)
+        ret = 2;
+    else
+        ret = 3;
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}
+
 int pg_check_session(char *username, int session, int lifetime)
 {
     PGconn     *conn;

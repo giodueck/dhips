@@ -23,6 +23,17 @@ int pg_check_pass(char *user, char *password);
 //  Returns 0 if successful, other if not
 int pg_change_pass(char *user, char *hash);
 
+// Adds a user.
+//  Returns 0 if successful, other if not
+int pg_add_user(char *username, char *hash, char *role);
+
+// Removes a user.
+//  Returns 0 if successful, other if not
+int pg_delete_user(char *username);
+
+// Returns 0 if user is 'admin', 1 if user is 'user', 2 if user is 'spectator', 3 if none, and other if error
+int pg_get_role(char *user);
+
 // Checks if a session for user exists and is valid. If one is found, the expiration
 // timestamp is updated to lifetime minutes + current time and the return value is 1.
 // If no active session was found returns 0, if an expired session was found returns 2

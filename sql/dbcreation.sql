@@ -1,8 +1,17 @@
+create table "role" (
+    "role" varchar(16) not null,
+    constraint role_pkey primary key ("role")
+);
+
+insert into "role" values
+    ('admin'), ('user'), ('spectator');
+
 create table login (
     username varchar(16) not null,
     pwd varchar(128) not null,
     "role" varchar(16) not null,
-    constraint login_pkey primary key (username)
+    constraint login_pkey primary key (username),
+    constraint role_fkey foreign key ("role") references "role"("role")
 );
 
 insert into login values ('admin',
