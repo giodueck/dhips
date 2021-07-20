@@ -8,7 +8,7 @@
 
 using namespace std;
 
-int verify_session(int *session, char *user)
+char **verify_session(int *session, char *user)
 {
     // get username from query string
     char **qs = web_get_query_string();
@@ -18,8 +18,8 @@ int verify_session(int *session, char *user)
     // page was incorrectly accessed, redirect to login
     if (!user)
     {
+        // no session
         cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login\" />";
-        return 1;   // no session
     }
 
     // check database for session
@@ -27,23 +27,20 @@ int verify_session(int *session, char *user)
     if (res == -1)  // misc error
     {
         cout << "<p>An error occurred, check the error log</p>";
-        return 1;
     } else if (res == 0)
     {
+        // no session found
         cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?u=" << user << "\" />";
-        return 1;   // no session found
     } else if (res == 2)
     {
+        // session expired
         cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?e=3&u=" << user << "\" />";
-        return 1;   // session expired
     } else if (res == 3)
     {
+        // session ended
         cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?e=4&u=" << user << "\" />";
-        return 1;   // session ended
-    } else // if (res == 1)
-    {
-        return 0;   // session found
     }
+    return qs;
 }
 
 // int verify_session(int session, char *user)
@@ -114,6 +111,39 @@ int login()
         // html should prevent this
 		cout << "<p>No username given</p>";
 	}
+
+    return 0;
+}
+
+int change_passwd(char *user, int session, int e)
+{
+    if (!user) // whose?
+        return -1;
+
+    cout << "<form action=\"/cgi-bin/change_passwd\" method=\"post\">";
+    cout << "<label for=\"cpass\">Current password<br></label>";
+    cout << "<input type=\"password\" name=\"cpass\" required><br>";
+    cout << "<label for=\"npass\">New password<br></label>";
+    cout << "<input type=\"password\" name=\"npass\" required><br><br>";
+
+    cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
+    cout << "<input type=\"hidden\" name=\"session\" value=" << session << ">";
+
+    cout << "<input type=\"submit\" value=\"Update password\">";
+    cout << "</form>";
+
+    if (e)
+    {
+        if (e > 0)
+        {
+            cout << "<p style=\"color:Tomato;\">";
+            cout << "Incorrect password";
+            cout << "</p>";
+        } else
+        {
+            cout << "<p>Password updated!</p>";
+        }
+    }
 
     return 0;
 }

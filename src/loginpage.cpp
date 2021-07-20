@@ -14,18 +14,20 @@ using namespace std;
 void print_head()
 {
     cout << "<head>";
-    cout <<     "<title>DHIPS Login</title>";
+    cout <<     "<title>DHIPS | Login</title>";
     cout << "</head>";
 }
 
 void print_login_form(char *user)
 {
     cout << "<form action=\"/cgi-bin/main\" method=\"post\">\n";
+    cout << "<label for=\"user\">Username<br></label>";
     if (user)
-        cout << "Username<br><input type=\"text\" name=\"user\" value=\"" << user << "\" required><br>\n";
+        cout << "<input type=\"text\" name=\"user\" value=\"" << user << "\" required><br>\n";
     else
-        cout << "Username<br><input type=\"text\" name=\"user\" required><br>\n";
-    cout << "Password<br><input type=\"password\" name=\"password\"><br><br>\n";
+        cout << "<input type=\"text\" name=\"user\" required><br>\n";
+    cout << "<label for=\"password\">Password<br></label>";
+    cout << "<input type=\"password\" name=\"password\"><br><br>\n";
     cout << "<input type=\"submit\" value=\"Log in\">\n";
     cout << "</form>\n";
 }
@@ -59,6 +61,7 @@ int main()
     start_html();
     print_head();
     start_body();
+    printf("<h1>DHIPS | Login</h1>");
     print_login_form(u);
 
     // Print error if there is one

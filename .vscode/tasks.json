@@ -75,6 +75,31 @@
 		},
 		{
 			"type": "cppbuild",
+			"label": "C/C++: g++ build change password page",
+			"command": "/usr/bin/g++",
+			"args": [
+				"-g",
+				"/home/giodueck/vscode/dhips/src/changepasswdpage.c",
+				"/home/giodueck/vscode/dhips/src/web.c",
+				"/home/giodueck/vscode/dhips/src/pgsql.c",
+				"-o",
+				"/home/giodueck/vscode/dhips/cgi-bin/change_passwd",
+				"-I/home/giodueck/vscode/dhips/headers",
+				"-I/usr/include/postgresql",
+				"-lcrypt",
+				"-lpq"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "compiler: /usr/bin/g++"
+		},
+		{
+			"type": "cppbuild",
 			"label": "C/C++: g++ build debug hips",
 			"command": "/usr/bin/g++",
 			"args": [

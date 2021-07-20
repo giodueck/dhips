@@ -19,6 +19,10 @@ int pg_get_hashed_passphrase(char *username, char *dest);
 // pg_get_hashed_passphrase to stderr
 int pg_check_pass(char *user, char *password);
 
+// Updates the stored hashed passfrase pwd for the given user
+//  Returns 0 if successful, other if not
+int pg_change_pass(char *user, char *hash);
+
 // Checks if a session for user exists and is valid. If one is found, the expiration
 // timestamp is updated to lifetime minutes + current time and the return value is 1.
 // If no active session was found returns 0, if an expired session was found returns 2
