@@ -124,7 +124,7 @@ int change_passwd(char *user, int session, int e)
     if (!user) // whose?
         return -1;
 
-    cout << "<form action=\"/cgi-bin/change_passwd\" method=\"post\">";
+    cout << "<form action=\"/cgi-bin/user_mgmt\" method=\"post\">";
     cout << "<label for=\"cpass\">Current password<br></label>";
     cout << "<input type=\"password\" name=\"cpass\" required><br>";
     cout << "<label for=\"npass\">New password<br></label>";
@@ -132,8 +132,9 @@ int change_passwd(char *user, int session, int e)
 
     cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
     cout << "<input type=\"hidden\" name=\"session\" value=" << session << ">";
+    cout << "<input type=\"hidden\" name=\"own\" value=true>";
 
-    cout << "<input type=\"submit\" value=\"Update password\">";
+    cout << "<input type=\"submit\" name=\"action\" value=\"Update password\">";
     cout << "</form>";
 
     if (e)

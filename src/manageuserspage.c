@@ -40,9 +40,43 @@ static void add_user_(char **qs)
     }
 }
 
+static void change_pass_(char **qs)
+{
+    // get query variables
+    char *user = web_get_from_query_string(qs, (char*)"user");
+    char *session = web_get_from_query_string(qs, (char*)"session");
+    char *cpass = web_get_from_query_string(qs, (char*)"cpass");
+    char *npass = web_get_from_query_string(qs, (char*)"npass");
+
+    fprintf(stderr, "dbg: got here");
+
+    // check current password
+    if (pg_check_pass(user, cpass) == 1)    // password correct
+    {
+        // store new hash
+        pg_change_pass(user, crypt(npass, crypt_gensalt("$6$", 0, NULL, 0)));
+
+        // back to main page with confirmation message
+        printf("<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=%s&s=%s&section=pass&e=-1\" />", user, session);
+    } else
+    {
+        // password incorrect
+        // back to main page with error message
+        printf("<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=%s&s=%s&section=pass&e=1\" />", user, session);
+    }
+}
+
 // action: 0 for change pass, 1 for change role
 static void edit_user_(char **qs)
 {
+    // check if changing own password
+    char *own = web_get_from_query_string(qs, (char*)"own");
+    if (own)
+    {
+        change_pass_(qs);
+        return;
+    }
+
     char *user = web_get_from_query_string(qs, (char*)"user");
     char *session = web_get_from_query_string(qs, (char*)"session");
     int res, e;
@@ -118,7 +152,7 @@ static void delete_user_(char **qs)
         printf("<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=%s&s=%s&section=editu&e=3\" />", user, session);
     } else
     {
-        printf("<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=%s&s=%s&section=editu&e=-\" />", user, session);
+        printf("<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=%s&s=%s&section=editu&e=%d\" />", user, session, res);
     }
 }
 
