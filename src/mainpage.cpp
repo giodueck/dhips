@@ -103,7 +103,7 @@ void show_section()
     }
 
     // Back to home section
-    cout << "<br><br><a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "\">Home</a>";
+    cout << "<br><a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "\">Home</a>";
 
     cout << "</body>";
 }

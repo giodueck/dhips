@@ -181,9 +181,8 @@ int add_user(char *user, int session, int e)
 
     cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
     cout << "<input type=\"hidden\" name=\"session\" value=" << session << ">";
-    cout << "<input type=\"hidden\" name=\"action\" value=adduser>";
 
-    cout << "<br><br><input type=\"submit\" value=\"Add user\">";
+    cout << "<br><br><input type=\"submit\" name=\"action\" value=\"Add user\">";
     cout << "</form>";
 
     if (e)
@@ -237,6 +236,13 @@ int edit_user(char *user, int session, int e)
     cout << "<input type=\"radio\" name=\"role\" value=\"spectator\">";
 
     cout << "<br><input type=\"submit\" name=\"action\" value=\"Update role\">";
+
+    // delete user
+    cout << "<p style=\"color:Red;\">";
+    cout << "<br>Danger zone";
+    cout << "</p>";
+    cout << "<input type=\"submit\" name=\"action\" value=\"Delete user\">";
+
     cout << "</form>";
 
     if (e)
@@ -247,6 +253,9 @@ int edit_user(char *user, int session, int e)
         } else if (e == 2)
         {
             cout << "<p>Role changed</p>";
+        } else if (e == 3)
+        {
+            cout << "<p>User deleted</p>";
         } else if (e == -1)
         {
             cout << "<p style=\"color:Tomato;\">";
@@ -256,6 +265,11 @@ int edit_user(char *user, int session, int e)
         {
             cout << "<p style=\"color:Tomato;\">";
             cout << "Role unchanged";
+            cout << "</p>";
+        } else if (e == -3)
+        {
+            cout << "<p style=\"color:Tomato;\">";
+            cout << "No users deleted";
             cout << "</p>";
         } else
         {

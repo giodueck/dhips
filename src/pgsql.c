@@ -149,6 +149,8 @@ int pg_change_pass(char *user, char *hash)
     char cmd[512] = "";
     char buf[BUFSIZ];
 
+    char *rets;
+
     /* Make a connection to the database */
     conn = open_conn();
     if (!conn) return -1;
@@ -169,6 +171,16 @@ int pg_change_pass(char *user, char *hash)
     // Set stderr buffer to be buf
     setbuf(stderr, buf);
     res = PQexec(conn, cmd);
+
+    // check if update was successful
+    rets = PQcmdStatus(res);
+    if (strcmp(rets, "UPDATE 1") != 0)
+    {
+        fprintf(stderr, "dhips//pgsql: no data updated: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -2;
+    }
     PQclear(res);
 
     /* end the transaction */
@@ -186,6 +198,8 @@ int pg_change_role(char *user, char *role)
     PGresult   *res;
     char cmd[512] = "";
     char buf[BUFSIZ];
+
+    char *rets;
 
     /* Make a connection to the database */
     conn = open_conn();
@@ -207,6 +221,16 @@ int pg_change_role(char *user, char *role)
     // Set stderr buffer to be buf
     setbuf(stderr, buf);
     res = PQexec(conn, cmd);
+
+    // check if update was successful
+    rets = PQcmdStatus(res);
+    if (strcmp(rets, "UPDATE 1") != 0)
+    {
+        fprintf(stderr, "dhips//pgsql: no data updated: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -2;
+    }
     PQclear(res);
 
     /* end the transaction */
@@ -293,7 +317,14 @@ int pg_delete_user(char *username)
     }
     PQclear(res);
 
-    // Insert new user
+    // Delete user sessions
+    sprintf(cmd, "DELETE FROM public.session WHERE username = '%s';", username);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+    PQclear(res);
+
+    // Delete user
     sprintf(cmd, "DELETE FROM public.login WHERE username = '%s';", username);
     // Set stderr buffer to be buf
     setbuf(stderr, buf);
@@ -306,7 +337,7 @@ int pg_delete_user(char *username)
         fprintf(stderr, "dhips//pgsql: no data deleted: %s", PQerrorMessage(conn));
         PQclear(res);
         exit_nicely(conn);
-        return -1;
+        return -2;
     }
     PQclear(res);
 

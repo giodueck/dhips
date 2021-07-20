@@ -93,6 +93,35 @@ static void edit_user_(char **qs)
     }
 }
 
+static void delete_user_(char **qs)
+{
+    char *user = web_get_from_query_string(qs, (char*)"user");
+    char *session = web_get_from_query_string(qs, (char*)"session");
+
+    // check if admin
+    if (get_role(user) != 0)
+    {
+        printf("<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=%s&s=%s\" />", user, session);
+        printf ("<body>");
+        return;
+    }
+
+    char *username = web_get_from_query_string(qs, (char*)"u");
+    
+    // add user
+    int res = pg_delete_user(username);
+    if (res == -2) res = -3;
+
+    if (res == 0)
+    {
+        // back to main page with confirmation message
+        printf("<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=%s&s=%s&section=editu&e=3\" />", user, session);
+    } else
+    {
+        printf("<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=%s&s=%s&section=editu&e=-\" />", user, session);
+    }
+}
+
 int main()
 {
     web_print_header();
@@ -113,12 +142,15 @@ int main()
         return 1;
     }
 
-    if (strcmp(action, "adduser") == 0)
+    if (strcmp(action, "Add user") == 0)
     {
         add_user_(qs);
     } else if (strcmp(action, "Update password") == 0 || strcmp(action, "Update role") == 0)
     {
         edit_user_(qs);
+    } else if (strcmp(action, "Delete user") == 0)
+    {
+        delete_user_(qs);
     }
 
     printf("</body>");
