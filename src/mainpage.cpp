@@ -111,7 +111,6 @@ void show_section()
 void show_links()
 {
     // show if role permits it
-    // TODO: pgsql role checking function
 }
 
 int main()

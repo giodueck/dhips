@@ -24,7 +24,7 @@ insert into login values ('admin',
 
 create table session (
     session_id serial not null,
-    username varchar(8) not null,
+    username varchar(16) not null,
     expiration timestamp,
     creation timestamp not null,
     constraint session_pkey primary key (session_id),

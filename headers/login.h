@@ -23,7 +23,7 @@ char **verify_session(int *session, char *user);
 // if not redirects back to login page with an error message for the user
 int login();
 
-// Changes the password for the given user, normally the user logged in
+// Changes the password for the given user
 //  Returns 0 if the password was changed, else returns negatives
 int change_passwd(char *user, int session, int e);
 

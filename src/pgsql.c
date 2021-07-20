@@ -95,7 +95,7 @@ int pg_get_hashed_passphrase(char *username, char *dest)
     {
         // error retrieving data
         dest[0] = '\0';
-        fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
+        fprintf(stderr, "dhips//pgsql pg_get_hashed_passphrase: no data retrieved: %s\n", PQresultErrorMessage(res));
         PQclear(res);
         exit_nicely(conn);
         return 1;
@@ -176,7 +176,7 @@ int pg_change_pass(char *user, char *hash)
     rets = PQcmdStatus(res);
     if (strcmp(rets, "UPDATE 1") != 0)
     {
-        fprintf(stderr, "dhips//pgsql: no data updated: %s", PQerrorMessage(conn));
+        fprintf(stderr, "dhips//pgsql pg_change_pass: no data updated: %s", PQerrorMessage(conn));
         PQclear(res);
         exit_nicely(conn);
         return -2;
@@ -226,7 +226,7 @@ int pg_change_role(char *user, char *role)
     rets = PQcmdStatus(res);
     if (strcmp(rets, "UPDATE 1") != 0)
     {
-        fprintf(stderr, "dhips//pgsql: no data updated: %s", PQerrorMessage(conn));
+        fprintf(stderr, "dhips//pgsql pg_change_role: no data updated: %s", PQerrorMessage(conn));
         PQclear(res);
         exit_nicely(conn);
         return -2;
@@ -276,7 +276,7 @@ int pg_add_user(char *username, char *hash, char *role)
     rets = PQcmdStatus(res);
     if (strcmp(rets, "INSERT 0 1") != 0)
     {
-        fprintf(stderr, "dhips//pgsql: no data inserted: %s", PQerrorMessage(conn));
+        fprintf(stderr, "dhips//pgsql pg_add_user: no data inserted: %s", PQerrorMessage(conn));
         PQclear(res);
         exit_nicely(conn);
         return 1;
@@ -334,7 +334,7 @@ int pg_delete_user(char *username)
     rets = PQcmdStatus(res);
     if (strcmp(rets, "DELETE 1") != 0)
     {
-        fprintf(stderr, "dhips//pgsql: no data deleted: %s", PQerrorMessage(conn));
+        fprintf(stderr, "dhips//pgsql pg_delete_user: no data deleted: %s", PQerrorMessage(conn));
         PQclear(res);
         exit_nicely(conn);
         return -2;
@@ -384,7 +384,7 @@ int pg_get_role(char *user)
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
         // error retrieving data
-        fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
+        fprintf(stderr, "dhips//pgsql pg_get_role: no data retrieved: %s\n", PQresultErrorMessage(res));
         PQclear(res);
         exit_nicely(conn);
         return -1;
@@ -415,6 +415,85 @@ int pg_get_role(char *user)
     PQfinish(conn);
 
     return ret;
+}
+
+int pg_get_users(char ***dest)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    char *rets;
+    int n;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Retrieve all users
+    sprintf(cmd, "SELECT username FROM public.login;");
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql pg_get_users: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    // allocate space for array
+    n = PQntuples(res);
+    *dest = (char**)malloc(sizeof(char*) * n);
+    if (!dest)
+    {
+        // malloc error
+        fprintf(stderr, "dhips//pgsql pg_get_users: memory allocation failed\n");
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        // allocate space for and store usernames
+        rets = PQgetvalue(res, i, 0);
+        (*dest)[i] = (char*)malloc(strlen(rets) + 1);
+        if (!(*dest)[i])
+        {
+            // malloc error
+            fprintf(stderr, "dhips//pgsql pg_get_users: memory allocation failed\n");
+            PQclear(res);
+            exit_nicely(conn);
+            return -1;
+        }
+        strcpy((*dest)[i], rets);
+    }
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return n;
 }
 
 int pg_check_session(char *username, int session, int lifetime)
@@ -454,7 +533,7 @@ int pg_check_session(char *username, int session, int lifetime)
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
         // error retrieving data
-        fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
+        fprintf(stderr, "dhips//pgsql pg_check_session: no data retrieved: %s\n", PQresultErrorMessage(res));
         PQclear(res);
         exit_nicely(conn);
         return -1;
@@ -482,7 +561,7 @@ int pg_check_session(char *username, int session, int lifetime)
         if (PQresultStatus(res) != PGRES_TUPLES_OK)
         {
             // error retrieving data
-            fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
+            fprintf(stderr, "dhips//pgsql pg_check_session: no data retrieved: %s\n", PQresultErrorMessage(res));
             PQclear(res);
             exit_nicely(conn);
             return -1;
@@ -549,7 +628,7 @@ int pg_create_session(char *username, int lifetime)
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
         // error retrieving data
-        fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
+        fprintf(stderr, "dhips//pgsql pg_create_session: no data retrieved: %s\n", PQresultErrorMessage(res));
         PQclear(res);
         exit_nicely(conn);
         return -1;
@@ -636,7 +715,7 @@ int pg_get_alarm_severity(int alarm_id)
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
         // error retrieving data
-        fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
+        fprintf(stderr, "dhips//pgsql pg_get_alarm_severity: no data retrieved: %s\n", PQresultErrorMessage(res));
         PQclear(res);
         exit_nicely(conn);
         return -1;
@@ -693,7 +772,7 @@ char *pg_get_alarm_description(int alarm_id)
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
         // error retrieving data
-        fprintf(stderr, "dhips//pgsql: no data retrieved: %s\n", PQresultErrorMessage(res));
+        fprintf(stderr, "dhips//pgsql pg_get_alarm_description: no data retrieved: %s\n", PQresultErrorMessage(res));
         PQclear(res);
         exit_nicely(conn);
         return NULL;
@@ -750,7 +829,7 @@ int pg_check_db()
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
         // error retrieving data
-        fprintf(stderr, "dhips//pgsql: error: %s\n", PQresultErrorMessage(res));
+        fprintf(stderr, "dhips//pgsql pg_check_db: error: %s\n", PQresultErrorMessage(res));
         PQclear(res);
         exit_nicely(conn);
         return -1;
@@ -761,7 +840,7 @@ int pg_check_db()
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
         // error retrieving data
-        fprintf(stderr, "dhips//pgsql: error: %s\n", PQresultErrorMessage(res));
+        fprintf(stderr, "dhips//pgsql pg_check_db: error: %s\n", PQresultErrorMessage(res));
         PQclear(res);
         exit_nicely(conn);
         return -1;
@@ -772,7 +851,7 @@ int pg_check_db()
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
         // error retrieving data
-        fprintf(stderr, "dhips//pgsql: error: %s\n", PQresultErrorMessage(res));
+        fprintf(stderr, "dhips//pgsql pg_check_db: error: %s\n", PQresultErrorMessage(res));
         PQclear(res);
         exit_nicely(conn);
         return -1;

@@ -38,6 +38,10 @@ int pg_delete_user(char *username);
 // Returns 0 if user is 'admin', 1 if user is 'user', 2 if user is 'spectator', 3 if none, and other if error
 int pg_get_role(char *user);
 
+// Retrieves all usernames from the database into dest. Each item should be freed after using
+//  Returns the number of users found, negative if error
+int pg_get_users(char ***dest);
+
 // Checks if a session for user exists and is valid. If one is found, the expiration
 // timestamp is updated to lifetime minutes + current time and the return value is 1.
 // If no active session was found returns 0, if an expired session was found returns 2

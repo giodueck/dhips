@@ -2,6 +2,7 @@
 #include <string>
 #include <cstring>
 #include <unistd.h>
+#include <stdlib.h>
 #include "login.h"
 #include "web.h"
 #include "pgsql.h"
@@ -121,9 +122,6 @@ int login()
 
 int change_passwd(char *user, int session, int e)
 {
-    if (!user) // whose?
-        return -1;
-
     cout << "<form action=\"/cgi-bin/user_mgmt\" method=\"post\">";
     cout << "<label for=\"cpass\">Current password<br></label>";
     cout << "<input type=\"password\" name=\"cpass\" required><br>";
@@ -165,9 +163,6 @@ int get_role(char *user)
 
 int add_user(char *user, int session, int e)
 {
-    if (!user) // whose?
-        return -1;
-
     cout << "<form action=\"/cgi-bin/user_mgmt\" method=\"post\">";
     cout << "<label for=\"nuser\">Username<br></label>";
     cout << "<input type=\"text\" name=\"nuser\" required><br>";
@@ -209,14 +204,31 @@ int add_user(char *user, int session, int e)
 
 int edit_user(char *user, int session, int e)
 {
-    if (!user) // whose?
-        return -1;
-
     cout << "<form action=\"/cgi-bin/user_mgmt\" method=\"post\">";
 
-    // Username
-    cout << "<label for=\"u\">Username<br></label>";
-    cout << "<input type=\"text\" name=\"u\" required><br><br>";
+    // select user
+    // cout << "<label for=\"u\">Username<br></label>";
+    // cout << "<input type=\"text\" name=\"u\" required><br><br>";
+
+    char **users;
+    int n_users = pg_get_users(&users);
+
+    if (n_users < 0)
+    {
+        cout << "</form>";
+        cout << "<p>An error occurred</p>";
+        return -1;
+    }
+    
+    cout << "<p>Select user:</p>";
+    for (int i = 0; i < n_users; i++)
+    {
+        cout << "<input type=\"radio\" name=\"u\" value=\"" << users[i] << "\" required>";
+        cout << "<label for=\"" << users[i] << "\">" << users[i] << "</label><br>";
+        free(users[i]);
+    }
+    free(users);
+    cout << "<br>";
 
     // hidden input
     cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
