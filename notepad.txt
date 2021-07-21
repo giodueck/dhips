@@ -1,5 +1,4 @@
 TODO:
-    - Add user editing
     - Add instalation routine to help with testing
     - Create alarm table, add alarm insertion to script
     - Create ruleset tables, add default ruleset insertion to script
