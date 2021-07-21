@@ -4,6 +4,41 @@
                  en el archivo /etc/passwd o /etc/shadow.
 */
 
-// TODO: finish user handling, create dhips user with owner permissions on dhips (the database), change connection string
-// TODO: create config in db for the program, e.g. how frequently modules perform scans
-//       applying the configs takes a restart, so that can't be done from the web
+#ifndef MOD_I_H
+#define MOD_I_H
+
+#include "module.h"
+#include "monitor.h"
+#include "alarms.h"
+
+#define MONITOR_LOG "/var/log/hips/monitor.log"
+#define MONITOR_OUT "/var/log/hips/monitor.out"
+
+class ModuleI: public Module
+{
+    private:
+
+    class DetectorI: public Detector
+    {
+        private:
+
+        public:
+
+        Monitor *sysFileMonitor;
+        
+        DetectorI();
+
+        int setup();
+        int scan();
+    } detector;
+
+    public: 
+
+    // Constructor
+    ModuleI();
+
+    void setup();
+    void run();
+};
+
+#endif // MOD_I_H

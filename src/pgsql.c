@@ -25,7 +25,7 @@ static PGconn *open_conn()
     file = fopen("/var/www/config/connstring", "r");    // connstring is restricted to root:www-data, apache should be able to access it
     if (!file)
     {
-        fprintf(stderr, "dhips//pgsql: could not open /var/www/config/connstring: %s", strerror(errno));
+        fprintf(stderr, "dhips//pgsql: could not open /var/www/config/connstring: %s\n", strerror(errno));
         return NULL;
     }
     conninfo = (char*)malloc(sizeof(char) * BUFSIZ);
@@ -39,7 +39,7 @@ static PGconn *open_conn()
     /* Check to see that the backend connection was successfully made */
     if (PQstatus(conn) != CONNECTION_OK)
     {
-        fprintf(stderr, "dhips//pgsql: connection to database failed: %s", PQerrorMessage(conn));
+        fprintf(stderr, "dhips//pgsql: connection to database failed: %s\n", PQerrorMessage(conn));
         exit_nicely(conn);
         return NULL;
     }
@@ -48,7 +48,7 @@ static PGconn *open_conn()
     res = PQexec(conn, "SELECT pg_catalog.set_config('search_path', '', false)");
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
-        fprintf(stderr, "dhips//pgsql: SET failed: %s", PQerrorMessage(conn));
+        fprintf(stderr, "dhips//pgsql: SET failed: %s\n", PQerrorMessage(conn));
         PQclear(res);
         exit_nicely(conn);
         return NULL;
@@ -78,7 +78,7 @@ int pg_get_hashed_passphrase(char *username, char *dest)
     res = PQexec(conn, "BEGIN");
     if (PQresultStatus(res) != PGRES_COMMAND_OK)
     {
-        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s\n", PQerrorMessage(conn));
         PQclear(res);
         exit_nicely(conn);
         return -1;
@@ -856,6 +856,67 @@ int pg_check_db()
         exit_nicely(conn);
         return -1;
     }
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}
+
+int pg_get_monitor_filename(int index, int type, char **dest)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+    
+    char *fullfilename;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Retrieve fullfilename
+    sprintf(cmd, "SELECT fullfilename, monitor_id FROM public.monitor WHERE monitor_id > %d AND type = %d LIMIT 1;", index, type);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql pg_get_monitor_filename: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    // copy 
+    int rows = PQntuples(res);
+    if (rows > 0)
+    {
+        fullfilename = PQgetvalue(res, 0, 0);
+        *dest = (char*)malloc(strlen(fullfilename) + 1);
+        strcpy(*dest, fullfilename);
+        ret = atoi(PQgetvalue(res, 0, 1));
+    } else ret = 0;
     PQclear(res);
 
     /* end the transaction */

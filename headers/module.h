@@ -6,19 +6,17 @@
 
 class Module
 {
-    private:
-    Detector detector;
-    Preventer preventer;
-
     public:
     
-    Module(){}
+    Module();
+
+    /* This function is called once at the start of the program */
+    void setup();
 
     /* This function is called periodically and runs a detector scan and a preventer act,
        but the latter is dependent on the former.
     */
-    virtual void run();
-
+    void run();
 };
 
 #endif // MODULE_H

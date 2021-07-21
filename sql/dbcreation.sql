@@ -37,3 +37,15 @@ create table alarm (
     "description" varchar(512),
     constraint alarm_pkey primary key (alarm_id)
 );
+
+create table monitor (
+    monitor_id serial not null,
+    fullfilename text not null,
+    type int not null,
+    active boolean not null,
+    constraint monitor_pkey primary key (monitor_id)
+);
+
+insert into monitor (fullfilename, type, active) values
+    ('/etc/passwd', 1, true),
+    ('/etc/shadow', 1, true);

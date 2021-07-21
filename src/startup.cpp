@@ -14,8 +14,8 @@ int startup()
     else
     {
         f = fopen("/var/log/hips/alarmas.log", "w");
-        fprintf(f, "# timestamp :: modulo y codigo de alarma: descripcion :: IP\n");
-        fprintf(f, "# [dd]/[mm]/[yyyy] [hh]:[mm]:[ss] :: [modulo(romano)].[codigo(numero)]: [texto] :: [IPv4/localhost]\n\n");
+        fprintf(f, "# timestamp :: modulo y codigo de alarma: descripcion :: IP :: Observaciones\n");
+        fprintf(f, "# [dd]/[mm]/[yyyy] [hh]:[mm]:[ss] :: [modulo(romano)].[codigo(numero)]: [texto] :: [IPv4/localhost] :: [texto]\n\n");
         fclose(f);
     }
 

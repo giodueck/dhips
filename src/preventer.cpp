@@ -34,3 +34,9 @@ int Preventer::log(const char *msg)
 {
     return this->log(this->module.c_str(), msg);
 }
+
+int Preventer::act(int action)
+{
+    printf("Preventer::act() overloading didn't work\n");
+    return -1;
+}

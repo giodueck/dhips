@@ -18,6 +18,14 @@
 // Space to store at least 100 events
 #define EVENT_BUFSIZE (100 * sizeof(struct inotify_event) + NAME_MAX + 1)
 
+// Stores information about an event
+struct MonitorEvent
+{
+    uint32_t mask;
+    uint32_t cookie;
+    std::string filename;
+};
+
 class Monitor
 {
     private:
@@ -51,6 +59,8 @@ class Monitor
     int read_();
 
     public:
+
+    Monitor();
 
     // Constructor
     Monitor(const char *module);
@@ -89,7 +99,7 @@ class Monitor
     // Attempts to read all available events into events. The events are stored in an internal buffer that is overwritten
     // every time this function is called.
     //  Returns the number of events read
-    int extractEvents(std::vector<struct inotify_event*> &events);
+    int extractEvents(std::vector<struct MonitorEvent> &events, std::string logfile);
 };
 
 #endif // MONITOR_H

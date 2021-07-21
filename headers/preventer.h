@@ -32,7 +32,7 @@ class Preventer
     /* This function is called to act upon an alarm, action may be used to differentiate between multiple
        different possibilities.
     */
-    virtual int act(int action = 0);
+    int act(int action = 0);
 };
 
 #endif // PREVENTER_H

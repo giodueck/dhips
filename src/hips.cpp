@@ -1,20 +1,34 @@
 #include <iostream>
-#include "module.h"
+#include "modules.h"
 #include "startup.h"
+#include "pgsql.h"
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
-    Detector alarm = Detector();
-    Preventer preventer = Preventer();
-
-    // Startup procedure
+    /* Startup procedures */
     int s = startup();
 
     // test code
-    alarm.log("XVII", 12345, "localhost");
-    alarm.log(12345, "localhost");
-    // alarm.log("XVII", 1234, "localhost");
-    // preventer.log("XVII", "This is a text description");
+
+
+    // create module instances
+    ModuleI mod_i = ModuleI();
+
+    // initialize modules
+    mod_i.setup();
+
+    // while loop
+    while (1)
+    {
+        // run module scans
+        mod_i.run();
+        
+        // sleep a little
+        sleep(2);
+        cout << ".\n";
+    }
 
     return 0;
 }

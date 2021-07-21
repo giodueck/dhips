@@ -5,10 +5,11 @@
 #include <time.h>
 #include <stdlib.h>
 #include <iostream>
+#include <cstring>
 
 using namespace std;
 
-int Detector::log(const char *module, int id, const char *location)
+int Detector::log(const char *module, int id, const char *location, const char *msg)
 {
     char *description = NULL;
     int severity = 0, res;
@@ -49,8 +50,8 @@ int Detector::log(const char *module, int id, const char *location)
     // write to log
     unixtime = time(NULL);
     ts = localtime(&unixtime);
-    fprintf(f, "%02d/%02d/%04d %02d:%02d:%02d :: %s.%d: %s\t:: %s\n",
-        ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module, id, description, location);
+    fprintf(f, "%02d/%02d/%04d %02d:%02d:%02d :: %s.%d: %s\t:: %s\t:: %s\n",
+        ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module, id, description, location, (strlen(msg)) ? msg : "");
 
     // close file and free description
     fclose(f);
@@ -58,10 +59,10 @@ int Detector::log(const char *module, int id, const char *location)
     return severity;
 }
 
-int Detector::log(int id, const char *location)
+int Detector::log(int id, const char *location, const char *msg)
 {
     if (module.length())
-        return this->log(this->module.c_str(), id, location);
+        return this->log(this->module.c_str(), id, location, msg);
     else 
     {
         char msg[128];
@@ -69,4 +70,16 @@ int Detector::log(int id, const char *location)
         dhips_perror_no_errno(msg);
         return -1;
     }
+}
+
+int Detector::setup()
+{
+    cout << "Detector::setup() overloading didn't work\n";
+    return -1;
+}
+
+int Detector::scan()
+{
+    cout << "Detector::scan() overloading didn't work\n";
+    return -1;
 }

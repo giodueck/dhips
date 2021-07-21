@@ -65,7 +65,7 @@ HIDPS
 - alarm types:
     - notice/aviso: reporting of regular activity
     - important/importante: reporting of important activity
-    - warning/advertencia: reporting of suspicious activity, take note
+    - warning/advertencia: reporting of suspicious or dangerous activity, take note
     - alert/alerta: reporting of dangerous activity, take action
 - warnings will cause the system to log an event into a watchlist, which will make less suspicious but related events
     also show up as warnings. Repeated warnings will escalate to alerts.
@@ -74,9 +74,8 @@ HIDPS
 
 List and description of tasks/modules:
 i:      IDS:
-            important: changes to binaries and system files, new users
-            warning: changes to system binaries and system files
-            important: password change
+            important: changes to system files
+            warning: changes to system binaries and deletion of system files
 ii:     IDS:
             regular: user connected from localhost
             important: user connected remotely

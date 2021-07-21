@@ -64,4 +64,9 @@ int pg_get_alarm_severity(int alarm_id);
 //  Returns description if successful, NULL if not
 char *pg_get_alarm_description(int alarm_id);
 
+// Copies the first filename with monitor_id > index and the given type into dest.
+// dest will be malloced, free after done.
+//  Returns the monitor_id of the monitor item if found, 0 if none found, and negative if errors occur
+int pg_get_monitor_filename(int index, int type, char **dest);
+
 #endif // PGSQL_H

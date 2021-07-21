@@ -14,6 +14,17 @@ Monitor::Monitor(const char *module)
     mask = IN_MODIFY | IN_DELETE_SELF;
 }
 
+Monitor::Monitor()
+{
+    this->module = string("").c_str();
+    watchNames = vector<string>();
+    notifyfd = -1;
+    n = -1;
+    p = NULL;
+    pid = -1;
+    mask = IN_MODIFY | IN_DELETE_SELF;
+}
+
 bool Monitor::addWatch(const string filename)
 {
     n = watchNames.size();
@@ -140,7 +151,7 @@ int Monitor::start(string logfile, string outfile)
     // monitor
     struct inotify_event *event;
     FILE *tmpfd;
-    FILE *logfd = fopen(log.c_str(), "a");
+    FILE *logfd = fopen(log.c_str(), "w");
     while (1)
     {
         n = read(notifyfd, eventBuf, EVENT_BUFSIZE);
@@ -152,8 +163,8 @@ int Monitor::start(string logfile, string outfile)
             // increment p manually because of variable struct inotify_event size
             p += sizeof(struct inotify_event) + event->len;
             // log events
-            if (event->mask & IN_MODIFY) fprintf(logfd, "%s was modified\n", watchedNames[event->wd]);
-            if (event->mask & IN_DELETE_SELF) fprintf(logfd, "%s was deleted\n", watchedNames[event->wd]);
+            if (event->mask & IN_MODIFY) fprintf(logfd, "IN_MODIFY;%s\n", watchedNames[event->wd]);
+            if (event->mask & IN_DELETE_SELF) fprintf(logfd, "IN_DELETE_SELF%s\n", watchedNames[event->wd]);
             fflush(logfd);
         }
     }
@@ -197,16 +208,45 @@ bool Monitor::eventAvailable()
     return (p < eventBuf + n);
 }
 
-int Monitor::extractEvents(vector<struct inotify_event*> &events)
+int Monitor::extractEvents(vector<struct MonitorEvent> &events, string logfile)
 {
-    // check if buffer has events, otherwise try to read from notifyfd
-    // Loop over events
+    // read the log file
     int i;
-    for (i = 0, p = eventBuf; p < eventBuf + n; i++)
+    char buf[BUFSIZ];
+    char *tok;
+    struct MonitorEvent event;
+    FILE *log = fopen(logfile.c_str(), "r");
+    if (!log)
     {
-        events.push_back((struct inotify_event*)p);
-        // increment p manually because of variable struct inotify_event size
-        p += sizeof(struct inotify_event) + events[i]->len;
+        char msg[128];
+        sprintf(msg, "%s: could not open %s", module, logfile.c_str());
+        dhips_perror(msg);
+        return -1;
     }
+
+    // read log
+    while (fgets(buf, BUFSIZ, log) != NULL)
+    {
+        tok = strtok(buf, ";\n");
+        
+        // event mask
+        event.mask = 0;
+        if (strcmp(tok, "IN_MODIFY") == 0)
+            event.mask = IN_MODIFY;
+        else if (strcmp(tok, "IN_DELETE_SELF") == 0)
+            event.mask = IN_DELETE_SELF;
+        
+        // filename
+        tok = strtok(NULL, ";\n");
+        event.filename = string(tok);
+
+        // cookie is there in case i ever need it
+        event.cookie = 0;
+
+        // add event to events
+        events.push_back(event);
+    }
+
+    fclose(log);
     return i;
 }

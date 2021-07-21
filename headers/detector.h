@@ -8,13 +8,12 @@ enum AlarmType { notice, important, warning, alert };
 
 class Detector
 {
-    private:
+    protected:
         const char *filename = "/var/log/hips/alarmas.log";
-        const std::string module;
+        std::string module;
+        Preventer *preventer;
 
     public:
-    
-    Detector(){}
 
     /* Logs an alarm in alarmas.log along with a timestamp (this version takes in the module instead
        of using the private variable).
@@ -24,21 +23,24 @@ class Detector
         P:  const char *module: roman numeral in the range I-X
             int id: unique identifier of alarm
             char *location: the IP address that originated the alarm, or localhost
+            char *msg: an additional optional message or observation
     */
-    int log(const char *module, int id, const char *location);
+    int log(const char *module, int id, const char *location, const char *msg = NULL);
 
     /* Logs an alarm in alarmas.log along with a timestamp.
        The id is used to recover the description of the alarm to add to the log.
         R: int corresponding to an enum AlarmType for the alarm if successful, negatives otherwise
         P:  int id: unique identifier of alarm
             char *location: the IP address that originated the alarm, or localhost
+            char *msg: an additional optional message or observation
     */
-    int log(int id, const char *location);
+    int log(int id, const char *location, const char *msg = NULL);
+
+    /* This function is called once at the start of the program */
+    int setup();
 
     /* This function is called periodically */
-    virtual int scan();
-
-    // TODO: function to get all config from db
+    int scan();
 };
 
 #endif // DETECTOR_H
