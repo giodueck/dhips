@@ -63,20 +63,6 @@ int ModuleII::DetectorII::setup()
     }
     fclose(log_file);
 
-    // // testing code
-    // for (int i = 0; i < baseline.size(); i++)
-    // {
-        // unsigned char bytes[4];
-
-        // bytes[0] = data.ut_addr_v6[0] & 0xFF;
-        // bytes[1] = (data.ut_addr_v6[0] >> 8) & 0xFF;
-        // bytes[2] = (data.ut_addr_v6[0] >> 16) & 0xFF;
-        // bytes[3] = (data.ut_addr_v6[0] >> 24) & 0xFF;
-    //     printf("Read a record, User : %s\n", data.ut_user);
-    //     printf("               Line : %s\n", data.ut_line);
-    //     printf("               IP   : %x.%x.%x.%x\n", (unsigned char)bytes[0], (unsigned char)bytes[1], (unsigned char)bytes[2], (unsigned char)bytes[3]);
-    // }
-
     return 0;
 }
 
@@ -85,6 +71,8 @@ int ModuleII::DetectorII::scan()
     struct utmpx data;
     FILE *log_file = fopen(_PATH_UTMP, "r");
     memset(&data, 0, sizeof(struct utmpx));
+
+    bool changed = false;
 
     while(fread(&data, sizeof(struct utmpx), 1, log_file) == 1)
     {
@@ -107,9 +95,15 @@ int ModuleII::DetectorII::scan()
             {
                 log(ALARM_II_USER_LOGGED_IN, "localhost");
             }
+            changed = true;
         }
     }
     fclose(log_file);
+
+    if (changed)
+    {
+        setup();
+    }
 
     return 0;
 }

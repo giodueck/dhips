@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
     {
         // run module scans
         mod_i.run();
+        mod_ii.run();
         
         // sleep a little
         sleep(2);
