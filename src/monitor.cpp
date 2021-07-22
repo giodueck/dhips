@@ -193,7 +193,10 @@ int Monitor::start(string logfile, string outfile)
             p += sizeof(struct inotify_event) + event->len;
             // log events
             if (event->mask & IN_MODIFY) fprintf(logfd, "IN_MODIFY;%s\n", watchedNames[event->wd]);
-            if (event->mask & IN_DELETE_SELF) fprintf(logfd, "IN_DELETE_SELF;%s\n", watchedNames[event->wd]);
+            if (event->mask & IN_DELETE_SELF)
+            {
+                fprintf(logfd, "IN_DELETE_SELF;%s\n", watchedNames[event->wd]);
+            }
             fflush(logfd);
         }
     }

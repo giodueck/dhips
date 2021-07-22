@@ -54,6 +54,7 @@ class Monitor
     // watched names indexed by their watchfd
     char watchedNames[100][NAME_MAX + 1];
     int nWatchedNames;
+    int deleted[100];
 
     public:
 
@@ -96,8 +97,7 @@ class Monitor
     // Returns true if a new event is readable, false if not
     bool eventAvailable();
 
-    // Attempts to read all available events into events. The events are stored in an internal buffer that is overwritten
-    // every time this function is called.
+    // Attempts to read all available events into events.
     //  Returns the number of events read
     int extractEvents(std::vector<struct MonitorEvent> &events, std::string logfile);
 };

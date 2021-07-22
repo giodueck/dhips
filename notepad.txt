@@ -1,11 +1,10 @@
 TODO:
     - Add instalation routine to help with testing
     - Create alarm table, add alarm insertion to script
-    - Create ruleset tables, add default ruleset insertion to script
-        - define a parent table from which they inherit
     - Develop main page:
         - control panel
         - config pages
+    - Add loading bar
 
 Model:
     https://www.researchgate.net/publication/271070098_Host-based_Intrusion_Detection_and_Prevention_System_HIDPS
@@ -19,8 +18,6 @@ Installation
 - create config files with 740 permissions and root:www-data owner
     connstring: dbname=dhips user=postgres password=postgres
 - create /var/log/hips
-- install auditd: yum install audit
-    start on boot: sudo chkconfig auditd on
 
 Manual
 

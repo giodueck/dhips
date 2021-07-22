@@ -22,6 +22,8 @@ int ModuleI::DetectorI::setup()
     char *dest;
 
     // get all monitoring filenames
+    cout << "Adding watches";
+    fflush(stdout);
     do
     {
         // system files
@@ -39,7 +41,11 @@ int ModuleI::DetectorI::setup()
             binMonitor->addWatch(string(dest));
         }
         // possible mem leak with dest
+
+        cout << ".";
+        fflush(stdout);
     } while (i > 0 || j > 0);
+    cout << endl;
 
     // start monitoring
     sysFileMonitor->start(sysFileMonitorFilename + ".log", sysFileMonitorFilename + ".out");
@@ -55,50 +61,11 @@ int ModuleI::DetectorI::scan()
     sysFileMonitor->extractEvents(sfevents, sysFileMonitorFilename + ".log");
     binMonitor->extractEvents(bevents, binMonitorFilename + ".log");
 
-    // process events
-    string msg;
-    // system files
-    while (sfevents.size())
-    {
-        // log an event
-        if (sfevents[0].mask & IN_MODIFY)
-        {
-            msg = "File=" + sfevents[0].filename;
-            log(ALARM_I_FILE_MOD, "localhost", msg.c_str());
-        }
-        if (sfevents[0].mask & IN_DELETE_SELF)
-        {
-            msg = "File=" + sfevents[0].filename;
-            log(ALARM_I_FILE_DEL, "localhost", msg.c_str());
-        }
-
-        // delete the event
-        sfevents.erase(sfevents.begin());
-    }
-
-    // binary files
-    while (bevents.size())
-    {
-        // log an event
-        if (bevents[0].mask & IN_MODIFY)
-        {
-            msg = "File=" + bevents[0].filename;
-            log(ALARM_I_BIN_MOD, "localhost", msg.c_str());
-        }
-        if (bevents[0].mask & IN_DELETE_SELF)
-        {
-            msg = "File=" + bevents[0].filename;
-            log(ALARM_I_BIN_DEL, "localhost", msg.c_str());
-        }
-
-        // delete the event
-        bevents.erase(bevents.begin());
-    }
-
-    // restart monitor in case unavailable files become available, log if it is the case
+    /* Restart monitor in case unavailable files become available, log if it is the case */
     int aux;
-    string auxs;
+    string auxs, msg;
 
+    // System Files
     // record how many files were being watched before stopping
     sysFileMonitor->stop();
     nSysFileWatchedNames = sysFileMonitor->getWatchedNameCount();
@@ -141,11 +108,13 @@ int ModuleI::DetectorI::scan()
     // update number of watched system files
     nSysFileWatchedNames = aux;
 
+    // Binaries
+    // record how many files were being watched before stopping
     binMonitor->stop();
-    nBinWatchedNames = sysFileMonitor->getWatchedNameCount();
+    nBinWatchedNames = binMonitor->getWatchedNameCount();
     for (int i = 1; i <= nBinWatchedNames; i++)
     {
-        sysFileWatchedNames[i] = sysFileMonitor->getWatchedName(i);
+        binWatchedNames[i] = binMonitor->getWatchedName(i);
     }
 
     // restart monitor, if a file was added the count will be bigger
@@ -172,7 +141,7 @@ int ModuleI::DetectorI::scan()
             {
                 // add log
                 msg = "File=" + auxs;
-                log(ALARM_I_FILE_CREATE, "localhost", msg.c_str());
+                log(ALARM_I_BIN_CREATE, "localhost", msg.c_str());
                 // decrement amount of extra files and start check again
                 x--;
                 break;
@@ -181,6 +150,85 @@ int ModuleI::DetectorI::scan()
     }
     // update number of watched binaries
     nBinWatchedNames = aux;
+
+    /* Process events */
+    // system files
+    while (sfevents.size())
+    {
+        // log an event
+        if (sfevents[0].mask & IN_MODIFY)
+        {
+            msg = "File=" + sfevents[0].filename;
+            log(ALARM_I_FILE_MOD, "localhost", msg.c_str());
+        }
+        if (sfevents[0].mask & IN_DELETE_SELF)
+        {
+            // check to see if the file was replaced
+            bool present = false;
+            for (int j = 1; j <= nSysFileWatchedNames; j++)
+            {
+                if (strcmp(sfevents[0].filename.c_str(), sysFileWatchedNames[j].c_str()) == 0)
+                {
+                    present = true;
+                    break;
+                }
+            }
+
+            if (!present)
+            {
+                // file was deleted
+                msg = "File=" + sfevents[0].filename;
+                log(ALARM_I_FILE_DEL, "localhost", msg.c_str());
+            } else
+            {
+                // file was replaced
+                msg = "File=" + sfevents[0].filename;
+                log(ALARM_I_FILE_MOD, "localhost", msg.c_str());
+            }
+        }
+
+        // delete the event
+        sfevents.erase(sfevents.begin());
+    }
+
+    // binary files
+    while (bevents.size())
+    {
+        // log an event
+        if (bevents[0].mask & IN_MODIFY)
+        {
+            msg = "File=" + bevents[0].filename;
+            log(ALARM_I_BIN_MOD, "localhost", msg.c_str());
+        }
+        if (bevents[0].mask & IN_DELETE_SELF)
+        {
+            // check to see if the file was replaced
+            bool present = false;
+            for (int j = 1; j <= nBinWatchedNames; j++)
+            {
+                if (strcmp(bevents[0].filename.c_str(), binWatchedNames[j].c_str()) == 0)
+                {
+                    present = true;
+                    break;
+                }
+            }
+
+            if (!present)
+            {
+                // file was deleted
+                msg = "File=" + bevents[0].filename;
+                log(ALARM_I_BIN_DEL, "localhost", msg.c_str());
+            } else
+            {
+                // file was replaced
+                msg = "File=" + bevents[0].filename;
+                log(ALARM_I_BIN_MOD, "localhost", msg.c_str());
+            }
+        }
+
+        // delete the event
+        bevents.erase(bevents.begin());
+    }
 
     return 0;
 }

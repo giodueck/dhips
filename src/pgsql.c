@@ -894,7 +894,7 @@ int pg_get_monitor_filename(int index, int type, char **dest)
     PQclear(res);
 
     // Retrieve fullfilename
-    sprintf(cmd, "SELECT fullfilename, monitor_id FROM public.monitor WHERE monitor_id > %d AND type = %d LIMIT 1;", index, type);
+    sprintf(cmd, "SELECT fullfilename, monitor_id FROM public.monitor WHERE monitor_id > %d AND type = %d AND active = true LIMIT 1;", index, type);
     // Set stderr buffer to be buf
     setbuf(stderr, buf);
     res = PQexec(conn, cmd);
