@@ -81,6 +81,9 @@ int ModuleI::DetectorI::scan()
     sysFileMonitor->start(sysFileMonitorFilename + ".log", sysFileMonitorFilename + ".out");
     aux = sysFileMonitor->getWatchedNameCount();
 
+    printf("2");
+    fflush(stdout);
+
     // if number of watched system files increased this loop will execute
     for (int x = aux - nSysFileWatchedNames; x > 0;)
     {
@@ -111,7 +114,7 @@ int ModuleI::DetectorI::scan()
     // update number of watched system files
     nSysFileWatchedNames = aux;
 
-    printf("2");
+    printf("3");
     fflush(stdout);
 
     // Binaries
@@ -156,9 +159,6 @@ int ModuleI::DetectorI::scan()
     }
     // update number of watched binaries
     nBinWatchedNames = aux;
-
-    printf("3");
-    fflush(stdout);
 
     /* Process events */
     // system files
