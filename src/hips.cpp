@@ -12,14 +12,19 @@ Detector globalLogger;
 ModuleI mod_i;
 ModuleII mod_ii;
 
-static void break_handler(int sig)
+static void exit_nicely(int code)
 {
     globalLogger.log((const char*)"Stopping modules", "localhost");
     // stop all modules and exit
     mod_i.stop();
     cout << endl;
     globalLogger.log((const char*)"Stopped", "localhost");
-    exit(0);
+    exit(code);
+}
+
+static void break_handler(int sig)
+{
+    exit_nicely(0);
 }
 
 int main(int argc, char *argv[])
