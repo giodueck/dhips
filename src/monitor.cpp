@@ -164,7 +164,7 @@ int Monitor::start(string logfile, string outfile)
             p += sizeof(struct inotify_event) + event->len;
             // log events
             if (event->mask & IN_MODIFY) fprintf(logfd, "IN_MODIFY;%s\n", watchedNames[event->wd]);
-            if (event->mask & IN_DELETE_SELF) fprintf(logfd, "IN_DELETE_SELF%s\n", watchedNames[event->wd]);
+            if (event->mask & IN_DELETE_SELF) fprintf(logfd, "IN_DELETE_SELF;%s\n", watchedNames[event->wd]);
             fflush(logfd);
         }
     }
@@ -175,8 +175,10 @@ int Monitor::stop()
     // check if running
     if (notifyfd == -1) return 1;
 
-    // close file descriptors
+    // kill child and close file descriptors 
+    int status;
     kill(pid, SIGKILL);
+    waitpid(pid, &status, 0);
     close(notifyfd);
     notifyfd = -1;
     pid = -1;

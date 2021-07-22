@@ -31,6 +31,16 @@ int startup()
         fclose(f);
     }
 
+    // monitor.out and monitor.log
+    f = fopen("/var/log/hips/sfmonitor.out", "a");
+    fclose(f);
+    f = fopen("/var/log/hips/sfmonitor.log", "a");
+    fclose(f);
+    f = fopen("/var/log/hips/bmonitor.out", "a");
+    fclose(f);
+    f = fopen("/var/log/hips/bmonitor.log", "a");
+    fclose(f);
+
     // Database
     int res = pg_check_db();
     return res;

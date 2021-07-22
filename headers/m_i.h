@@ -11,9 +11,6 @@
 #include "monitor.h"
 #include "alarms.h"
 
-#define MONITOR_LOG "/var/log/hips/monitor.log"
-#define MONITOR_OUT "/var/log/hips/monitor.out"
-
 class ModuleI: public Module
 {
     private:
@@ -22,9 +19,13 @@ class ModuleI: public Module
     {
         private:
 
+        std::string sysFileMonitorFilename;
+        std::string binMonitorFilename;
+
         public:
 
         Monitor *sysFileMonitor;
+        Monitor *binMonitor;
         
         DetectorI();
 

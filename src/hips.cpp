@@ -27,7 +27,8 @@ int main(int argc, char *argv[])
         
         // sleep a little
         sleep(2);
-        cout << ".\n";
+        cout << ".";
+        fflush(stdout);
     }
 
     return 0;
