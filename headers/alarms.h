@@ -10,7 +10,7 @@
 #define ALARM_I_BIN_CREATE          6
 
 #define ALARM_II_USER_LOGGED_IN     7
-#define ALARM_II_USER_LOGGED_OUT    7
+#define ALARM_II_USER_LOGGED_OUT    8
 
 // Special definitions for modules
 #define I_SYSFILE_TYPE              1
