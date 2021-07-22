@@ -61,6 +61,9 @@ int ModuleI::DetectorI::scan()
     sysFileMonitor->extractEvents(sfevents, sysFileMonitorFilename + ".log");
     binMonitor->extractEvents(bevents, binMonitorFilename + ".log");
 
+    printf("2");
+    fflush(stdout);
+
     /* Restart monitor in case unavailable files become available, log if it is the case */
     int aux;
     string auxs, msg;
@@ -151,6 +154,9 @@ int ModuleI::DetectorI::scan()
     // update number of watched binaries
     nBinWatchedNames = aux;
 
+    printf("3");
+    fflush(stdout);
+
     /* Process events */
     // system files
     while (sfevents.size())
@@ -230,6 +236,9 @@ int ModuleI::DetectorI::scan()
         bevents.erase(bevents.begin());
     }
 
+    printf("4");
+    fflush(stdout);
+
     return 0;
 }
 
@@ -248,6 +257,8 @@ void ModuleI::setup()
 void ModuleI::run()
 {
     // detector scan
+    printf("1");
+    fflush(stdout);
     detector.scan();
 
     // preventer act
