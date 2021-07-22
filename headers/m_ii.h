@@ -8,6 +8,12 @@
 
 #include "module.h"
 #include "alarms.h"
+#include <utmpx.h>
+#include <paths.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <vector>
 
 class ModuleII: public Module
 {
@@ -16,6 +22,9 @@ class ModuleII: public Module
     class DetectorII: public Detector
     {
         private:
+
+        // all currently logged in users
+        std::vector<struct utmpx> baseline;
 
         public:
         

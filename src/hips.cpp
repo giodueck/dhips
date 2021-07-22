@@ -10,6 +10,7 @@ using namespace std;
 // declare all modules
 Detector globalLogger;
 ModuleI mod_i;
+ModuleII mod_ii;
 
 static void break_handler(int sig)
 {
@@ -40,10 +41,12 @@ int main(int argc, char *argv[])
     globalLogger = Detector("DHIPS");
     globalLogger.log((const char*)"Started", "localhost");
     mod_i = ModuleI();
+    mod_ii = ModuleII();
 
     // initialize modules
     globalLogger.log((const char*)"Started module initialization", "localhost");
     mod_i.setup();
+    mod_ii.setup();
 
     // while loop
     globalLogger.log((const char*)"Ready", "localhost");
