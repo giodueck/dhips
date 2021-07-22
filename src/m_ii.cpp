@@ -73,11 +73,17 @@ int ModuleII::DetectorII::scan()
     memset(&data, 0, sizeof(struct utmpx));
 
     bool changed = false;
+    bool loggedout = false;
+    string aux;
 
     while(fread(&data, sizeof(struct utmpx), 1, log_file) == 1)
     {
         if (m_ii_newLogin(baseline, data))
         {
+            // check if actually logged out
+            aux = string(data.ut_user);
+            if (aux.length() == 0) loggedout = true;
+
             if (data.ut_addr_v6[0] != 0)
             {
                 // work out IP
@@ -90,10 +96,10 @@ int ModuleII::DetectorII::scan()
                 bytes[3] = (data.ut_addr_v6[0] >> 24) & 0xFF;
 
                 sprintf(location, "%d.%d.%d.%d", bytes[0], bytes[1], bytes[2], bytes[3]);
-                log(ALARM_II_USER_LOGGED_IN, location);
+                (loggedout) ? log(ALARM_II_USER_LOGGED_OUT, location) : log(ALARM_II_USER_LOGGED_IN, location);
             } else
             {
-                log(ALARM_II_USER_LOGGED_IN, "localhost");
+                (loggedout) ? log(ALARM_II_USER_LOGGED_OUT, "localhost") : log(ALARM_II_USER_LOGGED_IN, "localhost");
             }
             changed = true;
         }

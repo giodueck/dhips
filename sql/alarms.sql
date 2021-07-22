@@ -5,4 +5,5 @@ insert into alarm values
     (4, 3, 'Binary file was deleted'),
     (5, 2, 'System file was created'),
     (6, 3, 'Binary file was created'),
-    (7, 1, 'User logged in');
+    (7, 1, 'User logged in'),
+    (8, 1, 'User logged out');
