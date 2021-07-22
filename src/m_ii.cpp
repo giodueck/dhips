@@ -38,6 +38,11 @@ void ModuleII::setup()
     detector.setup();
 }
 
+void ModuleII::run()
+{
+    detector.scan();
+}
+
 ModuleII::DetectorII::DetectorII()
 {
     this->module = "II";
