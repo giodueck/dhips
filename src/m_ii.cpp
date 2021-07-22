@@ -75,6 +75,7 @@ int ModuleII::DetectorII::scan()
     bool changed = false;
     bool loggedout = false;
     string aux;
+    int i = 0;
 
     while(fread(&data, sizeof(struct utmpx), 1, log_file) == 1)
     {
@@ -82,7 +83,11 @@ int ModuleII::DetectorII::scan()
         {
             // check if actually logged out
             aux = string(data.ut_user);
-            if (strcmp(aux.c_str(), "LOGIN") == 0 || data.ut_user[0] == '\0') loggedout = true;
+            if (strcmp(aux.c_str(), "LOGIN") == 0 || data.ut_user[0] == '\0')
+            {
+                loggedout = true;
+            }
+            aux = "User: " + string(baseline[i].ut_user) + "\tLine:" + string(data.ut_line);
 
             if (data.ut_addr_v6[0] != 0)
             {
@@ -97,18 +102,19 @@ int ModuleII::DetectorII::scan()
 
                 sprintf(location, "%d.%d.%d.%d", bytes[0], bytes[1], bytes[2], bytes[3]);
                 if (loggedout)
-                    log(ALARM_II_USER_LOGGED_OUT, location, data.ut_user);
+                    log(ALARM_II_USER_LOGGED_OUT, location, aux.c_str());
                 else 
-                    log(ALARM_II_USER_LOGGED_IN, location, data.ut_user);
+                    log(ALARM_II_USER_LOGGED_IN, location, aux.c_str());
             } else
             {
                 if (loggedout)
-                    log(ALARM_II_USER_LOGGED_OUT, "localhost", data.ut_user);
+                    log(ALARM_II_USER_LOGGED_OUT, "localhost", aux.c_str());
                 else 
-                    log(ALARM_II_USER_LOGGED_IN, "localhost", data.ut_user);
+                    log(ALARM_II_USER_LOGGED_IN, "localhost", aux.c_str());
             }
             changed = true;
         }
+        i++;
     }
     fclose(log_file);
 
