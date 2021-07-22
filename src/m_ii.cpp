@@ -88,7 +88,7 @@ int ModuleII::DetectorII::scan()
                 loggedout = true;
             }
             // we want the user, not LOGIN or an empty string
-            if (data.ut_user[0])
+            if (data.ut_user[0] == '\0')
                 aux = "User: " + string(baseline[i].ut_user) + "\tLine:" + string(data.ut_line);
             else
                 aux = "User: " + string(data.ut_user) + "\tLine:" + string(data.ut_line);
