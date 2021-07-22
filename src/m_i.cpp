@@ -61,9 +61,6 @@ int ModuleI::DetectorI::scan()
     sysFileMonitor->extractEvents(sfevents, sysFileMonitorFilename + ".log");
     binMonitor->extractEvents(bevents, binMonitorFilename + ".log");
 
-    printf("1");
-    fflush(stdout);
-
     /* Restart monitor in case unavailable files become available, log if it is the case */
     int aux;
     string auxs, msg;
@@ -72,19 +69,11 @@ int ModuleI::DetectorI::scan()
     // record how many files were being watched before stopping
     sysFileMonitor->stop();
 
-    printf("2");
-    fflush(stdout);
-
     nSysFileWatchedNames = sysFileMonitor->getWatchedNameCount();
     for (int i = 1; i <= nSysFileWatchedNames; i++)
     {
         sysFileWatchedNames[i] = sysFileMonitor->getWatchedName(i);
-        printf("-");
-        fflush(stdout);
     }
-
-    printf("3");
-    fflush(stdout);
 
     // restart monitor, if a file was added the count will be bigger
     sysFileMonitor->start(sysFileMonitorFilename + ".log", sysFileMonitorFilename + ".out");

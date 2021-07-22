@@ -75,15 +75,6 @@ int Monitor::getWatchedNameCount()
     return nWatchedNames;
 }
 
-// Monitor child SIGINT (^C) handler
-static void break_handler(int sig)
-{
-    pid_t pid = getpid();
-    // send sigkill to itself to get rid of the stopped process
-    kill(pid, SIGKILL);
-    exit(0);
-}
-
 int Monitor::start(string logfile, string outfile)
 {
     // check if already started
@@ -169,14 +160,6 @@ int Monitor::start(string logfile, string outfile)
         return 0;
     }
 
-    // set up break signal handling
-    struct sigaction sigbreak;
-
-    sigbreak.sa_handler = break_handler;
-    sigemptyset (&sigbreak.sa_mask);
-    sigbreak.sa_flags = 0;
-    if (sigaction(SIGINT, &sigbreak, NULL) != 0) dhips_perror("sigaction");
-
     // monitor
     struct inotify_event *event;
     FILE *tmpfd;
@@ -204,14 +187,22 @@ int Monitor::start(string logfile, string outfile)
 
 int Monitor::stop()
 {
+    printf("1");
+    fflush(stdout);
     // check if running
     if (pid == -1) return 1;
 
+    printf("2");
+    fflush(stdout);
+
     // kill child and close file descriptors 
     int status;
-    kill(pid, SIGINT);
+    kill(pid, SIGKILL);
     waitpid(pid, &status, 0);
     pid = -1;
+
+    printf("3");
+    fflush(stdout);
 
     // The notify process terminates when all related file descriptors are closed 
     return 0;
