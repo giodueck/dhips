@@ -8,6 +8,8 @@ ModuleI::DetectorI::DetectorI()
 {
     sysFileMonitorFilename = string("/var/log/hips/sfmonitor");
     binMonitorFilename = string("/var/log/hips/bmonitor");
+    nSysFileWatchedNames = 0;
+    nBinWatchedNames = 0;
     this->module = "I";
     sysFileMonitor = new Monitor("I");
     binMonitor = new Monitor("I");
@@ -93,11 +95,92 @@ int ModuleI::DetectorI::scan()
         bevents.erase(bevents.begin());
     }
 
-    // restart monitor in case unavailable files become available
+    // restart monitor in case unavailable files become available, log if it is the case
+    int aux;
+    string auxs;
+
+    // record how many files were being watched before stopping
     sysFileMonitor->stop();
+    nSysFileWatchedNames = sysFileMonitor->getWatchedNameCount();
+    for (int i = 1; i <= nSysFileWatchedNames; i++)
+    {
+        sysFileWatchedNames[i] = sysFileMonitor->getWatchedName(i);
+    }
+
+    // restart monitor, if a file was added the count will be bigger
     sysFileMonitor->start(sysFileMonitorFilename + ".log", sysFileMonitorFilename + ".out");
+    aux = sysFileMonitor->getWatchedNameCount();
+
+    // if number of watched system files increased this loop will execute
+    for (int x = aux - nSysFileWatchedNames; x > 0;)
+    {
+        for (int i = 1; i <= aux; i++)
+        {
+            auxs = sysFileMonitor->getWatchedName(i);
+            bool present = false;
+            for (int j = 1; j <= nSysFileWatchedNames; j++)
+            {
+                if (strcmp(auxs.c_str(), sysFileWatchedNames[j].c_str()) == 0)
+                {
+                    present = true;
+                    break;
+                }
+            }
+
+            if (!present)
+            {
+                // add log
+                msg = "File=" + auxs;
+                log(ALARM_I_FILE_CREATE, "localhost", msg.c_str());
+                // decrement amount of extra files and start check again
+                x--;
+                break;
+            }
+        }
+    }
+    // update number of watched system files
+    nSysFileWatchedNames = aux;
+
     binMonitor->stop();
+    nBinWatchedNames = sysFileMonitor->getWatchedNameCount();
+    for (int i = 1; i <= nBinWatchedNames; i++)
+    {
+        sysFileWatchedNames[i] = sysFileMonitor->getWatchedName(i);
+    }
+
+    // restart monitor, if a file was added the count will be bigger
     binMonitor->start(binMonitorFilename + ".log", binMonitorFilename + ".out");
+    aux = binMonitor->getWatchedNameCount();
+
+    // if number of watched binaries increased this loop will execute
+    for (int x = aux - nBinWatchedNames; x > 0;)
+    {
+        for (int i = 1; i <= aux; i++)
+        {
+            auxs = binMonitor->getWatchedName(i);
+            bool present = false;
+            for (int j = 1; j <= nBinWatchedNames; j++)
+            {
+                if (strcmp(auxs.c_str(), binWatchedNames[j].c_str()) == 0)
+                {
+                    present = true;
+                    break;
+                }
+            }
+
+            if (!present)
+            {
+                // add log
+                msg = "File=" + auxs;
+                log(ALARM_I_FILE_CREATE, "localhost", msg.c_str());
+                // decrement amount of extra files and start check again
+                x--;
+                break;
+            }
+        }
+    }
+    // update number of watched binaries
+    nBinWatchedNames = aux;
 
     return 0;
 }

@@ -10,14 +10,13 @@ using namespace std;
 // declare all modules
 ModuleI mod_i;
 
-void break_handler(int a)
+static void break_handler(int sig)
 {
     // stop all modules and exit
     mod_i.stop();
     cout << endl;
     exit(0);
 }
-
 
 int main(int argc, char *argv[])
 {

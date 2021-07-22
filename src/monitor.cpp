@@ -12,6 +12,7 @@ Monitor::Monitor(const char *module)
     p = NULL;
     pid = -1;
     mask = IN_MODIFY | IN_DELETE_SELF;
+    nWatchedNames = 0;
 }
 
 Monitor::Monitor()
@@ -69,8 +70,13 @@ string Monitor::getWatchedName(int watchfd)
     return string(watchedNames[watchfd]);
 }
 
+int Monitor::getWatchedNameCount()
+{
+    return nWatchedNames;
+}
+
 // Monitor child SIGINT (^C) handler
-static void break_handler(int a)
+static void break_handler(int sig)
 {
     pid_t pid = getpid();
     // send sigkill to itself to get rid of the stopped process
@@ -108,6 +114,7 @@ int Monitor::start(string logfile, string outfile)
     
     // add filenames to the watchlist
     int n_ = watchNames.size();
+    nWatchedNames = 0;
     for (int i = 0; i < n_; i++)
     {
         fn = watchNames.at(i).c_str();
@@ -131,6 +138,7 @@ int Monitor::start(string logfile, string outfile)
                 if (!out.empty()) fprintf(fout, "start: added %s to watch list with watch descriptor %d\n", fn, watchfd);
                 // add to watched names
                 strcpy(watchedNames[watchfd], fn);
+                nWatchedNames++;
             }
         } else // probably a directory
         {
@@ -194,7 +202,7 @@ int Monitor::start(string logfile, string outfile)
 int Monitor::stop()
 {
     // check if running
-    if (notifyfd == -1) return 1;
+    if (pid == -1) return 1;
 
     // kill child and close file descriptors 
     int status;

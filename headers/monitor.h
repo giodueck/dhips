@@ -53,6 +53,7 @@ class Monitor
     char *p;
     // watched names indexed by their watchfd
     char watchedNames[100][NAME_MAX + 1];
+    int nWatchedNames;
 
     public:
 
@@ -74,6 +75,9 @@ class Monitor
 
     // Get a filename with watchfd
     std::string getWatchedName(int watchfd);
+
+    // Get the number of watched files
+    int getWatchedNameCount();
 
     // Start an inotify instance as a child process and start monitoring. Applies watch configurations
     // Use eventAvailable and getEvent to get events. Use stop to stop monitoring.

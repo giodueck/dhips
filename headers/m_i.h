@@ -22,6 +22,11 @@ class ModuleI: public Module
         std::string sysFileMonitorFilename;
         std::string binMonitorFilename;
 
+        std::string sysFileWatchedNames[100];
+        int nSysFileWatchedNames;
+        std::string binWatchedNames[100];
+        int nBinWatchedNames;
+
         public:
 
         Monitor *sysFileMonitor;
