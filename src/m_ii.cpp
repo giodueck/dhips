@@ -96,10 +96,16 @@ int ModuleII::DetectorII::scan()
                 bytes[3] = (data.ut_addr_v6[0] >> 24) & 0xFF;
 
                 sprintf(location, "%d.%d.%d.%d", bytes[0], bytes[1], bytes[2], bytes[3]);
-                (loggedout) ? log(ALARM_II_USER_LOGGED_OUT, location, data.ut_user) : log(ALARM_II_USER_LOGGED_IN, location, data.ut_user);
+                if (loggedout)
+                    log(ALARM_II_USER_LOGGED_OUT, location, data.ut_user)
+                else 
+                    log(ALARM_II_USER_LOGGED_IN, location, data.ut_user);
             } else
             {
-                (loggedout) ? log(ALARM_II_USER_LOGGED_OUT, "localhost", data.ut_user) : log(ALARM_II_USER_LOGGED_IN, "localhost", data.ut_user);
+                if (loggedout)
+                    log(ALARM_II_USER_LOGGED_OUT, "localhost", data.ut_user)
+                else 
+                    log(ALARM_II_USER_LOGGED_IN, "localhost", data.ut_user);
             }
             changed = true;
         }
