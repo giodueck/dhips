@@ -47,23 +47,18 @@ int main(int argc, char *argv[])
 
     // while loop
     globalLogger.log((const char*)"Ready", "localhost");
-    cout << "before loop" << endl;
     killed = false;
     while (!killed)
     {
         // run module scans
-        cout << "before mod_i" << endl;
         mod_i.run();
-        cout << "before mod_ii" << endl;
         mod_ii.run();
         
         // sleep a little
-        cout << "before sleep" << endl;
         sleep(2);
         cout << ".";
         fflush(stdout);
     }
-    cout << "after loop" << endl;
 
     // stop all modules and exit
     globalLogger.log((const char*)"Stopping modules", "localhost");
