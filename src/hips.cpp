@@ -8,13 +8,16 @@
 using namespace std;
 
 // declare all modules
+Detector globalLogger;
 ModuleI mod_i;
 
 static void break_handler(int sig)
 {
+    globalLogger.log((const char*)"Stopping modules", "localhost");
     // stop all modules and exit
     mod_i.stop();
     cout << endl;
+    globalLogger.log((const char*)"Stopped", "localhost");
     exit(0);
 }
 
@@ -34,12 +37,16 @@ int main(int argc, char *argv[])
     if (sigaction(SIGINT, &sigbreak, NULL) != 0) dhips_perror("sigaction");
 
     // create module instances
+    globalLogger = Detector("DHIPS");
+    globalLogger.log((const char*)"Started", "localhost");
     mod_i = ModuleI();
 
     // initialize modules
+    globalLogger.log((const char*)"Started module initialization", "localhost");
     mod_i.setup();
 
     // while loop
+    globalLogger.log((const char*)"Ready", "localhost");
     while (1)
     {
         // run module scans

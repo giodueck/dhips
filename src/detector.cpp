@@ -9,6 +9,43 @@
 
 using namespace std;
 
+Detector::Detector(){}
+
+Detector::Detector(string module)
+{
+    this->module = module;
+}
+
+int Detector::log(const char *msg, const char *location)
+{
+    char *description = NULL;
+    int severity = 0, res;
+    FILE *f;
+    struct tm *ts;
+    time_t unixtime;
+
+    // open file
+    f = fopen(filename, "a");
+    if (!f)
+    {
+        char msg[128];
+        sprintf(msg, "could not open log file %s", filename);
+        dhips_perror(msg);
+        return -1;
+    }
+
+    // write to log
+    unixtime = time(NULL);
+    ts = localtime(&unixtime);
+    fprintf(f, "%02d/%02d/%04d %02d:%02d:%02d\t:: %s: %s\t:: %s\t::\n",
+        ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module.c_str(), msg, location);
+
+    // close file and free description
+    fclose(f);
+
+    return severity;
+}
+
 int Detector::log(const char *module, int id, const char *location, const char *msg)
 {
     char *description = NULL;
