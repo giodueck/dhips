@@ -97,13 +97,13 @@ int ModuleII::DetectorII::scan()
 
                 sprintf(location, "%d.%d.%d.%d", bytes[0], bytes[1], bytes[2], bytes[3]);
                 if (loggedout)
-                    log(ALARM_II_USER_LOGGED_OUT, location, data.ut_user)
+                    log(ALARM_II_USER_LOGGED_OUT, location, data.ut_user);
                 else 
                     log(ALARM_II_USER_LOGGED_IN, location, data.ut_user);
             } else
             {
                 if (loggedout)
-                    log(ALARM_II_USER_LOGGED_OUT, "localhost", data.ut_user)
+                    log(ALARM_II_USER_LOGGED_OUT, "localhost", data.ut_user);
                 else 
                     log(ALARM_II_USER_LOGGED_IN, "localhost", data.ut_user);
             }
