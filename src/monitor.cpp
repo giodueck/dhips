@@ -187,22 +187,14 @@ int Monitor::start(string logfile, string outfile)
 
 int Monitor::stop()
 {
-    printf("1");
-    fflush(stdout);
     // check if running
     if (pid == -1) return 1;
-
-    printf("2");
-    fflush(stdout);
 
     // kill child and close file descriptors 
     int status;
     kill(pid, SIGKILL);
     waitpid(pid, &status, 0);
     pid = -1;
-
-    printf("3");
-    fflush(stdout);
 
     // The notify process terminates when all related file descriptors are closed 
     return 0;
