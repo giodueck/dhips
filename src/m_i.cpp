@@ -71,18 +71,24 @@ int ModuleI::DetectorI::scan()
     // System Files
     // record how many files were being watched before stopping
     sysFileMonitor->stop();
+
+    printf("2");
+    fflush(stdout);
+
     nSysFileWatchedNames = sysFileMonitor->getWatchedNameCount();
     for (int i = 1; i <= nSysFileWatchedNames; i++)
     {
         sysFileWatchedNames[i] = sysFileMonitor->getWatchedName(i);
+        printf("-");
+        fflush(stdout);
     }
+
+    printf("3");
+    fflush(stdout);
 
     // restart monitor, if a file was added the count will be bigger
     sysFileMonitor->start(sysFileMonitorFilename + ".log", sysFileMonitorFilename + ".out");
     aux = sysFileMonitor->getWatchedNameCount();
-
-    printf("2");
-    fflush(stdout);
 
     // if number of watched system files increased this loop will execute
     for (int x = aux - nSysFileWatchedNames; x > 0;)
@@ -113,9 +119,6 @@ int ModuleI::DetectorI::scan()
     }
     // update number of watched system files
     nSysFileWatchedNames = aux;
-
-    printf("3");
-    fflush(stdout);
 
     // Binaries
     // record how many files were being watched before stopping
