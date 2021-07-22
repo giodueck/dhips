@@ -121,3 +121,10 @@ void ModuleI::run()
 
     // preventer act
 }
+
+void ModuleI::stop()
+{
+    // stop the detector if necessary
+    detector.sysFileMonitor->stop();
+    detector.binMonitor->stop();
+}

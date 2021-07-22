@@ -17,6 +17,9 @@ class Module
        but the latter is dependent on the former.
     */
     void run();
+
+    /* This function is called once when stopping the program */
+    void stop();
 };
 
 #endif // MODULE_H

@@ -54,10 +54,6 @@ class Monitor
     // watched names indexed by their watchfd
     char watchedNames[100][NAME_MAX + 1];
 
-    // Reads from the temporary file the child writes to into eventBuf and sets n and p
-    //  Returns the number of bytes read, or n
-    int read_();
-
     public:
 
     Monitor();

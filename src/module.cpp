@@ -11,3 +11,8 @@ void Module::run()
 {
     printf("Module::run() overloading didn't work\n");
 }
+
+void Module::stop()
+{
+    printf("Module::stop() overloading didn't work\n");
+}

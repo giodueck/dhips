@@ -1,9 +1,23 @@
 #include <iostream>
+#include <signal.h>
+#include "dhipslib.h"
 #include "modules.h"
 #include "startup.h"
 #include "pgsql.h"
 
 using namespace std;
+
+// declare all modules
+ModuleI mod_i;
+
+void break_handler(int a)
+{
+    // stop all modules and exit
+    mod_i.stop();
+    cout << endl;
+    exit(0);
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -12,9 +26,16 @@ int main(int argc, char *argv[])
 
     // test code
 
+    // set up break signal handling
+    struct sigaction sigbreak;
+
+    sigbreak.sa_handler = break_handler;
+    sigemptyset (&sigbreak.sa_mask);
+    sigbreak.sa_flags = 0;
+    if (sigaction(SIGINT, &sigbreak, NULL) != 0) dhips_perror("sigaction");
 
     // create module instances
-    ModuleI mod_i = ModuleI();
+    mod_i = ModuleI();
 
     // initialize modules
     mod_i.setup();

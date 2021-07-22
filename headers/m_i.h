@@ -40,6 +40,7 @@ class ModuleI: public Module
 
     void setup();
     void run();
+    void stop();
 };
 
 #endif // MOD_I_H

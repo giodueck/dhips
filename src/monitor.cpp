@@ -69,10 +69,19 @@ string Monitor::getWatchedName(int watchfd)
     return string(watchedNames[watchfd]);
 }
 
+// Monitor child SIGINT (^C) handler
+static void break_handler(int a)
+{
+    pid_t pid = getpid();
+    // send sigkill to itself to get rid of the stopped process
+    kill(pid, SIGKILL);
+    exit(0);
+}
+
 int Monitor::start(string logfile, string outfile)
 {
     // check if already started
-    if (notifyfd > 0) return 1;
+    if (pid > 0) return 1;
 
     struct stat sb;
     const char *fn;
@@ -142,11 +151,23 @@ int Monitor::start(string logfile, string outfile)
         char msg[128];
         sprintf(msg, "%s: fork", module);
         dhips_perror(msg);
+        close(notifyfd);
+        notifyfd = -1;
         return -1;
     } else if (pid)
     {
+        close(notifyfd);
+        notifyfd = -1;
         return 0;
     }
+
+    // set up break signal handling
+    struct sigaction sigbreak;
+
+    sigbreak.sa_handler = break_handler;
+    sigemptyset (&sigbreak.sa_mask);
+    sigbreak.sa_flags = 0;
+    if (sigaction(SIGINT, &sigbreak, NULL) != 0) dhips_perror("sigaction");
 
     // monitor
     struct inotify_event *event;
@@ -177,10 +198,8 @@ int Monitor::stop()
 
     // kill child and close file descriptors 
     int status;
-    kill(pid, SIGKILL);
+    kill(pid, SIGINT);
     waitpid(pid, &status, 0);
-    close(notifyfd);
-    notifyfd = -1;
     pid = -1;
 
     // The notify process terminates when all related file descriptors are closed 
@@ -190,19 +209,6 @@ int Monitor::stop()
 bool Monitor::isMonitoring()
 {
     return (notifyfd > 0);
-}
-
-int Monitor::read_()
-{
-    FILE *tmpfd;
-
-    // open tmpf
-    tmpfd = fopen(tmpf.c_str(), "r");
-    if (!tmpfd) return 0;
-    n = read(notifyfd, eventBuf, EVENT_BUFSIZE);
-    fclose(tmpfd);
-    remove(tmpf.c_str());
-    return n;
 }
 
 bool Monitor::eventAvailable()
