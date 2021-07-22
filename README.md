@@ -13,7 +13,9 @@ Un proyecto C/C++ con interfaz web para la materia de Sistemas Operativos 2
 *COMING SOON(TM)*
 
 # Features
-*COMING SOON(TM)*
+- Interfaz web
+- Usuarios propios del programa para iniciar sesion por la interfaz web
 
 # Modulos
-*COMING SOON(TM)*
+- I: Monitoreo de archivos del sistema y archivos binarios
+- II: Monitoreo de inicio y cierre de sesion
