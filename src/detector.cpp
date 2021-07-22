@@ -88,7 +88,7 @@ int Detector::log(const char *module, int id, const char *location, const char *
     unixtime = time(NULL);
     ts = localtime(&unixtime);
     fprintf(f, "%02d/%02d/%04d %02d:%02d:%02d\t:: %s.%d: %s\t:: %s\t:: %s\n",
-        ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module, id, description, location, (strlen(msg)) ? msg : "");
+        ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module, id, description, location, (msg && strlen(msg)) ? msg : "");
 
     // close file and free description
     fclose(f);
