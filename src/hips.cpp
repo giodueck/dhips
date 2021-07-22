@@ -7,24 +7,16 @@
 
 using namespace std;
 
+bool killed = false;
+
 // declare all modules
 Detector globalLogger;
 ModuleI mod_i;
 ModuleII mod_ii;
 
-static void exit_nicely(int code)
-{
-    globalLogger.log((const char*)"Stopping modules", "localhost");
-    // stop all modules and exit
-    mod_i.stop();
-    cout << endl;
-    globalLogger.log((const char*)"Stopped", "localhost");
-    exit(code);
-}
-
 static void break_handler(int sig)
 {
-    exit_nicely(0);
+    killed = true;
 }
 
 int main(int argc, char *argv[])
@@ -55,7 +47,7 @@ int main(int argc, char *argv[])
 
     // while loop
     globalLogger.log((const char*)"Ready", "localhost");
-    while (1)
+    while (!killed)
     {
         // run module scans
         mod_i.run();
@@ -67,5 +59,10 @@ int main(int argc, char *argv[])
         fflush(stdout);
     }
 
-    return 0;
+    // stop all modules and exit
+    globalLogger.log((const char*)"Stopping modules", "localhost");
+    mod_i.stop();
+    cout << endl;
+    globalLogger.log((const char*)"Stopped", "localhost");
+    exit(0);
 }
