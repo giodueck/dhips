@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
     sigbreak.sa_handler = break_handler;
     sigemptyset (&sigbreak.sa_mask);
     sigbreak.sa_flags = 0;
+    cout << "before sigaction" << endl;
     if (sigaction(SIGINT, &sigbreak, NULL) != 0) dhips_perror("sigaction");
 
     // create module instances
@@ -47,6 +48,7 @@ int main(int argc, char *argv[])
 
     // while loop
     globalLogger.log((const char*)"Ready", "localhost");
+    cout << "before loop" << endl;
     while (!killed)
     {
         // run module scans
@@ -58,6 +60,7 @@ int main(int argc, char *argv[])
         cout << ".";
         fflush(stdout);
     }
+    cout << "after loop" << endl;
 
     // stop all modules and exit
     globalLogger.log((const char*)"Stopping modules", "localhost");
