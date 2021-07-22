@@ -82,7 +82,7 @@ int ModuleII::DetectorII::scan()
         {
             // check if actually logged out
             aux = string(data.ut_user);
-            if (strcmp(aux.c_str(), "LOGIN") == 0 || strcmp(aux.c_str(), "") == 0) loggedout = true;
+            if (strcmp(aux.c_str(), "LOGIN") == 0 || data.ut_user[0] == '\0') loggedout = true;
 
             if (data.ut_addr_v6[0] != 0)
             {
