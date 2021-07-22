@@ -45,7 +45,3 @@ create table monitor (
     active boolean not null,
     constraint monitor_pkey primary key (monitor_id)
 );
-
-insert into monitor (fullfilename, type, active) values
-    ('/etc/passwd', 1, true),
-    ('/etc/shadow', 1, true);
