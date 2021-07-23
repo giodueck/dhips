@@ -47,8 +47,8 @@ static int cp_to_www()
     fclose(fp1);
     fclose(fp2);
 
-    FILE *fp1=fopen("/var/log/hips/prevencion.log","r");
-    FILE *fp2=fopen("/var/www/log/prevencion.log","w");
+    fp1=fopen("/var/log/hips/prevencion.log","r");
+    fp2=fopen("/var/www/log/prevencion.log","w");
     if(!fp1)
     {
         char msg[128];
@@ -63,7 +63,7 @@ static int cp_to_www()
         dhips_perror(msg);
         return -1;
 	}
-    char *ch=(char *)malloc(BUFSIZ);
+    ch=(char *)malloc(BUFSIZ);
     while(!feof(fp1))
     {
         memset(ch,0,BUFSIZ);
