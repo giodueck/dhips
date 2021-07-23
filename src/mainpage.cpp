@@ -112,8 +112,8 @@ void show_section()
         cout << "<h2>Alarms</h2>";
 
         int p = 1;
-        // int maxpages = pagecount("/var/log/hips/alarmas.log");
-        int maxpages = 100;
+        int maxpages = pagecount("/var/log/hips/alarmas.log");
+        // int maxpages = 100;
 
         // get query variables
         user = web_get_from_query_string(qs, (char*)"u");
