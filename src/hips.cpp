@@ -124,5 +124,6 @@ int main(int argc, char *argv[])
     mod_i.stop();
     cout << endl;
     globalLogger.log((const char*)"Stopped", "localhost");
+    cp_to_www();
     exit(0);
 }
