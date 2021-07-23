@@ -13,7 +13,7 @@
 				"/home/giodueck/vscode/dhips/src/web.c",
 				"/home/giodueck/vscode/dhips/src/dhipsweb.cpp",
 				"/home/giodueck/vscode/dhips/src/dhipslib.cpp",
-				"-o",
+				"-o", 
 				"/home/giodueck/vscode/dhips/cgi-bin/main",
 				"-I/home/giodueck/vscode/dhips/headers",
 				"-I/usr/include/postgresql",
