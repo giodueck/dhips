@@ -162,7 +162,7 @@ void show_section()
         } else cout << ">>";
 
         // show alarm table
-        p = show_alarm_table(p);
+        // p = show_alarm_table(p);
 
         cout << "<br>";
 
