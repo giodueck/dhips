@@ -107,12 +107,23 @@ void show_section()
 
         cout << "<br>";
 
-    } else if (strcmp(section, "alog") == 0)
+    } else if (strcmp(section, "alog") == 0 || strcmp(section, "plog") == 0)
     {
-        cout << "<h2>Alarms</h2>";
+        const char *filename;
+
+        if (section[0] == 'a')
+        {
+            cout << "<h2>Alarms</h2>";
+            filename = "/var/www/log/alarmas.log";
+        } else
+        {
+            cout << "<h2>Prevenciones</h2>";
+            filename = "/var/www/log/prevencion.log";
+        }
+        
 
         int p = 1;
-        int maxpages = pagecount("/var/www/log/alarmas.log");
+        int maxpages = pagecount(filename);
 
         // get query variables
         user = web_get_from_query_string(qs, (char*)"u");
@@ -123,23 +134,23 @@ void show_section()
 
         // page index error causes redirect to correct page
         if (p <= 0 and p != -1)
-            cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=1\" />";
+            cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=1\" />";
         else if (p > maxpages)
-            cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=" << maxpages << "\" />";
+            cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << maxpages << "\" />";
 
         // show page buttons
         // first page
         cout << " Navigate: ";
         if (p > 1)
         {
-            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=1\">";
+            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=1\">";
             cout << "<<";
             cout << "</a> | ";
         } else cout << "<< | ";
         // previous page
         if (p > 1)
         {
-            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=" << p - 1 << "\">";
+            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << p - 1 << "\">";
             cout << "<";
             cout << "</a> | ";
         } else cout << "< | ";
@@ -148,20 +159,25 @@ void show_section()
         // next page
         if (p < maxpages)
         {
-            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=" << p + 1 << "\">";
+            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << p + 1 << "\">";
             cout << ">";
             cout << "</a> | ";
         } else cout << "> | ";
         // last page
         if (p < maxpages)
         {
-            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=" << maxpages << "\">";
+            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << maxpages << "\">";
             cout << ">>";
             cout << "</a>";
         } else cout << ">>";
 
-        // show alarm table
-        p = show_alarm_table(p);
+        if (section[0] == 'a')
+        {
+            p = show_alarm_table(p);
+        } else
+        {
+            p = show_prevention_table(p);
+        }
 
         cout << "<br>";
 

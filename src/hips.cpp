@@ -22,6 +22,7 @@ static void break_handler(int sig)
 
 static int cp_to_www()
 {
+    // Alarmas
     FILE *fp1=fopen("/var/log/hips/alarmas.log","r");
     FILE *fp2=fopen("/var/www/log/alarmas.log","w");
     if(!fp1)
@@ -48,6 +49,7 @@ static int cp_to_www()
     fclose(fp1);
     fclose(fp2);
 
+    // Prevencion
     fp1=fopen("/var/log/hips/prevencion.log","r");
     fp2=fopen("/var/www/log/prevencion.log","w");
     if(!fp1)

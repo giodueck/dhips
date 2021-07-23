@@ -6,6 +6,9 @@
 // prints the html for showing all alarms arranged in tables and divided into PAGE_SIZE sized chunks
 int show_alarm_table(int page);
 
+// prints the html for showing all preventions arranged in tables and divided into PAGE_SIZE sized chunks
+int show_prevention_table(int page);
+
 // Returns the amount of pages filename can be divided up into
 int pagecount(const char *filename);
 
