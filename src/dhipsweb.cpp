@@ -59,9 +59,8 @@ int pagecount(const char *filename)
 
 int parse_and_print_line(const char *filename, int page)
 {
-    cerr << "\n1" << endl;
     int pc = pagecount(filename);
-    cerr << "\n2" << endl;
+    cerr << "pagecount=" << pc << endl;
     FILE *fd = fopen(filename, "r");
     if (!fd)
     {
@@ -71,7 +70,6 @@ int parse_and_print_line(const char *filename, int page)
         return -1;
     } else if (pc == -1)
         return -1;
-    cerr << "\n3" << endl;
 
     int i = 0;
     char buf[BUFSIZ];
