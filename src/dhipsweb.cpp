@@ -59,8 +59,8 @@ int pagecount(const char *filename)
 
 int parse_and_print_line(const char *filename, int page)
 {
-    int pc = pagecount(filename);
-    cerr << "pagecount=" << pc << endl;
+    // int pc = pagecount(filename);
+    int pc = 100;
     FILE *fd = fopen(filename, "r");
     if (!fd)
     {
@@ -79,13 +79,13 @@ int parse_and_print_line(const char *filename, int page)
     if (page <= 0) page = 1;
     else if (page > pc) page = pc;
 
-    cout << "<table>\n";
-    cout << "  <tr>\n";
-    cout << "    <th>Timestamp</th>\n";
-    cout << "    <th>Tipo de alarma</th>\n";
-    cout << "    <th>IP</th>\n";
-    cout << "    <th>Observaciones</th>\n";
-    cout << "  </tr>\n";
+    cout << "<table>";
+    cout << "  <tr>";
+    cout << "    <th>Timestamp</th>";
+    cout << "    <th>Tipo de alarma</th>";
+    cout << "    <th>IP</th>";
+    cout << "    <th>Observaciones</th>";
+    cout << "  </tr>";
 
     while (fgets(buf, BUFSIZ, fd))
     {
@@ -105,28 +105,28 @@ int parse_and_print_line(const char *filename, int page)
         // parse and show alarm if on the right page
         if (i / PAGE_SIZE == page - 1)
         {
-            cout << "  <tr>\n";
+            cout << "  <tr>";
 
             // timestamp
             tok = strtok(buf, "\t");
-            cout << "    <td>" << tok << "</td>\n";
+            cout << "    <td>" << tok << "</td>";
             // description
             tok = strtok(NULL, "\t");
             tok += 3;
-            cout << "    <td>" << tok << "</td>\n";
+            cout << "    <td>" << tok << "</td>";
             // IP
             tok = strtok(NULL, "\t");
             tok += 3;
-            cout << "    <td>" << tok << "</td>\n";
+            cout << "    <td>" << tok << "</td>";
             // aditional
             tok = strtok(NULL, "\t");
             if (tok[0] != '\n')
             {
                 tok += 3;
-                cout << "    <td>" << tok << "</td>\n";
+                cout << "    <td>" << tok << "</td>";
             }
 
-            cout << "  </tr>\n";
+            cout << "  </tr>";
         }
 
         // i is used as an alarm counter
@@ -134,7 +134,7 @@ int parse_and_print_line(const char *filename, int page)
     }
     
     fclose(fd);
-    cout << "</table>\n";
+    cout << "</table>";
 
     return page;
 }
