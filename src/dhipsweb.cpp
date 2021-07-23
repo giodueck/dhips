@@ -26,7 +26,7 @@ int pagecount(const char *filename)
     if (!fd)
     {
         char msg[128];
-        sprintf(msg, "could not open file %s", filename);
+        sprintf(msg, "pagecount: could not open file %s", filename);
         dhips_perror(msg);
         return -1;
     }
