@@ -64,7 +64,7 @@ int parse_and_print_line(const char *filename, int page)
     if (!fd)
     {
         char msg[128];
-        sprintf(msg, "could not open file %s", filename);
+        sprintf(msg, "parse_and_print_line: could not open file %s", filename);
         dhips_perror(msg);
         return -1;
     } else if (pc == -1)
