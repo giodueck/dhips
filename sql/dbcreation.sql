@@ -38,10 +38,20 @@ create table alarm (
     constraint alarm_pkey primary key (alarm_id)
 );
 
+-- type 1 is system file, 2 is binary
 create table monitor (
     monitor_id serial not null,
     fullfilename text not null,
     type int not null,
     active boolean not null,
     constraint monitor_pkey primary key (monitor_id)
+);
+
+-- type 1 is sniffer
+create table targeted_proc (
+    targeted_proc_id serial not null,
+    name text not null,
+    type int not null,
+    active boolean not null,
+    constraint targeted_proc_pkey primary key (targeted_proc_id)
 );

@@ -25,14 +25,14 @@ int ModuleI::DetectorI::setup()
     do
     {
         // system files
-        i = pg_get_monitor_filename(i, I_SYSFILE_TYPE, &dest);
+        i = pg_get_monitor_filename(i, SYSFILE_TYPE, &dest);
         if (i > 0)
         {
             sysFileMonitor->addWatch(string(dest));
         }
 
         // binaries
-        j = pg_get_monitor_filename(j, I_BINARY_TYPE, &dest);
+        j = pg_get_monitor_filename(j, BINARY_TYPE, &dest);
         if (j > 0)
         {
             binMonitor->addWatch(string(dest));

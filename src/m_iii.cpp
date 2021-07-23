@@ -3,6 +3,49 @@
 // Dud functions
 void ModuleIII::stop(){}
 
+// If a process by the name task_name is found, its pid is copied into *pid
+static void getPidByName(pid_t *pid, const char *task_name)
+{
+    DIR *dir;
+    struct dirent *ptr;
+    FILE *fp;
+    char filepath[PATH_MAX];
+    char cur_task_name[FILENAME_MAX];
+    char buf[BUFSIZ];
+
+    dir = opendir("/proc"); 
+    if (NULL != dir)
+    {
+        while ((ptr = readdir(dir)) != NULL) //Cycle read every file/folder under /proc
+        {
+            // Skip if it reads "." or "..", and skip if it reads not the folder name
+            if ((strcmp(ptr->d_name, ".") == 0) || (strcmp(ptr->d_name, "..") == 0))
+                continue;
+            if (DT_DIR != ptr->d_type)
+                continue;
+
+            //Generate the path of the file to be read
+            sprintf(filepath, "/proc/%s/status", ptr->d_name);
+            fp = fopen(filepath, "r");
+            if (NULL != fp)
+            {
+                if( fgets(buf, BUFSIZ-1, fp)== NULL ){
+                    fclose(fp);
+                    continue;
+                }
+                sscanf(buf, "%*s %s", cur_task_name);
+
+                //If the file content meets the requirements, print the name of the path (that is, the PID of the process)
+                if (!strcmp(task_name, cur_task_name)){
+                    sscanf(ptr->d_name, "%d", pid);
+                }
+                fclose(fp);
+            }
+        }
+        closedir(dir);
+    }
+}
+
 ModuleIII::ModuleIII(){}
 
 ModuleIII::DetectorIII::PreventerIII::PreventerIII()
@@ -27,7 +70,7 @@ int ModuleIII::DetectorIII::setup()
     {
         ifc.name = ifaces[0];
         ifc.promisc = false;
-        
+
         // check flags for 'P'
         for (int c = 0; c < flgs[0].length(); c++)
         {
@@ -47,12 +90,23 @@ int ModuleIII::DetectorIII::setup()
         flgs.erase(flgs.begin());
     }
 
+    // get list of sniffers
+    int i = 0;
+    char *dest;
+    do
+    {
+        // system files
+        i = pg_get_targeted_proc_name(i, SNIFFER_TYPE, &dest);
+        if (i > 0)
+            sniffers.push_back(std::string(dest));
+    } while (i > 0);
+
     return 0;
 }
 
 int ModuleIII::DetectorIII::scan(bool setup)
 {
-    // use netstat to see if promiscous mode
+    // use netstat to see if in promiscous mode
     system("/usr/bin/netstat -i > /tmp/netstatlog");
 
     // creates temporary file
@@ -156,11 +210,51 @@ int ModuleIII::DetectorIII::scan(bool setup)
         flgs.erase(flgs.begin());
     }
 
+    // sniffers
+    pid_t pid;
+    for (i = 0; i < sniffers.size(); i++)
+    {
+        pid = 0;
+        getPidByName(&pid, sniffers[i].c_str());
+        if (pid)
+        {
+            // sniffer found
+            char msg[1024];
+            sprintf(msg, "PID: %d Name: %s. Action taken", pid, sniffers[i].c_str()); 
+            log(ALARM_III_SNIFFER_FOUND, "localhost", msg);
+            preventer.setTargetName(sniffers[i].c_str());
+            preventer.setTarget(pid);
+            preventer.act();
+        }
+    }
+
     return 0;
+}
+
+void ModuleIII::DetectorIII::PreventerIII::setTarget(pid_t pid)
+{
+    target = pid;
+}
+
+void ModuleIII::DetectorIII::PreventerIII::setTargetName(const char *name)
+{
+    targetName = name;
 }
 
 int ModuleIII::DetectorIII::PreventerIII::act(int action)
 {
+    if (target)
+    {
+        // forcibly kill the process with pid = target
+        kill(target, SIGKILL);
+
+        // log the action
+        char msg[1024];
+        sprintf(msg, "Killed process \"%s\" with PID %d", targetName, target);
+        log(msg);
+        target = 0;
+    }
+
     return 0;
 }
 

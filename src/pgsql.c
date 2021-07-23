@@ -928,3 +928,64 @@ int pg_get_monitor_filename(int index, int type, char **dest)
 
     return ret;
 }
+
+int pg_get_targeted_proc_name(int index, int type, char **dest)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+    
+    char *proc_name;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Retrieve process name
+    sprintf(cmd, "SELECT name, targeted_proc_id FROM public.targeted_proc WHERE targeted_proc_id > %d AND type = %d AND active = true LIMIT 1;", index, type);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql pg_get_targeted_proc_name: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    // copy 
+    int rows = PQntuples(res);
+    if (rows > 0)
+    {
+        proc_name = PQgetvalue(res, 0, 0);
+        *dest = (char*)malloc(strlen(proc_name) + 1);
+        strcpy(*dest, proc_name);
+        ret = atoi(PQgetvalue(res, 0, 1));
+    } else ret = 0;
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}

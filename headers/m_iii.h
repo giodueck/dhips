@@ -14,11 +14,16 @@
 #include "module.h"
 #include "alarms.h"
 #include "dhipslib.h"
+#include "pgsql.h"
+#include <sys/types.h>
+#include <dirent.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <vector>
+#include <limits>
+#include <signal.h>
 
 class ModuleIII: public Module
 {
@@ -32,10 +37,15 @@ class ModuleIII: public Module
         {
             private:
 
+            const char *targetName;
+            pid_t target;
+
             public:
 
             PreventerIII();
 
+            void setTarget(pid_t pid);
+            void setTargetName(const char *name);
             int act(int action = 0);
         } preventer;
 
@@ -46,6 +56,7 @@ class ModuleIII: public Module
         };
         
         std::vector<std::string> ifaces, flgs;
+        std::vector<std::string> sniffers;
         
         std::vector<struct iface> knownifaces;
 

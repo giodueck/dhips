@@ -6,7 +6,7 @@
 class Preventer
 {
     protected:
-        const char *filename = std::string("/var/log/hips/prevencion.log").c_str();
+        const char *filename = "/var/log/hips/prevencion.log";
         std::string module;
 
     public:
