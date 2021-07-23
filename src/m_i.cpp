@@ -21,7 +21,6 @@ int ModuleI::DetectorI::setup()
     char *dest;
 
     // get all monitoring filenames
-    cout << "Adding watches";
     fflush(stdout);
     do
     {
@@ -31,7 +30,6 @@ int ModuleI::DetectorI::setup()
         {
             sysFileMonitor->addWatch(string(dest));
         }
-        // possible mem leak with dest
 
         // binaries
         j = pg_get_monitor_filename(j, I_BINARY_TYPE, &dest);
@@ -39,12 +37,7 @@ int ModuleI::DetectorI::setup()
         {
             binMonitor->addWatch(string(dest));
         }
-        // possible mem leak with dest
-
-        cout << ".";
-        fflush(stdout);
     } while (i > 0 || j > 0);
-    cout << endl;
 
     // start monitoring
     sysFileMonitor->start(sysFileMonitorFilename + ".log", sysFileMonitorFilename + ".out");

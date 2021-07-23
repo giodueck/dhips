@@ -94,20 +94,29 @@ int main(int argc, char *argv[])
 
     // create module instances
     globalLogger = Detector("DHIPS");
-    globalLogger.log((const char*)"Started", "localhost");
     mod_i = ModuleI();
     mod_ii = ModuleII();
     mod_iii = ModuleIII();
 
     // initialize modules
+    cout << "Starting modules...";
     globalLogger.log((const char*)"Started module initialization", "localhost");
+    cout << "I";
+    fflush(stdout);
     mod_i.setup();
+    cout << "I";
+    fflush(stdout);
     mod_ii.setup();
+    cout << "I";
+    fflush(stdout);
     mod_iii.setup();
+    cout << "\b\b\bdone\n";
+    fflush(stdout);
 
     // while loop
-    globalLogger.log((const char*)"Ready", "localhost");
+    globalLogger.log((const char*)"Started", "localhost");
     killed = false;
+    cout << "HIPS running\n";
     while (!killed)
     {
         cp_to_www();
@@ -119,12 +128,10 @@ int main(int argc, char *argv[])
         
         // sleep a little
         sleep(2);
-        cout << ".";
-        fflush(stdout);
     }
 
     // stop all modules and exit
-    globalLogger.log((const char*)"Stopping modules", "localhost");
+    cout << "\nStopping";
     mod_i.stop();
     cout << endl;
     globalLogger.log((const char*)"Stopped", "localhost");
