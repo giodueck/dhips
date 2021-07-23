@@ -199,9 +199,45 @@ void show_section()
         else if (p > maxpage)
             cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << maxpage << "\" />";
 
+        // show page buttons
+        // first page
+        cout << " Navigate: ";
+        if (p > 1)
+        {
+            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=1\">";
+            cout << "<<";
+            cout << "</a> | ";
+        } else cout << "<< | ";
+        // previous page
+        if (p > 1)
+        {
+            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << p - 1 << "\">";
+            cout << "<";
+            cout << "</a> | ";
+        } else cout << "< | ";
+        // current page
+        printr(p);
+        cout << " | ";
+        // next page
+        if (p < maxpage)
+        {
+            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << p + 1 << "\">";
+            cout << ">";
+            cout << "</a> | ";
+        } else cout << "> | ";
+        // last page
+        if (p < maxpage)
+        {
+            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << maxpage << "\">";
+            cout << ">>";
+            cout << "</a>";
+        } else cout << ">>";
+        
         cout << "<h3>Modulo ";
         printr(p);
         cout << "</h3>";
+
+        show_config(p);
 
         cout << "<br>";
     }
