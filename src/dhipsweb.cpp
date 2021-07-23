@@ -141,12 +141,12 @@ int parse_and_print_line(const char *filename, int page)
 
 int parse_and_print_line_a(int page)
 {
-    return parse_and_print_line("/var/www/alarmas.log", page);
+    return parse_and_print_line("/var/www/log/alarmas.log", page);
 }
 
 int parse_and_print_line_p(int page)
 {
-    return parse_and_print_line("/var/log/hips/prevencion.log", page);
+    return parse_and_print_line("/var/www/log/prevencion.log", page);
 }
 
 int show_alarm_table(int page)

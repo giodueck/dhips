@@ -19,6 +19,37 @@ static void break_handler(int sig)
     killed = true;
 }
 
+static int cp_to_www()
+{
+    FILE *fp1=fopen("/var/log/hips/alarmas.log","r");
+    FILE *fp2=fopen("/var/www/log/alarmas.log","w");
+    if(!fp1)
+    {
+        char msg[128];
+        sprintf(msg, "cp_to_www: could not open /var/log/hips/alarmas.log");
+        dhips_perror(msg);
+        return -1;
+    }
+    if(!fp2)
+	{
+        char msg[128];
+        sprintf(msg, "cp_to_www: could not open /var/www/log/alarmas.log");
+        dhips_perror(msg);
+        return -1;
+	}
+    char *ch=(char *)malloc(BUFSIZ);
+    while(!feof(fp1))
+    {
+        memset(ch,0,BUFSIZ);
+        int size=fread(ch,1,BUFSIZ,fp1);
+        fwrite(ch,size,1,fp2); 
+    }
+    fclose(fp1);
+    fclose(fp2);
+
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
     /* Startup procedures */
@@ -50,6 +81,8 @@ int main(int argc, char *argv[])
     killed = false;
     while (!killed)
     {
+        cp_to_www();
+
         // run module scans
         mod_i.run();
         mod_ii.run();

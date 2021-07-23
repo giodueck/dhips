@@ -2,9 +2,15 @@
 #include "pgsql.h"
 #include "dhipslib.h"
 #include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 int startup()
 {
+    // Directories
+    mkdir("/var/log/hips", 0755);
+    mkdir("/var/www/log", 0755);
+
     // Log files
     FILE *f;
     // alarmas.log

@@ -112,7 +112,7 @@ void show_section()
         cout << "<h2>Alarms</h2>";
 
         int p = 1;
-        int maxpages = pagecount("/var/www/alarmas.log");
+        int maxpages = pagecount("/var/www/log/alarmas.log");
         // int maxpages = 100;
 
         // get query variables
@@ -162,7 +162,7 @@ void show_section()
         } else cout << ">>";
 
         // show alarm table
-        // p = show_alarm_table(p);
+        p = show_alarm_table(p);
 
         cout << "<br>";
 
