@@ -56,9 +56,9 @@ User creation and password editing
 - main script sections should either be collapsible or different pages alltogether
 
 Roles
-- admin: full privileges. Can add/edit users, edit dhips configurations, view process status, start/restart and stop process
-- user: normal privileges. Can edit own password, edit dhips configurations, view process status and start/restart process
-- spectator: restricted privileges. Can edit own password and view dhips configurations and process status
+- spectator: Can edit own password, view process status and see the logs
+- user: spectator privileges included. Can edit dhips configurations, start/restart process
+- admin: user privileges included. Can add/edit users, edit dhips configurations, start/restart and stop process
 
 HIDPS
 - modules will have detector and preventer objects which will handle log writing and module functionality
