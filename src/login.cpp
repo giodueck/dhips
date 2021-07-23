@@ -175,6 +175,8 @@ int add_user(char *user, int session, int e)
     cout << "<input type=\"text\" name=\"nuser\" required><br>";
     cout << "<label for=\"npass\">Password<br></label>";
     cout << "<input type=\"password\" name=\"npass\" required><br>";
+    cout << "<label for=\"mpass\">Confirm password<br></label>";
+    cout << "<input type=\"password\" name=\"mpass\" required><br>";
     cout << "<label for=\"admin\">Admin</label>";
     cout << "<input type=\"radio\" name=\"role\" value=\"admin\" required>";
     cout << "<label for=\"user\"><br>User</label>";
@@ -202,6 +204,11 @@ int add_user(char *user, int session, int e)
         {
             cout << "<p style=\"color:Tomato;\">";
             cout << "A user with that name already exists";
+            cout << "</p>";
+        } else if (e == 2)
+        {
+            cout << "<p style=\"color:Tomato;\">";
+            cout << "New password and confirmation are different";
             cout << "</p>";
         }
     }

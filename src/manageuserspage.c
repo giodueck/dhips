@@ -21,11 +21,21 @@ static void add_user_(char **qs)
 
     // get credentials
     char *username = web_get_from_query_string(qs, (char*)"nuser");
-    char *pass = web_get_from_query_string(qs, (char*)"npass");
+    char *npass = web_get_from_query_string(qs, (char*)"npass");
+    char *mpass = web_get_from_query_string(qs, (char*)"mpass");
     char *role = web_get_from_query_string(qs, (char*)"role");
     
+    // check if password is the same as confirmed
+    if (strcmp(npass, mpass))
+    {
+        // confirmation different
+        // back to main page with error message
+        printf("<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=%s&s=%s&section=addu&e=2\" />", user, session);
+        return;
+    }
+
     // add user
-    int res = pg_add_user(username, crypt(pass, crypt_gensalt("$6$", 0, NULL, 0)), role);
+    int res = pg_add_user(username, crypt(npass, crypt_gensalt("$6$", 0, NULL, 0)), role);
 
     if (res == 0)
     {
