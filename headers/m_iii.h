@@ -38,8 +38,16 @@ class ModuleIII: public Module
 
             int act(int action = 0);
         } preventer;
+
+        struct iface
+        {
+            std::string name;
+            bool promisc;
+        };
         
         std::vector<std::string> ifaces, flgs;
+        
+        std::vector<struct iface> knownifaces;
 
         public:
         
@@ -47,7 +55,7 @@ class ModuleIII: public Module
         DetectorIII(PreventerIII *preventer);
 
         int setup();
-        int scan();
+        int scan(bool setup = false);
     } detector;
 
     public: 
