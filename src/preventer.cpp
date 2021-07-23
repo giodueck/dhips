@@ -2,7 +2,16 @@
 #include "dhipslib.h"
 #include <stdio.h>
 
-int Preventer::log(const char *module, const char *msg)
+using namespace std;
+
+Preventer::Preventer(){}
+
+Preventer::Preventer(string module)
+{
+    this->module = module;
+}
+
+int Preventer::log(const char *module, const char *msg, int action)
 {
     FILE *f;
     struct tm *ts;
@@ -21,8 +30,12 @@ int Preventer::log(const char *module, const char *msg)
     // write to log
     unixtime = time(NULL);
     ts = localtime(&unixtime);
-    fprintf(f, "%02d/%02d/%04d %02d:%02d:%02d :: %s: %s\n",
-        ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module, msg);
+    if (action)
+        fprintf(f, "%02d/%02d/%04d %02d:%02d:%02d\t:: %s.%d: %s\n",
+            ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module, action, msg);
+    else
+        fprintf(f, "%02d/%02d/%04d %02d:%02d:%02d\t:: %s: %s\n",
+            ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module, msg);
 
     // close file and free description
     fclose(f);

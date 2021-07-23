@@ -28,10 +28,7 @@ static bool m_ii_newLogin(vector<struct utmpx> baseline, struct utmpx data)
 // Dud functions
 void ModuleII::stop(){}
 
-ModuleII::ModuleII()
-{
-    
-}
+ModuleII::ModuleII(){}
 
 void ModuleII::setup()
 {
@@ -46,7 +43,6 @@ void ModuleII::run()
 ModuleII::DetectorII::DetectorII()
 {
     this->module = "II";
-    this->preventer = NULL; // no preventing for users already logged in
     vector<struct utmpx> logins = vector<struct utmpx>();
 }
 

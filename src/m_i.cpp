@@ -13,7 +13,6 @@ ModuleI::DetectorI::DetectorI()
     this->module = "I";
     sysFileMonitor = new Monitor("I");
     binMonitor = new Monitor("I");
-    this->preventer = NULL; // no preventing for modifying files
 }
 
 int ModuleI::DetectorI::setup()

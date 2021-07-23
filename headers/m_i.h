@@ -1,7 +1,7 @@
 /*
     Module I
     Description: Verificar archivos binarios de sistema y en particular modificaciones realizadas
-                 en el archivo /etc/passwd o /etc/shadow.
+                en el archivo /etc/passwd o /etc/shadow.
 */
 
 #ifndef MOD_I_H

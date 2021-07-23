@@ -13,6 +13,7 @@ bool killed = false;
 Detector globalLogger;
 ModuleI mod_i;
 ModuleII mod_ii;
+ModuleIII mod_iii;
 
 static void break_handler(int sig)
 {
@@ -96,11 +97,13 @@ int main(int argc, char *argv[])
     globalLogger.log((const char*)"Started", "localhost");
     mod_i = ModuleI();
     mod_ii = ModuleII();
+    mod_iii = ModuleIII();
 
     // initialize modules
     globalLogger.log((const char*)"Started module initialization", "localhost");
     mod_i.setup();
     mod_ii.setup();
+    mod_iii.setup();
 
     // while loop
     globalLogger.log((const char*)"Ready", "localhost");
@@ -112,6 +115,7 @@ int main(int argc, char *argv[])
         // run module scans
         mod_i.run();
         mod_ii.run();
+        mod_iii.run();
         
         // sleep a little
         sleep(2);

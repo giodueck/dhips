@@ -11,7 +11,6 @@ class Detector
     protected:
         const char *filename = "/var/log/hips/alarmas.log";
         std::string module;
-        Preventer *preventer;
 
     public:
 
