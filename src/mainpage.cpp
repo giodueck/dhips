@@ -113,6 +113,7 @@ void show_section()
 
         int p = 1;
         int maxpages = pagecount("/var/log/hips/alarmas.log");
+        cout << "id = " << getuid();
         // int maxpages = 100;
 
         // get query variables
