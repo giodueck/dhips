@@ -87,51 +87,51 @@ int parse_and_print_line(const char *filename, int page)
     cout << "    <th>Observaciones</th>";
     cout << "  </tr>";
 
-    while (fgets(buf, BUFSIZ, fd))
-    {
-        // ignore comments and empty lines
-        if (strlen(buf) == 0)
-            continue;
-        int j = 0;
-        while (j < strlen(buf))
-        {
-            if (buf[j] == ' ' || buf[j] == '\t')
-                j++;
-            else break;
-        }
-        if (buf[j] == '#' || buf[j] == '\n')
-            continue;
+    // while (fgets(buf, BUFSIZ, fd))
+    // {
+    //     // ignore comments and empty lines
+    //     if (strlen(buf) == 0)
+    //         continue;
+    //     int j = 0;
+    //     while (j < strlen(buf))
+    //     {
+    //         if (buf[j] == ' ' || buf[j] == '\t')
+    //             j++;
+    //         else break;
+    //     }
+    //     if (buf[j] == '#' || buf[j] == '\n')
+    //         continue;
         
-        // parse and show alarm if on the right page
-        if (i / PAGE_SIZE == page - 1)
-        {
-            cout << "  <tr>";
+    //     // parse and show alarm if on the right page
+    //     if (i / PAGE_SIZE == page - 1)
+    //     {
+    //         cout << "  <tr>";
 
-            // timestamp
-            tok = strtok(buf, "\t");
-            cout << "    <td>" << tok << "</td>";
-            // description
-            tok = strtok(NULL, "\t");
-            tok += 3;
-            cout << "    <td>" << tok << "</td>";
-            // IP
-            tok = strtok(NULL, "\t");
-            tok += 3;
-            cout << "    <td>" << tok << "</td>";
-            // aditional
-            tok = strtok(NULL, "\t");
-            if (tok[0] != '\n')
-            {
-                tok += 3;
-                cout << "    <td>" << tok << "</td>";
-            }
+    //         // timestamp
+    //         tok = strtok(buf, "\t");
+    //         cout << "    <td>" << tok << "</td>";
+    //         // description
+    //         tok = strtok(NULL, "\t");
+    //         tok += 3;
+    //         cout << "    <td>" << tok << "</td>";
+    //         // IP
+    //         tok = strtok(NULL, "\t");
+    //         tok += 3;
+    //         cout << "    <td>" << tok << "</td>";
+    //         // aditional
+    //         tok = strtok(NULL, "\t");
+    //         if (tok[0] != '\n')
+    //         {
+    //             tok += 3;
+    //             cout << "    <td>" << tok << "</td>";
+    //         }
 
-            cout << "  </tr>";
-        }
+    //         cout << "  </tr>";
+    //     }
 
-        // i is used as an alarm counter
-        i++;
-    }
+    //     // i is used as an alarm counter
+    //     i++;
+    // }
     
     fclose(fd);
     cout << "</table>";
