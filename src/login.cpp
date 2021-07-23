@@ -126,7 +126,9 @@ int change_passwd(char *user, int session, int e)
     cout << "<label for=\"cpass\">Current password<br></label>";
     cout << "<input type=\"password\" name=\"cpass\" required><br>";
     cout << "<label for=\"npass\">New password<br></label>";
-    cout << "<input type=\"password\" name=\"npass\" required><br><br>";
+    cout << "<input type=\"password\" name=\"npass\" required><br>";
+    cout << "<label for=\"mpass\">Confirm new password<br></label>";
+    cout << "<input type=\"password\" name=\"mpass\" required><br><br>";
 
     cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
     cout << "<input type=\"hidden\" name=\"session\" value=" << session << ">";
@@ -137,10 +139,15 @@ int change_passwd(char *user, int session, int e)
 
     if (e)
     {
-        if (e > 0)
+        if (e == 1)
         {
             cout << "<p style=\"color:Tomato;\">";
             cout << "Incorrect password";
+            cout << "</p>";
+        } else if (e == 2)
+        {
+            cout << "<p style=\"color:Tomato;\">";
+            cout << "New password and confirmation are different";
             cout << "</p>";
         } else
         {
@@ -236,7 +243,9 @@ int edit_user(char *user, int session, int e)
 
     // edit password
     cout << "<label for=\"npass\">Password<br></label>";
-    cout << "<input type=\"password\" name=\"npass\">";
+    cout << "<input type=\"password\" name=\"npass\"><br>";
+    cout << "<label for=\"mpass\">Confirm password<br></label>";
+    cout << "<input type=\"password\" name=\"mpass\">";
 
     cout << "<br><input type=\"submit\" name=\"action\" value=\"Update password\"><br><br>";
 

@@ -47,9 +47,15 @@ static void change_pass_(char **qs)
     char *session = web_get_from_query_string(qs, (char*)"session");
     char *cpass = web_get_from_query_string(qs, (char*)"cpass");
     char *npass = web_get_from_query_string(qs, (char*)"npass");
+    char *mpass = web_get_from_query_string(qs, (char*)"mpass");
 
-    fprintf(stderr, "dbg: got here");
-
+    // check if password is the same as confirmed
+    if (strcmp(npass, mpass))
+    {
+        // confirmation different
+        // back to main page with error message
+        printf("<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=%s&s=%s&section=pass&e=2\" />", user, session);
+    } else
     // check current password
     if (pg_check_pass(user, cpass) == 1)    // password correct
     {
@@ -95,7 +101,13 @@ static void edit_user_(char **qs)
     if (strcmp(action, "Update password") == 0)
     {
         char *npass = web_get_from_query_string(qs, (char*)"npass");
-        if (npass && strlen(npass))
+        char *mpass = web_get_from_query_string(qs, (char*)"mpass");
+        if (strcmp(npass, mpass))
+        {
+            // confirmation different
+            // back to main page with error message
+            printf("<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=%s&s=%s&section=pass&e=2\" />", user, session);
+        } else if (npass && strlen(npass))
         {
             res = pg_change_pass(username, crypt(npass, crypt_gensalt("$6$", 0, NULL, 0)));
             e = 1;
