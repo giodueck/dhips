@@ -130,7 +130,7 @@ void show_section()
         // show page buttons
         // first page
         cout << " Navigate: ";
-        if (p > 2)
+        if (p > 1)
         {
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=1\">";
             cout << "<<";
@@ -146,14 +146,14 @@ void show_section()
         // current page
         cout << p << " | ";
         // next page
-        if (p != maxpages)
+        if (p < maxpages)
         {
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=" << p + 1 << "\">";
             cout << ">";
             cout << "</a> | ";
         } else cout << "> | ";
         // last page
-        if (p < maxpages - 1)
+        if (p < maxpages)
         {
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=" << maxpages << "\">";
             cout << ">>";
