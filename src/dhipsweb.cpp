@@ -81,9 +81,9 @@ int parse_and_print_line_a(const char *filename, int page)
     cout << "<table>";
     cout << "  <tr>";
     cout << "    <th>Timestamp</th>";
-    cout << "    <th>Tipo de alarma</th>";
+    cout << "    <th>Description</th>";
     cout << "    <th>IP</th>";
-    cout << "    <th>Observaciones</th>";
+    cout << "    <th>Notes</th>";
     cout << "  </tr>";
 
     while (fgets(buf, BUFSIZ, fd))
@@ -162,7 +162,7 @@ int parse_and_print_line_p(const char *filename, int page)
     cout << "<table>";
     cout << "  <tr>";
     cout << "    <th>Timestamp</th>";
-    cout << "    <th>Tipo de prevencion</th>";
+    cout << "    <th>Description</th>";
     cout << "  </tr>";
 
     while (fgets(buf, BUFSIZ, fd))
@@ -226,4 +226,51 @@ int show_prevention_table(int page)
 {
     print_table_style();
     return parse_and_print_line_p(page);
+}
+
+// Prints n in roman numeral notation
+void printr(int n)
+{
+    // numbers are 1-10, so just do the easy way
+    switch (n)
+    {
+        case 3:
+            cout << "I";
+        case 2:
+            cout << "I";
+        case 1:
+            cout << "I";
+            break;
+        case 4:
+            cout << "IV";
+            break;
+        case 5:
+            cout << "V";
+            break;
+        case 6:
+            cout << "VI";
+            break;
+        case 7:
+            cout << "VII";
+            break;
+        case 8:
+            cout << "VIII";
+            break;
+        case 9:
+            cout << "IX";
+            break;
+        case 10:
+            cout << "X";
+            break;
+        
+        default:
+            break;
+    }
+}
+
+int show_config(int module)
+{
+    
+
+    return 0;
 }

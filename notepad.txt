@@ -56,7 +56,7 @@ User creation and password editing
 - main script sections should either be collapsible or different pages alltogether
 
 Roles
-- spectator: Can edit own password, view process status and see the logs
+- spectator: Can edit own password and see the logs
 - user: spectator privileges included. Can edit dhips configurations, start/restart process
 - admin: user privileges included. Can add/edit users, edit dhips configurations, start/restart and stop process
 

@@ -121,9 +121,8 @@ void show_section()
             filename = "/var/www/log/prevencion.log";
         }
         
-
         int p = 1;
-        int maxpages = pagecount(filename);
+        int maxpage = pagecount(filename);
 
         // get query variables
         user = web_get_from_query_string(qs, (char*)"u");
@@ -135,8 +134,8 @@ void show_section()
         // page index error causes redirect to correct page
         if (p <= 0 and p != -1)
             cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=1\" />";
-        else if (p > maxpages)
-            cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << maxpages << "\" />";
+        else if (p > maxpage)
+            cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << maxpage << "\" />";
 
         // show page buttons
         // first page
@@ -157,16 +156,16 @@ void show_section()
         // current page
         cout << p << " | ";
         // next page
-        if (p < maxpages)
+        if (p < maxpage)
         {
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << p + 1 << "\">";
             cout << ">";
             cout << "</a> | ";
         } else cout << "> | ";
         // last page
-        if (p < maxpages)
+        if (p < maxpage)
         {
-            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << maxpages << "\">";
+            cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << maxpage << "\">";
             cout << ">>";
             cout << "</a>";
         } else cout << ">>";
@@ -181,7 +180,32 @@ void show_section()
 
         cout << "<br>";
 
+    } else if (strcmp(section, "conf") == 0 && role <= 1)
+    {
+        cout << "<h2>Configuraciones</h2>";
+
+        int p = 1, maxpage = 10;
+
+        // get query variables
+        user = web_get_from_query_string(qs, (char*)"u");
+        char *session_s = web_get_from_query_string(qs, (char*)"s");
+        if (session_s) session = atoi(session_s);
+        char *p_s = web_get_from_query_string(qs, (char*)"p");
+        if (p_s) p = atoi(p_s);
+
+        // page index error causes redirect to correct page
+        if (p <= 0 and p != -1)
+            cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=1\" />";
+        else if (p > maxpage)
+            cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=" << section << "&p=" << maxpage << "\" />";
+
+        cout << "<h3>Modulo ";
+        printr(p);
+        cout << "</h3>";
+
+        cout << "<br>";
     }
+
 
     // Back to home section
     cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "\">Home</a>";
@@ -194,6 +218,7 @@ void show_links()
     // show only if role permits it
     
     user = web_get_from_query_string(qs, (char*)"u");
+
     // logs, role: spectator+
     cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog\">";
     cout << "Alarms";
@@ -202,6 +227,14 @@ void show_links()
     cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=plog\">";
     cout << "Preventions";
     cout << "</a><br>";
+
+    // config, role: user+
+    if (role <= 1)
+    {
+        cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=conf\">";
+        cout << "Configuraciones";
+        cout << "</a><br>";
+    }
 }
 
 int main()

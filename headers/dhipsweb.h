@@ -12,4 +12,10 @@ int show_prevention_table(int page);
 // Returns the amount of pages filename can be divided up into
 int pagecount(const char *filename);
 
+// prints the config form for the module of the given number 
+int show_config(int module);
+
+// Prints n in roman numeral notation
+void printr(int n);
+
 #endif // DHIPS_WEB_H
