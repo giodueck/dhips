@@ -59,8 +59,7 @@ int pagecount(const char *filename)
 
 int parse_and_print_line(const char *filename, int page)
 {
-    // int pc = pagecount(filename);
-    int pc = 100;
+    int pc = pagecount(filename);
     FILE *fd = fopen(filename, "r");
     if (!fd)
     {

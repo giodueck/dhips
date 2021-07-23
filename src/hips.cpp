@@ -31,9 +31,35 @@ static int cp_to_www()
         return -1;
     }
     if(!fp2)
-	{
+    {
         char msg[128];
         sprintf(msg, "cp_to_www: could not open /var/www/log/alarmas.log");
+        dhips_perror(msg);
+        return -1;
+    }
+    char *ch=(char *)malloc(BUFSIZ);
+    while(!feof(fp1))
+    {
+        memset(ch,0,BUFSIZ);
+        int size=fread(ch,1,BUFSIZ,fp1);
+        fwrite(ch,size,1,fp2); 
+    }
+    fclose(fp1);
+    fclose(fp2);
+
+    FILE *fp1=fopen("/var/log/hips/prevencion.log","r");
+    FILE *fp2=fopen("/var/www/log/prevencion.log","w");
+    if(!fp1)
+    {
+        char msg[128];
+        sprintf(msg, "cp_to_www: could not open /var/log/hips/prevencion.log");
+        dhips_perror(msg);
+        return -1;
+    }
+    if(!fp2)
+	{
+        char msg[128];
+        sprintf(msg, "cp_to_www: could not open /var/www/log/prevencion.log");
         dhips_perror(msg);
         return -1;
 	}

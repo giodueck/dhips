@@ -113,7 +113,6 @@ void show_section()
 
         int p = 1;
         int maxpages = pagecount("/var/www/log/alarmas.log");
-        // int maxpages = 100;
 
         // get query variables
         user = web_get_from_query_string(qs, (char*)"u");
@@ -123,8 +122,8 @@ void show_section()
         if (p_s) p = atoi(p_s);
 
         // page index error causes redirect to correct page
-        // if (p <= 0 and p != -1)
-        //     cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=1\" />";
+        if (p <= 0 and p != -1)
+            cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=1\" />";
         else if (p > maxpages)
             cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=" << maxpages << "\" />";
 
@@ -138,7 +137,7 @@ void show_section()
             cout << "</a> | ";
         } else cout << "<< | ";
         // previous page
-        if (p != 1)
+        if (p > 1)
         {
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=" << p - 1 << "\">";
             cout << "<";
