@@ -28,6 +28,7 @@ int pagecount(const char *filename)
         char msg[128];
         sprintf(msg, "could not open file %s", filename);
         dhips_perror(msg);
+        fflush(stderr);
         return -1;
     }
 
@@ -66,6 +67,7 @@ int parse_and_print_line(const char *filename, int page)
         char msg[128];
         sprintf(msg, "could not open file %s", filename);
         dhips_perror(msg);
+        fflush(stderr);
         return -1;
     } else if (pc == -1)
         return -1;

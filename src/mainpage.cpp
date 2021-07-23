@@ -122,8 +122,8 @@ void show_section()
         if (p_s) p = atoi(p_s);
 
         // page index error causes redirect to correct page
-        if (p <= 0 and p != -1)
-            cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=1\" />";
+        // if (p <= 0 and p != -1)
+        //     cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=1\" />";
         else if (p > maxpages)
             cout << "<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/main?u=" << user << "&s=" << session << "&section=alog&p=" << maxpages << "\" />";
 
