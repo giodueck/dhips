@@ -83,6 +83,7 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
 {
     cout << outmsg;
     globalLogger.log(logmsg.c_str(), "localhost", addmsg);
+    cp_to_www();
     int chars = 0;
     if (pg_module_enabled(1) == 1)
     {
