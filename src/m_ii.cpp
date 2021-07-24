@@ -1,4 +1,5 @@
 #include "m_ii.h"
+#include "dhipslib.h"
 
 using namespace std;
 
@@ -51,6 +52,10 @@ int ModuleII::DetectorII::setup()
     // check all the users logged when setup was called to get a baseline
     struct utmpx data;
     FILE *log_file = fopen(_PATH_UTMP, "r");
+    if (!log_file)
+    {
+        return -1;
+    }
     memset(&data, 0, sizeof(struct utmpx));
 
     while(fread(&data, sizeof(struct utmpx), 1, log_file) == 1)
@@ -66,6 +71,13 @@ int ModuleII::DetectorII::scan()
 {
     struct utmpx data;
     FILE *log_file = fopen(_PATH_UTMP, "r");
+    if (!log_file)
+    {
+        char msg[128];
+        sprintf(msg, "II: could not open file %s", _PATH_UTMP);
+        dhips_perror(msg);
+        return -1;
+    }
     memset(&data, 0, sizeof(struct utmpx));
 
     bool changed = false;

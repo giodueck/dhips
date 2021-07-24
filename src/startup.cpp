@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <stdlib.h>
 
 int startup()
 {
@@ -37,6 +38,12 @@ int startup()
         fclose(f);
     }
 
+    // utmp for WSL2 Ubuntu, which does not create it by default
+    FILE *log_file = fopen("/var/run/utmp", "r");
+    if (!log_file)
+        system("/bin/sudo /bin/bash -c \"/bin/echo '[1] [00053] [~~  ] [runlevel] [~       ] [5.4.72-microsoft-standard-WSL2] [0.0.0.0    ] [2021-07-22T00:00:00,040218+00:00]' | /bin/utmpdump -r > /var/run/utmp\" 2> /dev/null");
+    else fclose(log_file);
+    
     // monitor.out and monitor.log
     f = fopen("/var/log/hips/sfmonitor.out", "a");
     fclose(f);
