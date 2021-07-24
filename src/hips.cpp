@@ -103,16 +103,33 @@ int main(int argc, char *argv[])
     // initialize modules
     cout << "Starting modules...";
     globalLogger.log((const char*)"Started module initialization", "localhost");
-    cout << "I";
-    fflush(stdout);
-    mod_i.setup();
-    cout << "I";
-    fflush(stdout);
-    mod_ii.setup();
-    cout << "I";
-    fflush(stdout);
-    mod_iii.setup();
-    cout << "\b\b\bdone\n";
+    int chars = 0;
+    if (pg_module_enabled(1) == 1)
+    {
+        cout << "I";
+        fflush(stdout);
+        mod_i.setup();
+        chars = 1;
+    }
+    if (pg_module_enabled(2) == 1)
+    {
+        while (chars--) cout << '\b';
+        cout << "II";
+        fflush(stdout);
+        mod_ii.setup();
+        chars = 2;
+    }
+    if (pg_module_enabled(3) == 1)
+    {
+        while (chars--) cout << '\b';
+        cout << "III";
+        fflush(stdout);
+        mod_iii.setup();
+        chars = 3;
+    }
+
+    while (chars--) cout << '\b';
+    cout << "done\n";
     fflush(stdout);
 
     // while loop

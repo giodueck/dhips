@@ -1,8 +1,11 @@
 #include "dhipsweb.h"
 #include "dhipslib.h"
+#include "pgsql.h"
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
+#include <vector>
+#include <alarms.h>
 
 using namespace std;
 
@@ -268,11 +271,60 @@ void printr(int n)
     }
 }
 
-int show_config(int module)
+int show_config_i(char *user, int session)
+{
+    vector<string> sysFiles, binFiles;
+    vector<bool> sysFilesActive, binFilesActive;
+    int aux;
+    char *dest;
+    int i = 0, j = 0;
+    do
+    {
+        // system files
+        i = pg_get_monitor_filename_conf(i, SYSFILE_TYPE, &dest, &aux);
+        if (i > 0)
+        {
+            sysFiles.push_back(string(dest));
+            if (aux) sysFilesActive.push_back(true);
+            else sysFilesActive.push_back(false);
+        }
+
+        // binaries
+        j = pg_get_monitor_filename_conf(j, BINARY_TYPE, &dest, &aux);
+        if (j > 0)
+        {
+            binFiles.push_back(string(dest));
+            if (aux) binFilesActive.push_back(true);
+            else binFilesActive.push_back(false);
+        }
+    } while (i > 0 || j > 0);
+
+    // show form with data from 
+    cout << "<form action=\"/cgi-bin/config\" method=\"post\">";
+
+    // toggle module
+    cout << "<input type=\"submit\" name=\"apply\" value=\"Apply configuration\"><br><br>";
+
+    cout << "<input type=\"checkbox\" name=\"enable\" " << ((pg_module_enabled(1) == 1) ? "checked" : "") << ">";
+    cout << "<label for=\"enable\"> Enabled</label><br>";
+
+
+    // hidden info
+    cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
+    cout << "<input type=\"hidden\" name=\"session\" value=" << session << ">";
+    cout << "<input type=\"hidden\" name=\"mod\" value=1>";
+
+    cout << "</form>";
+
+    return 0;
+}
+
+int show_config(int module, char *user, int session)
 {
     switch (module)
     {
         case 1:
+            show_config_i(user, session);
             break;
         case 2:
             break;

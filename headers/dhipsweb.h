@@ -13,7 +13,7 @@ int show_prevention_table(int page);
 int pagecount(const char *filename);
 
 // prints the config form for the module of the given number 
-int show_config(int module);
+int show_config(int module, char *user, int session);
 
 // Prints n in roman numeral notation
 void printr(int n);

@@ -38,6 +38,24 @@ create table alarm (
     constraint alarm_pkey primary key (alarm_id)
 );
 
+create table module_status (
+    module_id int not null,
+    status boolean not null,
+    constraint module_status_pkey primary key (module_id)
+);
+
+insert into module_status values
+    (1, true),
+    (2, true),
+    (3, true),
+    (4, true),
+    (5, true),
+    (6, true),
+    (7, true),
+    (8, true),
+    (9, true),
+    (10, true);
+
 -- type 1 is system file, 2 is binary
 create table monitor (
     monitor_id serial not null,

@@ -194,7 +194,7 @@ int main()
     if (pg_check_session(user, atoi(session), SESSION_LIFETIME) != 1)
     {
         printf("<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?u=%s\" />", user);
-        printf ("<body>");
+        printf ("</body>");
         return 1;
     }
 

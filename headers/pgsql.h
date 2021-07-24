@@ -69,9 +69,20 @@ char *pg_get_alarm_description(int alarm_id);
 //  Returns the monitor_id of the monitor item if found, 0 if none found, and negative if errors occur
 int pg_get_monitor_filename(int index, int type, char **dest);
 
+// Copies the first filename with monitor_id > index and the given type into dest regardless of active.
+// Copies active into int *active, as true = 1 and false = 0. dest will be malloced, free after done.
+//  Returns the monitor_id of the monitor item if found, 0 if none found, and negative if errors occur
+int pg_get_monitor_filename_conf(int index, int type, char **dest, int *active);
+
 // Copies the first active targeted_proc name with targeted_proc_id > index and the given type into dest.
 // dest will be malloced, free after done.
 //  Returns the targeted_proc_id of the targeted_proc item if found, 0 if none found, and negative if errors occur
 int pg_get_targeted_proc_name(int index, int type, char **dest);
+
+//  Returns 1 if enabled, 0 if not, 2 if not found, negatives if error
+int pg_module_enabled(int module);
+
+//  Returns 0 if enabled, 1 if not found, negatives if error
+int pg_module_toggle(int module, int status);
 
 #endif // PGSQL_H

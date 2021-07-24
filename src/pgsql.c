@@ -929,6 +929,70 @@ int pg_get_monitor_filename(int index, int type, char **dest)
     return ret;
 }
 
+int pg_get_monitor_filename_conf(int index, int type, char **dest, int *active)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+    
+    char *fullfilename;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Retrieve fullfilename
+    sprintf(cmd, "SELECT fullfilename, monitor_id, active FROM public.monitor WHERE monitor_id > %d AND type = %d LIMIT 1;", index, type);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql pg_get_monitor_filename: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    // copy 
+    int rows = PQntuples(res);
+    if (rows > 0)
+    {
+        fullfilename = PQgetvalue(res, 0, 0);
+        *dest = (char*)malloc(strlen(fullfilename) + 1);
+        strcpy(*dest, fullfilename);
+        ret = atoi(PQgetvalue(res, 0, 1));
+        if (strcmp("true", PQgetvalue(res, 0, 2)) == 0 || strcmp("t", PQgetvalue(res, 0, 2)) == 0)
+            *active = 1;
+        else *active = 0;
+    } else ret = 0;
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}
+
 int pg_get_targeted_proc_name(int index, int type, char **dest)
 {
     PGconn     *conn;
@@ -978,6 +1042,120 @@ int pg_get_targeted_proc_name(int index, int type, char **dest)
         strcpy(*dest, proc_name);
         ret = atoi(PQgetvalue(res, 0, 1));
     } else ret = 0;
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}
+
+int pg_module_enabled(int module)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Retrieve module status
+    sprintf(cmd, "SELECT status FROM public.module_status WHERE module_id = %d;", module);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql pg_module_enabled: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    int rows = PQntuples(res);
+    if (rows)
+    {
+        if (strcmp("true", PQgetvalue(res, 0, 0)) == 0 || strcmp("t", PQgetvalue(res, 0, 0)) == 0)
+            ret = 1;
+        else ret = 0;
+    } else ret = 2;
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}
+
+int pg_module_toggle(int module, int status)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Set module status
+    sprintf(cmd, "UPDATE public.module_status SET status = %s WHERE module_id = %d RETURNING module_id;", (status == 1) ? "true" : "false", module);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql pg_module_enabled: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    int rows = PQntuples(res);
+    if (rows)
+    {
+        ret = 0;
+    } else ret = 1;
     PQclear(res);
 
     /* end the transaction */

@@ -237,7 +237,7 @@ void show_section()
         printr(p);
         cout << "</h3>";
 
-        show_config(p);
+        show_config(p, user, session);
 
         cout << "<br>";
     }
