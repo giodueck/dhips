@@ -273,33 +273,6 @@ void printr(int n)
 
 int show_config_i(char *user, int session)
 {
-    vector<string> sysFiles, binFiles;
-    vector<bool> sysActive, binActive;
-    int aux;
-    char *dest;
-    int i = 0, j = 0;
-    do
-    {
-        // system files
-        i = pg_get_monitor_filename_conf(i, SYSFILE_TYPE, &dest, &aux);
-        if (i > 0)
-        {
-            sysFiles.push_back(string(dest));
-            if (aux) sysActive.push_back(true);
-            else sysActive.push_back(false);
-        }
-
-        // binaries
-        j = pg_get_monitor_filename_conf(j, BINARY_TYPE, &dest, &aux);
-        if (j > 0)
-        {
-            binFiles.push_back(string(dest));
-            if (aux) binActive.push_back(true);
-            else binActive.push_back(false);
-        }
-    } while (i > 0 || j > 0);
-    int sfc = sysFiles.size(), bc = binFiles.size();
-
     print_table_style();
 
     // show form with data from 
@@ -308,8 +281,8 @@ int show_config_i(char *user, int session)
     // toggle module
     cout << "<input type=\"submit\" name=\"apply\" value=\"Apply configuration\"><br><br>";
 
-    cout << "<input type=\"checkbox\" name=\"enable\" " << ((pg_module_enabled(1) == 1) ? "checked" : "") << ">";
-    cout << "<label for=\"enable\"> Enabled</label><br>";
+    cout << "<input type=\"checkbox\" name=\"enabled\" " << ((pg_module_enabled(1) == 1) ? "checked" : "") << ">";
+    cout << "<label for=\"enabled\"> Enabled</label><br>";
 
     // Toggle all system files
     cout << "<input type=\"checkbox\" name=\"enablesys\" checked>";
@@ -318,34 +291,6 @@ int show_config_i(char *user, int session)
     // Toggle all binary files
     cout << "<input type=\"checkbox\" name=\"enablebin\" checked>";
     cout << "<label for=\"enablebin\"> Monitor binary files</label><br>";
-
-    // Toggle all system files
-    cout << "<input type=\"checkbox\" name=\"enablesysall\">";
-    cout << "<label for=\"enablesysall\"> Add all system files</label><br>";
-
-    // Toggle all binary files
-    cout << "<input type=\"checkbox\" name=\"enablebinall\">";
-    cout << "<label for=\"enablebinall\"> Add all binary files</label><br>";
-
-    char auxs[1024];
-    // List all system files in monitor
-    cout << "<p>System file list</p>";
-    for (i = 0; i < sfc; i++)
-    {
-        // display filename and current status
-        sprintf(auxs, "s%d", i);
-        cout << "<input type=\"checkbox\" name=\"" << auxs << "\" " << ((sysActive[i]) ? "checked" : "") << ">";
-        cout << "<label for=\"" << auxs << "\">" << sysFiles[i] << "</label><br>";
-    }
-    // List all binary files in monitor
-    cout << "<p>System file list</p>";
-    for (j = 0; j < bc; j++)
-    {
-        // display filename and current status
-        sprintf(auxs, "b%d", j);
-        cout << "<input type=\"checkbox\" name=\"" << auxs << "\" " << ((binActive[j]) ? "checked" : "") << ">";
-        cout << "<label for=\"" << auxs << "\">" << binFiles[j] << "</label><br>";
-    }
 
     // hidden info
     cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";

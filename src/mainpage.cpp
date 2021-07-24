@@ -188,12 +188,6 @@ void show_section()
         int p = 1, maxpage = 10;
 
         // get query variables
-        char *r = web_get_from_query_string(qs, (char*)"r");
-        if (r && strcmp(r, "true") == 0)
-        {
-            // set config changed
-            pg_set_config_changed(1);
-        }
         user = web_get_from_query_string(qs, (char*)"u");
         char *session_s = web_get_from_query_string(qs, (char*)"s");
         if (session_s) session = atoi(session_s);
@@ -201,43 +195,43 @@ void show_section()
         if (!p_s)
         {
             // Config home, show links for each module
-            cout << "<p>Select a module (site may take a while to load for some modules):</p>";
+            cout << "<p>Select a module:</p>";
 
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=conf&p=1\">";
             cout << "I";
-            cout << "</a><br>";
+            cout << "</a> | ";
 
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=conf&p=2\">";
             cout << "II";
-            cout << "</a><br>";
+            cout << "</a> | ";
 
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=conf&p=3\">";
             cout << "III";
-            cout << "</a><br>";
+            cout << "</a> | ";
 
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=conf&p=4\">";
             cout << "IV";
-            cout << "</a><br>";
+            cout << "</a> | ";
 
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=conf&p=5\">";
             cout << "V";
-            cout << "</a><br>";
+            cout << "</a> | ";
 
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=conf&p=6\">";
             cout << "VI";
-            cout << "</a><br>";
+            cout << "</a> | ";
 
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=conf&p=7\">";
             cout << "VII";
-            cout << "</a><br>";
+            cout << "</a> | ";
 
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=conf&p=8\">";
             cout << "VIII";
-            cout << "</a><br>";
+            cout << "</a> | ";
 
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=conf&p=9\">";
             cout << "IX";
-            cout << "</a><br>";
+            cout << "</a> | ";
 
             cout << "<a href=\"/cgi-bin/main?u=" << user << "&s=" << session << "&section=conf&p=10\">";
             cout << "X";
