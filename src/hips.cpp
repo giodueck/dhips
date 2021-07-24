@@ -81,6 +81,7 @@ static int cp_to_www()
 
 static void init(string outmsg, string logmsg, const char *addmsg = NULL)
 {
+    string modules = "";
     cout << outmsg;
     globalLogger.log(logmsg.c_str(), "localhost", addmsg);
     cp_to_www();
@@ -91,6 +92,7 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
         fflush(stdout);
         mod_i.setup();
         chars = 1;
+        modules += "I";
     }
     if (pg_module_enabled(2) == 1)
     {
@@ -99,6 +101,8 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
         fflush(stdout);
         mod_ii.setup();
         chars = 2;
+        if (modules.length()) modules += ", ";
+        modules += "II";
     }
     if (pg_module_enabled(3) == 1)
     {
@@ -107,13 +111,20 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
         fflush(stdout);
         mod_iii.setup();
         chars = 3;
+        if (modules.length()) modules += ", ";
+        modules += "III";
     }
 
     while (chars--) cout << '\b';
     cout << "done\n";
     fflush(stdout);
 
-    if (addmsg) globalLogger.log("Restarted", "localhost");
+    modules = "Modules active: " + modules;
+
+    if (addmsg) globalLogger.log("Restarted", "localhost", modules.c_str());
+    else globalLogger.log("Started", "localhost", modules.c_str());
+
+    cp_to_www();
 }
 
 int main(int argc, char *argv[])
@@ -142,8 +153,6 @@ int main(int argc, char *argv[])
     init(string("Starting modules..."), string("Started module initialization"));
 
     // while loop
-    globalLogger.log("Started", "localhost");
-    cp_to_www();
     killed = false;
     cout << "HIPS running\n";
     while (!killed)
@@ -155,13 +164,13 @@ int main(int argc, char *argv[])
             pg_set_config_changed(0);
             cout << "HIPS running\n";
         }
-        cp_to_www();
 
         // run module scans
         mod_i.run();
         mod_ii.run();
         mod_iii.run();
         
+        cp_to_www();
         // sleep a little
         sleep(2);
     }
