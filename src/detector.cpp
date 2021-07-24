@@ -16,7 +16,7 @@ Detector::Detector(string module)
     this->module = module;
 }
 
-int Detector::log(const char *msg, const char *location)
+int Detector::log(const char *msg, const char *location, const char *additional)
 {
     char *description = NULL;
     int severity = 0, res;
@@ -37,8 +37,13 @@ int Detector::log(const char *msg, const char *location)
     // write to log
     unixtime = time(NULL);
     ts = localtime(&unixtime);
-    fprintf(f, "%02d/%02d/%04d %02d:%02d:%02d\t:: %s: %s\t:: %s\t::\n",
-        ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module.c_str(), msg, location);
+    if (additional)
+    {
+        fprintf(f, "%02d/%02d/%04d %02d:%02d:%02d\t:: %s: %s\t:: %s\t:: %s\n",
+            ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module.c_str(), msg, location, additional);
+    } else
+        fprintf(f, "%02d/%02d/%04d %02d:%02d:%02d\t:: %s: %s\t:: %s\t::\n",
+            ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module.c_str(), msg, location);
 
     // close file and free description
     fclose(f);

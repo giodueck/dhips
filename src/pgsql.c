@@ -894,7 +894,7 @@ int pg_get_monitor_filename(int index, int type, char **dest)
     PQclear(res);
 
     // Retrieve fullfilename
-    sprintf(cmd, "SELECT fullfilename, monitor_id FROM public.monitor WHERE monitor_id > %d AND type = %d AND active = true LIMIT 1;", index, type);
+    sprintf(cmd, "SELECT fullfilename, monitor_id FROM public.monitor WHERE monitor_id > %d AND type = %d AND active = true ORDER BY monitor_id LIMIT 1;", index, type);
     // Set stderr buffer to be buf
     setbuf(stderr, buf);
     res = PQexec(conn, cmd);
@@ -955,7 +955,7 @@ int pg_get_monitor_filename_conf(int index, int type, char **dest, int *active)
     PQclear(res);
 
     // Retrieve fullfilename
-    sprintf(cmd, "SELECT fullfilename, monitor_id, active FROM public.monitor WHERE monitor_id > %d AND type = %d LIMIT 1;", index, type);
+    sprintf(cmd, "SELECT fullfilename, monitor_id, active FROM public.monitor WHERE monitor_id > %d AND type = %d ORDER BY monitor_id LIMIT 1;", index, type);
     // Set stderr buffer to be buf
     setbuf(stderr, buf);
     res = PQexec(conn, cmd);
@@ -1157,6 +1157,221 @@ int pg_module_toggle(int module, int status)
         ret = 0;
     } else ret = 1;
     PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}
+
+int pg_set_monitor_filename_conf(int index, int type, const char *fullfilename, int active)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Set monitor status
+    sprintf(cmd, "UPDATE public.monitor SET active = %s WHERE fullfilename = '%s' AND type = %d RETURNING monitor_id;",
+            (active == 1) ? "true" : "false", fullfilename, type);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql pg_set_monitor_filename_conf: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    int rows = PQntuples(res);
+    if (rows)
+    {
+        ret = 0;
+    } else ret = 1;
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}
+
+int pg_set_config_changed(int changed)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Set config changed
+    sprintf(cmd, "UPDATE public.config_change SET changed = %s WHERE config_change_id = 1 RETURNING config_change_id;", (changed == 1) ? "true" : "false");
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql pg_set_config_changed: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    int rows = PQntuples(res);
+    if (rows)
+    {
+        ret = 0;
+    } else ret = 1;
+    PQclear(res);
+
+    // row does not exist
+    if (ret == 1)
+    {
+        // Insert config changed
+        sprintf(cmd, "INSERT INTO public.config_change VALUES (1, %s);", (changed == 1) ? "true" : "false");
+        // Set stderr buffer to be buf
+        setbuf(stderr, buf);
+        res = PQexec(conn, cmd);
+
+        if (PQresultStatus(res) != PGRES_TUPLES_OK)
+        {
+            // error retrieving data
+            fprintf(stderr, "dhips//pgsql pg_set_monitor_filename_conf: no data retrieved: %s\n", PQresultErrorMessage(res));
+            PQclear(res);
+            exit_nicely(conn);
+            return -1;
+        }
+
+        ret = 0;
+        PQclear(res);
+    }
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}
+
+int pg_get_config_changed()
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Get config changed
+    sprintf(cmd, "SELECT changed FROM public.config_change WHERE config_change_id = 1;");
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql pg_get_config_changed: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    int rows = PQntuples(res);
+    if (rows)
+    {
+        if (strcmp("true", PQgetvalue(res, 0, 0)) == 0 || strcmp("t", PQgetvalue(res, 0, 0)) == 0)
+            ret = 1;
+        else ret = 0;
+    } else ret = -1;
+    PQclear(res);
+
+    // row does not exist
+    if (ret == -1)
+    {
+        // Insert config changed
+        sprintf(cmd, "INSERT INTO public.config_change VALUES (1, false);");
+        // Set stderr buffer to be buf
+        setbuf(stderr, buf);
+        res = PQexec(conn, cmd);
+
+        if (PQresultStatus(res) != PGRES_TUPLES_OK)
+        {
+            // error retrieving data
+            fprintf(stderr, "dhips//pgsql pg_set_monitor_filename_conf: no data retrieved: %s\n", PQresultErrorMessage(res));
+            PQclear(res);
+            exit_nicely(conn);
+            return -1;
+        }
+
+        ret = 0;
+        PQclear(res);
+    }
 
     /* end the transaction */
     res = PQexec(conn, "END");

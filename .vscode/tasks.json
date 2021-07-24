@@ -107,7 +107,7 @@
 			"command": "/usr/bin/g++",
 			"args": [
 				"-g",
-				"/home/giodueck/vscode/dhips/src/configpage.c",
+				"/home/giodueck/vscode/dhips/src/configpage.cpp",
 				"/home/giodueck/vscode/dhips/src/web.c",
 				"/home/giodueck/vscode/dhips/src/pgsql.c",
 				"/home/giodueck/vscode/dhips/src/login.cpp",

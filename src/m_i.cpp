@@ -21,7 +21,6 @@ int ModuleI::DetectorI::setup()
     char *dest;
 
     // get all monitoring filenames
-    fflush(stdout);
     do
     {
         // system files

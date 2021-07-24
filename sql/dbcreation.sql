@@ -56,6 +56,15 @@ insert into module_status values
     (9, true),
     (10, true);
 
+create table config_change (
+    config_change_id int not null,
+    changed boolean not null,
+    constraint config_change_pkey primary key (config_change_id)
+);
+
+insert into config_change values
+    (1, false);
+
 -- type 1 is system file, 2 is binary
 create table monitor (
     monitor_id serial not null,

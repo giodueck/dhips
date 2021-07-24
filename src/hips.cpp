@@ -79,30 +79,10 @@ static int cp_to_www()
     return 0;
 }
 
-int main(int argc, char *argv[])
+static void init(string outmsg, string logmsg, const char *addmsg = NULL)
 {
-    /* Startup procedures */
-    int s = startup();
-
-    // test code
-
-    // set up break signal handling
-    struct sigaction sigbreak;
-
-    sigbreak.sa_handler = break_handler;
-    sigemptyset (&sigbreak.sa_mask);
-    sigbreak.sa_flags = 0;
-    if (sigaction(SIGINT, &sigbreak, NULL) != 0) dhips_perror("sigaction");
-
-    // create module instances
-    globalLogger = Detector("DHIPS");
-    mod_i = ModuleI();
-    mod_ii = ModuleII();
-    mod_iii = ModuleIII();
-
-    // initialize modules
-    cout << "Starting modules...";
-    globalLogger.log((const char*)"Started module initialization", "localhost");
+    cout << outmsg;
+    globalLogger.log(logmsg.c_str(), "localhost", addmsg);
     int chars = 0;
     if (pg_module_enabled(1) == 1)
     {
@@ -131,6 +111,31 @@ int main(int argc, char *argv[])
     while (chars--) cout << '\b';
     cout << "done\n";
     fflush(stdout);
+}
+
+int main(int argc, char *argv[])
+{
+    /* Startup procedures */
+    int s = startup();
+
+    // test code
+
+    // set up break signal handling
+    struct sigaction sigbreak;
+
+    sigbreak.sa_handler = break_handler;
+    sigemptyset (&sigbreak.sa_mask);
+    sigbreak.sa_flags = 0;
+    if (sigaction(SIGINT, &sigbreak, NULL) != 0) dhips_perror("sigaction");
+
+    // create module instances
+    globalLogger = Detector("DHIPS");
+    mod_i = ModuleI();
+    mod_ii = ModuleII();
+    mod_iii = ModuleIII();
+
+    // initialize modules
+    init(string("Starting modules..."), string("Started module initialization"));
 
     // while loop
     globalLogger.log((const char*)"Started", "localhost");
@@ -138,6 +143,13 @@ int main(int argc, char *argv[])
     cout << "HIPS running\n";
     while (!killed)
     {
+        // check if config changed
+        if (pg_get_config_changed() == 1)
+        {
+            init(string("Restarting modules..."), string("Restarted module initialization"), (const char *)"Settings applied");
+            pg_set_config_changed(0);
+            cout << "HIPS running\n";
+        }
         cp_to_www();
 
         // run module scans

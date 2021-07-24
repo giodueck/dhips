@@ -46,7 +46,7 @@ class Detector
         P:  char *msg: an additional optional message or observation
             char *location: the IP address that originated the alarm, or localhost
     */
-    int log(const char *msg, const char *location);
+    int log(const char *msg, const char *location, const char *additional = NULL);
 
     /* This function is called once at the start of the program */
     int setup();
