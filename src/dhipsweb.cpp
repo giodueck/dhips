@@ -312,13 +312,36 @@ int show_config_ii(char *user, int session)
     // toggle module
     cout << "<input type=\"submit\" name=\"apply\" value=\"Apply configuration\"><br><br>";
 
-    cout << "<input type=\"checkbox\" name=\"enabled\" " << ((pg_module_enabled(1) == 1) ? "checked" : "") << ">";
+    cout << "<input type=\"checkbox\" name=\"enabled\" " << ((pg_module_enabled(2) == 1) ? "checked" : "") << ">";
     cout << "<label for=\"enabled\"> Enabled</label><br>";
 
     // hidden info
     cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
     cout << "<input type=\"hidden\" name=\"session\" value=" << session << ">";
     cout << "<input type=\"hidden\" name=\"mod\" value=2>";
+
+    cout << "</form>";
+
+    return 0;
+}
+
+int show_config_iii(char *user, int session)
+{
+    print_table_style();
+
+    // show form with data from 
+    cout << "<form action=\"/cgi-bin/config\" method=\"post\">";
+
+    // toggle module
+    cout << "<input type=\"submit\" name=\"apply\" value=\"Apply configuration\"><br><br>";
+
+    cout << "<input type=\"checkbox\" name=\"enabled\" " << ((pg_module_enabled(3) == 1) ? "checked" : "") << ">";
+    cout << "<label for=\"enabled\"> Enabled</label><br>";
+
+    // hidden info
+    cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
+    cout << "<input type=\"hidden\" name=\"session\" value=" << session << ">";
+    cout << "<input type=\"hidden\" name=\"mod\" value=3>";
 
     cout << "</form>";
 
@@ -336,6 +359,7 @@ int show_config(int module, char *user, int session)
             show_config_ii(user, session);
             break;
         case 3:
+            show_config_iii(user, session);
             break;
         case 4:
             break;

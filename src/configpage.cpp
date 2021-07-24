@@ -75,6 +75,10 @@ int main()
     case 1:
         conf1(qs);
         break;
+    case 2:
+        break;
+    case 3:
+        break;
     
     default:
         break;
@@ -84,7 +88,7 @@ int main()
 
     printf("<h3>Settings applied</h3>");
     printf("<a href=\"/cgi-bin/main?u=%s&s=%s&section=conf\">", user, session);
-    printf("Settings");
+    printf("Back to settings");
     printf("</a> | ");
     printf("<a href=\"/cgi-bin/main?u=%s&s=%s\">Home</a>", user, session);
     
