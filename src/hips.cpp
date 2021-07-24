@@ -112,6 +112,8 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
     while (chars--) cout << '\b';
     cout << "done\n";
     fflush(stdout);
+
+    if (addmsg) globalLogger.log("Restarted", "localhost");
 }
 
 int main(int argc, char *argv[])
@@ -136,10 +138,12 @@ int main(int argc, char *argv[])
     mod_iii = ModuleIII();
 
     // initialize modules
+    pg_set_config_changed(0);
     init(string("Starting modules..."), string("Started module initialization"));
 
     // while loop
-    globalLogger.log((const char*)"Started", "localhost");
+    globalLogger.log("Started", "localhost");
+    cp_to_www();
     killed = false;
     cout << "HIPS running\n";
     while (!killed)
@@ -147,7 +151,7 @@ int main(int argc, char *argv[])
         // check if config changed
         if (pg_get_config_changed() == 1)
         {
-            init(string("Restarting modules..."), string("Restarted module initialization"), (const char *)"Settings applied");
+            init(string("Restarting modules..."), string("Restarted module initialization"), (const char *)"Applying settings");
             pg_set_config_changed(0);
             cout << "HIPS running\n";
         }

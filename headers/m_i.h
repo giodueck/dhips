@@ -22,9 +22,9 @@ class ModuleI: public Module
         std::string sysFileMonitorFilename;
         std::string binMonitorFilename;
 
-        std::string sysFileWatchedNames[100];
+        std::string sysFileWatchedNames[EVENT_NUM];
         int nSysFileWatchedNames;
-        std::string binWatchedNames[100];
+        std::string binWatchedNames[EVENT_NUM];
         int nBinWatchedNames;
 
         public:

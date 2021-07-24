@@ -1225,6 +1225,45 @@ int pg_set_monitor_filename_conf(int index, int type, const char *fullfilename, 
     return ret;
 }
 
+int pg_toggle_monitor_filetype(int type, int active)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Set monitor status
+    sprintf(cmd, "UPDATE public.monitor SET active = %s WHERE type = %d;", (active == 1) ? "true" : "false", type);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return 0;
+}
+
 int pg_set_config_changed(int changed)
 {
     PGconn     *conn;

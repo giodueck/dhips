@@ -87,6 +87,10 @@ int pg_module_toggle(int module, int status);
 //  Returns 0 if successful, 1 if not found, and negative if errors occur
 int pg_set_monitor_filename_conf(int index, int type, const char *fullfilename, int active);
 
+// Sets the active status of the given filename and type
+//  Returns 0 if successful, 1 if not found, and negative if errors occur
+int pg_toggle_monitor_filetype(int type, int active);
+
 // Sets the config_changed to active
 //  Returns 0 if successful, negative if errors occur
 int pg_set_config_changed(int changed);

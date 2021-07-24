@@ -16,7 +16,8 @@
 #include <vector>
 
 // Space to store at least 100 events
-#define EVENT_BUFSIZE (100 * sizeof(struct inotify_event) + NAME_MAX + 1)
+#define EVENT_NUM 1000
+#define EVENT_BUFSIZE (EVENT_NUM * sizeof(struct inotify_event) + NAME_MAX + 1)
 
 // Stores information about an event
 struct MonitorEvent
@@ -52,9 +53,9 @@ class Monitor
     // points to the next inotify_event in eventBuf
     char *p;
     // watched names indexed by their watchfd
-    char watchedNames[100][NAME_MAX + 1];
+    char watchedNames[EVENT_NUM][NAME_MAX + 1];
     int nWatchedNames;
-    int deleted[100];
+    int deleted[EVENT_NUM];
 
     public:
 
