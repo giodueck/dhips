@@ -17,8 +17,8 @@ Installation
 - create default user, prompt user to change the default password
     username: admin
     password: admin
-- create config directory with 740 permissions and root:www-data/apache owner
-- create config files with 740 permissions and root:www-data/apache owner
+- create config directory with root:www-data/apache owner
+- create config files with 640 permissions and root:www-data/apache owner
     connstring: dbname=dhips user=postgres password=postgres
 - create /var/log/hips
 

@@ -1,0 +1,86 @@
+## Manual de uso
+Para lanzar el programa ejecutar el comando:
+$ sudo ./dhips
+o si dhips se encuentra en un directorio bin
+$ sudo dhips
+
+El programa deberia producir output parecido al ejemplo cuando se inicializa cada modulo:
+> Starting modules...I
+El tiempo de inicializacion depende de los modulos actualmente habilitados. Por ejemplo, el
+tiempo de inicializacion para el modulo I es significante gracias a la necesidad de recuperar
+los nombres de los archivos a monitorear.
+
+Y output parecido al siguiente al terminar la inicializacion:
+> Starting modules...done
+> HIPS running
+Esto indica que ya se esta ejecutando.
+
+Para detener la ejecucion de forma correcta usar SIGINT, o CTRL+C. El programa deberia producir este output:
+> ^C
+> Stopping
+
+En caso de querer detener el programa en el proceso de inicializacion de modulos, la senhal no se registra al
+terminarla, para detener el programa de inmediato pueden usarse otras senhales.
+OBS.: En este caso, el programa no registra la detencion en alarmas.log.
+
+## Logs: alarmas.log y prevencion.log
+dhips genera archivos log en /var/log/hips, y los copia periodicamente a /var/www/log. Si estos
+directorios no existen al iniciar dhips, son creados.
+Alarmas y notificaciones sobre la ejecucion se registran en alarmas.log, una por linea.
+Acciones de prevencion se registran en prevencion.log, una por linea.
+
+ # Entendiendo los logs
+
+ # alarmas.log
+Formato:        timestamp                       :: codigo: descripcion  :: IP (o localhost) :: Observaciones/Informacion adicional
+                [dd]/[mm]/[yyyy] [hh]:[mm]:[ss] :: [codigo]: [texto]    :: [IP/localhost]   :: [texto opcional]
+Codigo:         modulo(romano).ID(decimal)  - modulo es el modulo que produjo la alarma, y la ID es de uso interno
+            o   DHIPS   - para notificaciones sobre la ejecucion
+
+Ejemplos:       25/06/2021 16:08:03     :: DHIPS: Started       :: localhost    :: Modules active: I, II, III
+                25/06/2021 16:08:13     :: II.7: User logged in :: 192.168.0.13 :: User: root Line: pts/1
+
+ # prevencion.log
+Formato:        timestamp                       :: modulo: descripcion
+                [dd]/[mm]/[yyyy] [hh]:[mm]:[ss] :: [module(romano)]: [texto]
+
+Ejemplo:        23/06/2021 14:37:28     :: III: Killed process "tcpdump" with PID 7281
+
+## Interfaz Web
+Al ir al sitio http://[IP] o http://[IP]/index.html, el sitio redirecciona a la pagina /cgi-bin/login,
+una pagina de inicio de sesion.
+
+ # Usuarios
+El sitio opera con usuarios separados de los usuarios Unix, con tres roles o escalones de privilegio.
+Estos son 'admin', 'user', y 'spectator'. La base de datos se crea con un usuario de cada rol, con
+nombres de usuario iguales a su rol, con la CONTRASENHA=password.
+ES RECOMENDABLE CAMBIAR LAS CONTRASENHAS POR DEFECTO, NO SOLO SON IGUALES Y PREDECIBLES, SINO QUE SUS
+HASHES SON IGUALES TAMBIEN.
+
+Para cambiar una contrasenha iniciar sesion y cambiar la contrasenha a traves de los links inferiores
+en la pagina principal. Un usuario de rol 'admin' tiene la capacidad de cambiar las contrasenhas y
+roles de otros usuarios.
+
+ # Main
+Varios links se encuentran en la pagina principal:
+- Alarms: Permite leer todos los logs de alarmas.log, separados en paginas para no tener un muro de texto.
+- Preventions: Permite leer todos los logs de prevencion.log. Similar al link de Alarms.
+- Settings: Permite cambiar la configuracion de cada modulo por separado, como por ejemplo deshabilitar
+    cierto modulo, o cambiar el alance del monitoreo de archivos.
+
+Ademas, algunos links de manejo de usuario y sesion:
+- Log out: Cerrar sesion y volver a la pagina de inicio de sesion.
+- Change password: Cambia la contrasenha del usuario.
+- Add user: Agrega un usuario nuevo. Especifica un nombre se usuario, contrasenha y rol. Solo disponible
+    para el rol 'admin'.
+- Edit user: Cambia la contrasenha o rol de un usuario, o eliminalo. Solo disponible para el rol 'admin'.
+
+Bajo cada pagina tambien se encuentra un link para volver a la pagina principal, 'Home'.
+
+ # Sesiones
+El inicio de sesion crea una sesion en la base de datos que tiene un tiempo de vida de 5 minutos. Cada
+accion en el sitio requiere una sesion activa, sin ella el sitio redirecciona a la pagina de inicio de
+sesion.
+
+Una sesion se renueva a 5 minutos de tiempo de vida con cada accion en el sitio, y el link de 'Log out'
+termina la sesion manualmente.
