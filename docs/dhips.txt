@@ -1,8 +1,9 @@
 ## DOCUMENTACION ## DHIPS - EJECUCION DEL PROGRAMA ##
 
 ## INICIO
-Para iniciar el programa correr el ejecutable 'dhips', que se encuentra en build/release/
+Para iniciar el programa correr el ejecutable 'dhips'.
 Para el correcto funcionamiento, el programa debe ejecutarse como root, o con 'sudo'.
+Durante la ejecucion el programa usa la consola para notificar de eventos de ejecucion.
 
 ## MODULOS
  # INICIALIZACION
