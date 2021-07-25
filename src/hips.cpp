@@ -5,6 +5,8 @@
 #include "startup.h"
 #include "pgsql.h"
 
+#define SCAN_INTERVAL 2
+
 using namespace std;
 
 bool killed = false;
@@ -171,8 +173,9 @@ int main(int argc, char *argv[])
         mod_iii.run();
         
         cp_to_www();
+        
         // sleep a little
-        sleep(2);
+        sleep(SCAN_INTERVAL);
     }
 
     // stop all modules and exit
