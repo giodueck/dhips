@@ -4,10 +4,13 @@ Giovanni Dueck's Host-based Intrusion (Detection and) Prevention System
 Un proyecto C/C++ con interfaz web para la materia de Sistemas Operativos 2
 
 # Instalacion
-*COMING SOON(TM)*
+Guia de instalacion en el archivo INSTALACION.txt
 
 # Manual de uso
-*COMING SOON(TM)*
+Manual de uso en el archivo MANUAL.txt
+
+# Documentacion
+Documentacion en el archivo DOCS.txt y en el directorio docs/
 
 # Features
 - Usuarios propios del programa para iniciar sesion por la interfaz web
