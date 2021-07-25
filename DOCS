@@ -1,0 +1,8 @@
+## DOCUMENTACION ## PROYECTO DHIPS ##
+
+La documentacion se encuentra en el directorio docs/, con cada archivo
+abarcando una parte diferente del proyecto. Contienen consideraciones de
+disenho y codigo, y todo el codigo esta comentado para ser legible (o al 
+menos para facilitar el entendimiento de ciertas funciones o procedimientos).
+
+Este proyecto fue creado por Giovanni Dueck.

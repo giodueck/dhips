@@ -40,3 +40,6 @@ TODO.txt
 # Scripts and Build dirs
 cgi-bin
 build
+
+# Template
+docs/template.txt

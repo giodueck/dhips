@@ -1,0 +1,38 @@
+## DOCUMENTACION ## DHIPS - EJECUCION DEL PROGRAMA ##
+
+## INICIO
+Para iniciar el programa correr el ejecutable 'dhips', que se encuentra en build/release/
+Para el correcto funcionamiento, el programa debe ejecutarse como root, o con 'sudo'.
+
+## MODULOS
+ # INICIALIZACION
+Cada modulo tiene un proceso de inicializacion al ejecutar el programa, que causa salida de 
+texto en consola y una notificacion en alarmas.log. Este proceso respeta las configuraciones
+hechas en la pagina web.
+
+ # REINICIALIZACION
+La inicializacion puede causarse tambien por un cambio en la configuracion de algun modulo
+a traves de la pagina web. En este caso el mensaje en la consola como la notificacion en
+alarmas.log es diferente. Las configuraciones se aplican durante ejecucion, que es
+interrumpida hasta que termina.
+
+ # ESCANEOS
+Cada 2 segundos, cada modulo escanea su area de interes para generar alarmas y acciones de
+prevencion (dependiendo del caso). Solo generan una linea de log si encuentran algo, y la
+pausa de 2 segundos se da para no desperdiciar recursos.
+
+ # SUBPROCESOS
+Algunos modulos crean subprocesos. Estos se crean por diversas razones, ya sea por la
+utilizacion de programas externos o por la necesidad de un monitoreo ininterrumpido no
+posible con escaneos periodicos. Estos subprocesos se cierran y renuevan periodicamente
+sin dejar atras zombies, excepto en casos en los que un error fatal o una senhal causa que
+el programa se detenga de forma inesperada.
+
+## DETENCION
+Para detener la ejecucion, un manejador de la senhal SIGINT cierra todos los subprocesos
+abiertos y llama exit();. El manejo de otras senhales de sistema no esta implementado, por
+lo que puede cerrarse de manera incorrecta.
+
+## ERRORES
+Mensajes de error apareceran en consola con un mesaje que da una ayuda para identificar la
+causa. En caso de errores fatales, ejecucion simplemente termina.

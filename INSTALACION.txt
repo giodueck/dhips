@@ -1,0 +1,38 @@
+# Manual de instalacion
+
+# Dependencias
+postgresql (12 o 13)
+libpq - la libreria C para postgres. Para instalar el header en /usr/include usar el comando
+    '$ yum install /usr/include/libpq-fe.h'
+apache - viene preinstalado en CentOS
+
+# Apache y el firewall
+El firewall debe permitir conexiones al servidor de apache, para hacer eso ejecutar la serie de comandos:
+$ firewall-cmd --permanent --add-port=80/tcp
+$ firewall-cmd --reload
+
+# Postgres
+Para comenzar crear un usuario sin privilegios de superusuario, y una base de datos vacia cuyo propietario
+es este usuario. Luego, con ese usuario ejecutar los scripts contenidos en el directorio sql/, comenzando
+con sql/dbcreation.sql. Luego ejecutar los demas scripts.
+Lo mas facil es ejecutarlos desde la consola de psql, con el comando
+    '\i path_to_sql_file'.
+
+Esto se hace para que la base de datos sea enteramente propiedad del usuario, pero es posible cambiar de
+propietario todas las relaciones de la base luego de crearlas.
+
+Para permitir a apache el acceso a la base bajo este usuario se usa un archivo que contiene la 'connection
+string' con los siguientes comandos (reemplazar NOMBREBD, USUARIO y CONTRASENHA con los nombres y contrasenha
+elegidos):
+$ mkdir /var/www/config
+$ echo "dbname=NOMBREBD user=USUARIO password=CONTRASENHA" > /var/www/config/connstring
+$ chown root:apache /var/www/config/connstring
+$ chmod 640 /var/www/config/connstring
+
+Esto crea el archivo con permisos rw para root, r para el grupo apache, y ninguno para otros usuarios
+
+# Compilacion
+Para compilar el programa ejecutar el script compile.sh dentro del directorio raiz del repositorio de git.
+Esto copia los scripts para apache a /var/www/cgi-bin, pero no agrega dhips a ningun directorio bin. Para
+hacer eso ejecutar el comando, donde dhips es el HIPS compilado
+$ cp dhips /usr/bin/dhips
