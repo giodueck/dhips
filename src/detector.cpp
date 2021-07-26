@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <cstring>
+#include "defines.h"
+#include "dhipslib.h"
 
 using namespace std;
 
@@ -97,6 +99,14 @@ int Detector::log(const char *module, int id, const char *location, const char *
 
     // close file and free description
     fclose(f);
+
+    // compose email
+    const char *subject = "DHIPS: New alarm";
+    char e_msg[BUFSIZ];
+    sprintf(e_msg, "New alarm raised by DHIPS. Log reads:\n%02d/%02d/%04d %02d:%02d:%02d\t:: %s.%d: %s\t:: %s\t:: %s\n",
+        ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module, id, description, location, (msg && strlen(msg)) ? msg : "");
+    
+    dhips_send_email(subject, e_msg);
 
     return severity;
 }

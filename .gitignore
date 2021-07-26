@@ -46,3 +46,6 @@ docs/template.txt
 
 # Private
 src/config.py
+
+# Python cache
+src/__pycache__

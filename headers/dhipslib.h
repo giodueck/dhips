@@ -5,6 +5,8 @@
 #define DHIPS_H
 
 #include <stdlib.h>
+#include "defines.h"
+#include "pgsql.h"
 
 // Print error message to stderr in the format 'dhips: perror(msg)'
 void dhips_perror(const char *msg);
@@ -17,5 +19,8 @@ void getPidByName(pid_t *pid, const char *task_name);
 
 // If a process with the given pid is found, its name is copied into task_name
 void getNameByPid(pid_t pid, char *task_name);
+
+// Send an email to all the administrators with an email address
+void dhips_send_email(const char *subject, const char *msg);
 
 #endif // DHIPS_H

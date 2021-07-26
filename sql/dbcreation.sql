@@ -10,6 +10,7 @@ create table login (
     username varchar(16) not null,
     pwd varchar(128) not null,
     "role" varchar(16) not null,
+    email text,
     constraint login_pkey primary key (username),
     constraint role_fkey foreign key ("role") references "role"("role")
 );

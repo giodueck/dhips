@@ -5,6 +5,11 @@ postgresql (12 o 13)
 libpq - la libreria C para postgres. Para instalar el header en /usr/include usar el comando
     '$ yum install /usr/include/libpq-fe.h'
 apache - viene preinstalado en CentOS
+python3 - para el script que envia correos
+pip - manejador de paquetes de python. En mi caso pip se encontraba instalado en CentOS como 'pip3.6' y 'pip3'
+pyinstaller - compilador de archivos .py. Opcional, para no instalarlo cambiar SEND_EMAIL_PATH en el archivo
+    src/hips.cpp al path absoluto del script dhips-send-email.py. Instalar usando
+    '$ pip install pyinstaller'
 
 # Apache y el firewall
 El firewall debe permitir conexiones al servidor de apache, para hacer eso ejecutar la serie de comandos:
@@ -31,8 +36,23 @@ $ chmod 640 /var/www/config/connstring
 
 Esto crea el archivo con permisos rw para root, r para el grupo apache, y ninguno para otros usuarios
 
+# Correos
+Para enviar correos a los administradores es necesario guardar la direccion de correo desde el cual enviarlos.
+Para eso es necesario crear un archivo 'config.py', ya que el programa de correo es un script de python.
+Para hacer esto ejecutar los siguientes comandos, reemplazando EMAIL y CONTRASENHA por una direccion de correo
+y su contrasenha. (Tests hechos con un correo de gmail con la opcion 'Less secure apps access')
+$ touch src/config.py
+$ chmod 600 src/config.py
+$ echo "EMAIL_ADDRESS = 'EMAIL';PASSWORD = 'CONTRASENHA'" > src/config.py
+
 # Compilacion
 Para compilar el programa ejecutar el script compile.sh dentro del directorio raiz del repositorio de git.
 Esto copia los scripts para apache a /var/www/cgi-bin, pero no agrega dhips a ningun directorio bin. Para
 hacer eso ejecutar el comando, donde dhips es el HIPS compilado
 $ cp dhips /usr/bin/dhips
+
+Para convertir a dhips-send-email.py a un archivo binario ejecutable usar 
+$ pyinstaller --onefile src/dhips-send-email.py
+y cambiar SEND_EMAIL_PATH en el archivo src/hips.cpp al path absoluto del archivo resultante en dist/dhips-send-email,
+y cambiar SEND_EMAIL_COMPILED a 1.
+Este proceso permite eliminar el archivo src/config.py, que contiene una contrasenha en plain text.

@@ -4,6 +4,7 @@
 #include <cstring>
 #include <dirent.h>
 #include <limits.h>
+#include "pgsql.h"
 
 using namespace std;
 
@@ -74,5 +75,28 @@ void getNameByPid(pid_t pid, char *task_name)
         }
         fclose(fp);
         sscanf(buf, "%*s %s", task_name);
+    }
+}
+
+void dhips_send_email(const char *subject, const char *msg)
+{
+    char **admins;
+    int n = pg_get_users_with_role(&admins, 0);
+    char *email;
+    
+    for (int i = 0; i < n; i++)
+    {
+        if (pg_get_email(admins[i], &email) == 0)
+        {
+            char cmd[BUFSIZ] = {0};
+            if (SEND_EMAIL_COMPILED == 0)   // use python script
+            {
+                sprintf(cmd, "python3 %s %s \"%s\" \"%s\"", SEND_EMAIL_PATH, email, subject, msg);
+            } else                          // use binary file
+            {
+                sprintf(cmd, ".%s %s \"%s\" \"%s\"", SEND_EMAIL_PATH, email, subject, msg);
+            }
+            system(cmd);
+        }
     }
 }

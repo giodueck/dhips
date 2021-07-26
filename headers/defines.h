@@ -5,6 +5,8 @@
 #define SCAN_INTERVAL 2
 #define SEND_EMAIL_PATH "src/dhips-send-email.py"
 #define SEND_EMAIL_COMPILED 0
+// #define SEND_EMAIL_PATH "/full/path/to/dhips-send-email"
+// #define SEND_EMAIL_COMPILED 1
 
 // Alarm IDs
 #define ALARM_I_FILE_MOD            1

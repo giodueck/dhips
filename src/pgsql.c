@@ -496,6 +496,103 @@ int pg_get_users(char ***dest)
     return n;
 }
 
+int pg_get_users_with_role(char ***dest, int role)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    char rolestr[10];
+    char *rets;
+    int n;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    switch (role)
+    {
+        case 0:
+            strcpy(rolestr, "admin");
+            break;
+        case 1:
+            strcpy(rolestr, "user");
+            break;
+        case 2:
+            strcpy(rolestr, "spectator");
+            break;
+        
+        default:
+            strcpy(rolestr, "none");
+            break;
+    }
+
+    // Retrieve all users with the given role
+    sprintf(cmd, "SELECT username FROM public.login where role = '%s';", rolestr);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql pg_get_users_with_role: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    // allocate space for array
+    n = PQntuples(res);
+    *dest = (char**)malloc(sizeof(char*) * n);
+    if (!dest)
+    {
+        // malloc error
+        fprintf(stderr, "dhips//pgsql pg_get_users_with_role: memory allocation failed\n");
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        // allocate space for and store usernames
+        rets = PQgetvalue(res, i, 0);
+        (*dest)[i] = (char*)malloc(strlen(rets) + 1);
+        if (!(*dest)[i])
+        {
+            // malloc error
+            fprintf(stderr, "dhips//pgsql pg_get_users_with_role: memory allocation failed\n");
+            PQclear(res);
+            exit_nicely(conn);
+            return -1;
+        }
+        strcpy((*dest)[i], rets);
+    }
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return n;
+}
+
 int pg_check_session(char *username, int session, int lifetime)
 {
     PGconn     *conn;
@@ -1471,6 +1568,66 @@ int pg_get_targeted_ext_name(int index, char **dest)
         strcpy(*dest, ext_name);
         ret = atoi(PQgetvalue(res, 0, 1));
     } else ret = 0;
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}
+
+int pg_get_email(char *user, char **dest)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    char *rets;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Retrieve email for user
+    sprintf(cmd, "SELECT email FROM public.login where username = '%s';", user);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql pg_get_email: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    int rows = PQntuples(res);
+    if (rows > 0)
+    {
+        rets = PQgetvalue(res, 0, 0);
+        *dest = (char*)malloc(strlen(rets) + 1);
+        strcpy(*dest, rets);
+        ret = 0;
+    } else ret = 1;
     PQclear(res);
 
     /* end the transaction */

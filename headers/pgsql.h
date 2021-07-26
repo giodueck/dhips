@@ -38,9 +38,13 @@ int pg_delete_user(char *username);
 // Returns 0 if user is 'admin', 1 if user is 'user', 2 if user is 'spectator', 3 if none, and other if error
 int pg_get_role(char *user);
 
-// Retrieves all usernames from the database into dest. Each item should be freed after using
+// Retrieves all usernames from the database into dest.
 //  Returns the number of users found, negative if error
 int pg_get_users(char ***dest);
+
+// Retrieves all usernames from the database into dest and the given role.
+//  Returns the number of users found, negative if error
+int pg_get_users_with_role(char ***dest, int role);
 
 // Checks if a session for user exists and is valid. If one is found, the expiration
 // timestamp is updated to lifetime minutes + current time and the return value is 1.
@@ -102,5 +106,9 @@ int pg_get_config_changed();
 // Copies the first active targeted_ext name with targeted_ext_id > index into dest.
 //  Returns the targeted_ext_id of the targeted_ext item if found, 0 if none found, and negative if errors occur
 int pg_get_targeted_ext_name(int index, char **dest);
+
+// Copies the email of user into dest
+//  Returns 0 if successful, 1 if not found, negatives if errors occur
+int pg_get_email(char *user, char **dest);
 
 #endif // PGSQL_H
