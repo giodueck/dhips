@@ -1,10 +1,13 @@
 #include "dhipslib.h"
+#include "pgsql.h"
 #include <iostream>
 #include <string>
 #include <cstring>
 #include <dirent.h>
 #include <limits.h>
-#include "pgsql.h"
+#include <unistd.h>
+#include <vector>
+#include <sys/wait.h>
 
 using namespace std;
 
@@ -84,6 +87,8 @@ void dhips_send_email(const char *subject, const char *msg)
     int n = pg_get_users_with_role(&admins, 0);
     char *email;
     
+    cout << "Sending emails...";
+    fflush(stdout);
     for (int i = 0; i < n; i++)
     {
         if (pg_get_email(admins[i], &email) == 0)
@@ -96,7 +101,24 @@ void dhips_send_email(const char *subject, const char *msg)
             {
                 sprintf(cmd, ".%s %s \"%s\" \"%s\"", SEND_EMAIL_PATH, email, subject, msg);
             }
-            system(cmd);
+            pid_t pid = fork();
+            if (pid)
+            {
+                continue;
+            } else if (pid == 0)
+            {
+                system(cmd);
+                exit(0);
+            }
         }
     }
+
+    // wait for all the dhips-send-mail commands to finish
+    for (int i = 0; i < n; i++)
+    {
+        int status;
+        wait(&status);
+    }
+
+    cout << "done" << endl;
 }
