@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <vector>
-#include <limits>
+#include <limits.h>
 #include <signal.h>
 
 class ModuleIII: public Module

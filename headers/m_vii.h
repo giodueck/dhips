@@ -46,7 +46,7 @@ class ModuleVII: public Module
             int act(int action = 0);
         } preventer;
 
-        std::vector<std::string> susExtensions;
+        std::vector<std::string> susExtensions, whitelistedProcs;
 
         public:
         

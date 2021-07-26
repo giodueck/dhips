@@ -17,11 +17,13 @@
 #define ALARM_III_SNIFFER_FOUND     11
 
 #define ALARM_VII_SUSFILE_FOUND     12
+#define ALARM_VII_SUSPROC_FOUND     13
 
 // Special definitions for modules
 #define SYSFILE_TYPE                1
 #define BINARY_TYPE                 2
 
 #define SNIFFER_TYPE                1
+#define WHITELISTED_TYPE            2
 
 #endif // ALARMS_H

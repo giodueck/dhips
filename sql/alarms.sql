@@ -10,4 +10,5 @@ insert into alarm values
     (9, 3, 'Promiscous mode on'),
     (10, 3, 'Promiscous mode off'),
     (11, 4, 'Sniffer found'),
-    (12, 4, 'Suspiscious file found');
+    (12, 4, 'Suspicious file found'),
+    (13, 4, 'Suspicious process found running from /tmp');

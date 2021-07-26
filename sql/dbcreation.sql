@@ -74,7 +74,7 @@ create table monitor (
     constraint monitor_pkey primary key (monitor_id)
 );
 
--- type 1 is sniffer
+-- type 1 is sniffer, type 2 is whitelisted
 create table targeted_proc (
     targeted_proc_id serial not null,
     name text not null,
