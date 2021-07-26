@@ -20,6 +20,7 @@
 #include <string.h>
 #include <limits>
 #include <signal.h>
+#include <vector>
 
 class ModuleVII: public Module
 {
@@ -44,6 +45,8 @@ class ModuleVII: public Module
             void setTargetName(const char *name);
             int act(int action = 0);
         } preventer;
+
+        std::vector<std::string> susExtensions;
 
         public:
         

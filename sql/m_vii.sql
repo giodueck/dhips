@@ -1,4 +1,4 @@
-insert into targeted_ext values
+insert into targeted_ext (name, active) values
     ('exe', true),
     ('sh', true),
     ('out', true),

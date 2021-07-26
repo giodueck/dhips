@@ -84,7 +84,8 @@ create table targeted_proc (
 );
 
 create table targeted_ext (
+    targeted_ext_id serial not null,
     name text not null,
     active boolean not null,
-    constraint targeted_ext_pkey primary key (name)
+    constraint targeted_ext_pkey primary key (targeted_ext_id)
 );

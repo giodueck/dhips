@@ -33,11 +33,13 @@ ModuleII::ModuleII(){}
 
 void ModuleII::setup()
 {
+    active = true;
     detector.setup();
 }
 
 void ModuleII::run()
 {
+    if (!active) return;
     detector.scan();
 }
 

@@ -1,6 +1,9 @@
 #include "module.h"
 
-Module::Module(){}
+Module::Module()
+{
+    active = false;
+}
 
 void Module::setup()
 {

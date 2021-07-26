@@ -6,6 +6,10 @@
 
 class Module
 {
+    protected:
+    
+    bool active;
+
     public:
     
     Module();

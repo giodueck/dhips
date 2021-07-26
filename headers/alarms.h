@@ -16,6 +16,8 @@
 #define ALARM_III_PROMISC_OFF       10
 #define ALARM_III_SNIFFER_FOUND     11
 
+#define ALARM_VII_SUSFILE_FOUND     12
+
 // Special definitions for modules
 #define SYSFILE_TYPE                1
 #define BINARY_TYPE                 2

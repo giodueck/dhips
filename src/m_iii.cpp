@@ -220,7 +220,7 @@ int ModuleIII::DetectorIII::scan(bool setup)
         {
             // sniffer found
             char msg[1024];
-            sprintf(msg, "PID: %d Name: %s. Action taken", pid, sniffers[i].c_str()); 
+            sprintf(msg, "PID: %d Name: %s [Action taken]", pid, sniffers[i].c_str()); 
             log(ALARM_III_SNIFFER_FOUND, "localhost", msg);
             preventer.setTargetName(sniffers[i].c_str());
             preventer.setTarget(pid);
@@ -260,10 +260,12 @@ int ModuleIII::DetectorIII::PreventerIII::act(int action)
 
 void ModuleIII::setup()
 {
+    active = true;
     detector.setup();
 }
 
 void ModuleIII::run()
 {
+    if (!active) return;
     detector.scan();
 }

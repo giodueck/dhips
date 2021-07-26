@@ -16,6 +16,7 @@ Detector globalLogger;
 ModuleI mod_i;
 ModuleII mod_ii;
 ModuleIII mod_iii;
+ModuleVII mod_vii;
 
 static void break_handler(int sig)
 {
@@ -116,6 +117,16 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
         if (modules.length()) modules += ", ";
         modules += "III";
     }
+    if (pg_module_enabled(7) == 1)
+    {
+        while (chars--) cout << '\b';
+        cout << "VII";
+        fflush(stdout);
+        mod_vii.setup();
+        chars = 3;
+        if (modules.length()) modules += ", ";
+        modules += "VII";
+    }
 
     while (chars--) cout << '\b';
     cout << "done\n";
@@ -171,6 +182,7 @@ int main(int argc, char *argv[])
         mod_i.run();
         mod_ii.run();
         mod_iii.run();
+        mod_vii.run();
         
         cp_to_www();
         
