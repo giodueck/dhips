@@ -29,8 +29,7 @@ int pagecount(const char *filename)
     if (!fd)
     {
         char msg[128];
-        sprintf(msg, "pagecount: could not open file %s", filename);
-        dhips_perror(msg);
+        fprintf(stderr, "pagecount: could not open file %s", filename);
         return -1;
     }
 
@@ -57,7 +56,9 @@ int pagecount(const char *filename)
     }
 
     fclose(fd);
-    return i / PAGE_SIZE + (i % PAGE_SIZE > 0);
+    if (i)
+        return i / PAGE_SIZE + (i % PAGE_SIZE > 0);
+    else return 1;
 }
 
 int parse_and_print_line_a(const char *filename, int page)
@@ -148,8 +149,7 @@ int parse_and_print_line_p(const char *filename, int page)
     if (!fd)
     {
         char msg[128];
-        sprintf(msg, "parse_and_print_line_p: could not open file %s", filename);
-        dhips_perror(msg);
+        fprintf(stderr, "parse_and_print_line_p: could not open file %s", filename);
         return -1;
     } else if (pc == -1)
         return -1;
