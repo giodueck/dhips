@@ -166,7 +166,7 @@ int ModuleVII::DetectorVII::scan()
 
                 std::string auxs;
                 // create alarm
-                auxs = std::string("PID: ") + std::string(dirs[i]) + std::string(" [Action taken]");
+                auxs = std::string("PID: ") + std::string(dirs[i]) + std::string(" Name: ") + std::string(name) + std::string(" [Action taken]");
                 log(ALARM_VII_SUSPROC_FOUND, "localhost", auxs.c_str());
 
                 // kill process
