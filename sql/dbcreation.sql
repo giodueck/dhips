@@ -82,3 +82,9 @@ create table targeted_proc (
     active boolean not null,
     constraint targeted_proc_pkey primary key (targeted_proc_id)
 );
+
+create table targeted_ext (
+    name text not null,
+    active boolean not null,
+    constraint targeted_ext_pkey primary key (name)
+);
