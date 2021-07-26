@@ -29,14 +29,17 @@ int ModuleI::DetectorI::setup()
         {
             sysFileMonitor->addWatch(string(dest));
         }
+    } while (i > 0);
 
+    do
+    {
         // binaries
         j = pg_get_monitor_filename(j, BINARY_TYPE, &dest);
         if (j > 0)
         {
             binMonitor->addWatch(string(dest));
         }
-    } while (i > 0 || j > 0);
+    } while (j > 0);
 
     // start monitoring
     sysFileMonitor->start(sysFileMonitorFilename + ".log", sysFileMonitorFilename + ".out");
