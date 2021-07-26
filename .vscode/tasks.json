@@ -144,6 +144,7 @@
 				"/home/giodueck/vscode/dhips/src/m_i.cpp",
 				"/home/giodueck/vscode/dhips/src/m_ii.cpp",
 				"/home/giodueck/vscode/dhips/src/m_iii.cpp",
+				"/home/giodueck/vscode/dhips/src/m_vii.cpp",
 				"-o",
 				"/home/giodueck/vscode/dhips/build/debug/dhips",
 				"-I/home/giodueck/vscode/dhips/headers",
