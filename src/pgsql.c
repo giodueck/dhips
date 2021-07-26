@@ -1421,3 +1421,64 @@ int pg_get_config_changed()
 
     return ret;
 }
+
+int pg_get_targeted_ext_name(int index, char **dest)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+    
+    char *ext_name;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Retrieve extension name
+    sprintf(cmd, "SELECT name, targeted_ext_id FROM public.targeted_ext WHERE targeted_ext_id > %d AND active = true LIMIT 1;", index);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql pg_get_targeted_ext_name: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    // copy 
+    int rows = PQntuples(res);
+    if (rows > 0)
+    {
+        ext_name = PQgetvalue(res, 0, 0);
+        *dest = (char*)malloc(strlen(ext_name) + 1);
+        strcpy(*dest, ext_name);
+        ret = atoi(PQgetvalue(res, 0, 1));
+    } else ret = 0;
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}

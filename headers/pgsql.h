@@ -99,4 +99,8 @@ int pg_set_config_changed(int changed);
 //  Returns 1 if true, 0 if false, negative if errors occur
 int pg_get_config_changed();
 
+// Copies the first active targeted_ext name with targeted_ext_id > index into dest.
+//  Returns the targeted_ext_id of the targeted_ext item if found, 0 if none found, and negative if errors occur
+int pg_get_targeted_ext_name(int index, char **dest);
+
 #endif // PGSQL_H
