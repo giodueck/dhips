@@ -6,7 +6,7 @@
 #include <cstring>
 #include <string>
 #include <vector>
-#include "alarms.h"
+#include "defines.h"
 
 void conf1(char **qs)
 {

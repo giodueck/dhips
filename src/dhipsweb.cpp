@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <vector>
-#include <alarms.h>
+#include "defines.h"
 
 using namespace std;
 

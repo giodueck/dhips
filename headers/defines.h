@@ -1,5 +1,10 @@
-#ifndef ALARMS_H
-#define ALARMS_H
+#ifndef DHIPS_DEFINES_H
+#define DHIPS_DEFINES_H
+
+// send-email python program
+#define SCAN_INTERVAL 2
+#define SEND_EMAIL_PATH "src/dhips-send-email.py"
+#define SEND_EMAIL_COMPILED 0
 
 // Alarm IDs
 #define ALARM_I_FILE_MOD            1
@@ -26,4 +31,4 @@
 #define SNIFFER_TYPE                1
 #define WHITELISTED_TYPE            2
 
-#endif // ALARMS_H
+#endif // DHIPS_DEFINES_H

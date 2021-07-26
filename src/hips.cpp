@@ -4,8 +4,7 @@
 #include "modules.h"
 #include "startup.h"
 #include "pgsql.h"
-
-#define SCAN_INTERVAL 2
+#include "defines.h"
 
 using namespace std;
 

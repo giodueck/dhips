@@ -43,3 +43,6 @@ build
 
 # Template
 docs/template.txt
+
+# Private
+src/config.py

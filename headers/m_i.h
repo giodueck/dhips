@@ -9,7 +9,7 @@
 
 #include "module.h"
 #include "monitor.h"
-#include "alarms.h"
+#include "defines.h"
 
 class ModuleI: public Module
 {

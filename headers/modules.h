@@ -2,7 +2,7 @@
 #define MODULES_H
 
 // Alarm IDs
-#include "alarms.h"
+#include "defines.h"
 
 // Modules
 #include "m_i.h"

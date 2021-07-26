@@ -12,7 +12,7 @@
 #define MOD_III_H
 
 #include "module.h"
-#include "alarms.h"
+#include "defines.h"
 #include "dhipslib.h"
 #include "pgsql.h"
 #include <sys/types.h>

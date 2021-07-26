@@ -7,7 +7,7 @@
 #define MOD_II_H
 
 #include "module.h"
-#include "alarms.h"
+#include "defines.h"
 #include <utmpx.h>
 #include <paths.h>
 #include <stdlib.h>
