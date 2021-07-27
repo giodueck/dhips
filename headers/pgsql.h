@@ -139,4 +139,12 @@ int pg_add_targeted_ext(char *ext);
 //  Returns 0 if successful, 1 if not found, negatives if errors occur
 int pg_rm_targeted_ext(char *ext);
 
+// Sets the threshold of the given name to value
+//  Returns 0 if successful, 1 if not found, negative if errors occur
+int pg_set_threshold(const char *name, int value);
+
+// Gets the value of the threshold of the given name
+//  Returns value if successful, negatives if errors occur
+int pg_get_threshold(const char *name);
+
 #endif // PGSQL_H

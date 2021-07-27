@@ -27,6 +27,11 @@
 #define ALARM_VII_SUSFILE_FOUND     12
 #define ALARM_VII_SUSPROC_FOUND     13
 
+#define ALARM_IV_SSH_WARN           14
+#define ALARM_IV_SSH_BLOCK          15
+#define ALARM_IV_HTTP_WARN          16
+#define ALARM_IV_HTTP_BLOCK         17
+
 // Special definitions for modules
 #define SYSFILE_TYPE                1
 #define BINARY_TYPE                 2

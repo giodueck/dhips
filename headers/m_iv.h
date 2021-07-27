@@ -40,13 +40,25 @@ class ModuleIV: public Module
             int act(int action = 0);
         } preventer;
 
+        // database names
+        const char *sshWarnName = "sshWarn";
+        const char *sshBlockName = "sshBlock";
+        const char *webWarnName = "webWarn";
+        const char *webBlockName = "webBlock";
+        
+        // database values are copied during setup
         int sshWarnThreshold, sshBlockThreshold;
         int webWarnThreshold, webBlockThreshold;
 
+        // lists that contain all IPs that appear in error logs
         std::vector<std::string> sshIps;
         std::vector<std::string> webIps;
         std::vector<int> sshIpsFailures;
         std::vector<int> webIpsFailures;
+
+        // already blocked, this list is not reset
+        std::vector<std::string> sshIgnoreIps;
+        std::vector<std::string> webIgnoreIps;
 
         public:
         
