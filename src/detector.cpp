@@ -48,6 +48,7 @@ int Detector::log(const char *msg, const char *location, const char *additional)
             ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module.c_str(), msg, location);
 
     // close file and free description
+    free(description);
     fclose(f);
 
     return severity;
@@ -97,16 +98,17 @@ int Detector::log(const char *module, int id, const char *location, const char *
     fprintf(f, "%02d/%02d/%04d %02d:%02d:%02d\t:: %s.%d: %s\t:: %s\t:: %s\n",
         ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module, id, description, location, (msg && strlen(msg)) ? msg : "");
 
-    // close file and free description
+    // close file
     fclose(f);
 
-    // compose email
+    // compose email and free description
     const char *subject = "DHIPS: New alarm";
     char e_msg[BUFSIZ];
     sprintf(e_msg, "New alarm raised by DHIPS. Log reads:\n%02d/%02d/%04d %02d:%02d:%02d\t:: %s.%d: %s\t:: %s\t:: %s\n",
         ts->tm_mday, ts->tm_mon, ts->tm_year + 1900, ts->tm_hour, ts->tm_min, ts->tm_sec, module, id, description, location, (msg && strlen(msg)) ? msg : "");
     
     dhips_send_email(subject, e_msg);
+    free(description);
 
     return severity;
 }
