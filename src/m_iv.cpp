@@ -141,7 +141,15 @@ int ModuleIV::DetectorIV::PreventerIV::act(int action)
 {
     if (action = 0)
     {
-        printf("SSH threshold passed for ip %s\n", ip);
+        // block IP with an iptables rule
+        char cmd[512];
+        sprintf(cmd, "iptables -A INPUT -s %s -p tcp --destination-port 22 -j DROP", ip);
+        system(cmd);
+
+        // log the action
+        char msg[1024];
+        sprintf(msg, "Blocked \"%s\" from port 22 (SSH)", ip);
+        log(msg);
     }
     // if (target)
     // {
