@@ -111,6 +111,7 @@ int ModuleIV::DetectorIV::scan()
         if (newSshIpsFailures[i] > sshBlockThreshold && sshIpsFailures.size() > i && newSshIpsFailures[i] > sshIpsFailures[i])
         {
             log(ALARM_IV_SSH_BLOCK, sshIps[i].c_str(), "[Action taken]");
+            preventer.setIp(sshIps[i].c_str());
             preventer.act(0);
             sshIgnoreIps.push_back(sshIps[i]);
             break;
@@ -139,7 +140,7 @@ void ModuleIV::DetectorIV::PreventerIV::setIp(const char *ip)
 
 int ModuleIV::DetectorIV::PreventerIV::act(int action)
 {
-    if (action = 0)
+    if (action = 0 && strlen(ip))
     {
         // block IP with an iptables rule
         char cmd[512];
@@ -150,6 +151,7 @@ int ModuleIV::DetectorIV::PreventerIV::act(int action)
         char msg[1024];
         sprintf(msg, "Blocked \"%s\" from port 22 (SSH)", ip);
         log(msg);
+        ip[0] = '\0';
     }
     // if (target)
     // {
