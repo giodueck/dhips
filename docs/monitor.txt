@@ -1,0 +1,98 @@
+## DOCUMENTACION ## monitor.h, monitor.cpp ##
+
+La clase que permite monitorear archivos. Implementa inotify
+
+## DISENHO
+ # DEFINES
+ # EVENT_NUM
+Define el maximo numero de eventos a almacenar.
+
+ # EVENT_BUFSIZE
+Define el tamanho del buffer de eventos; basado en EVENT_NUM
+
+ # STRUCTS
+ # MonitorEvent
+Es una estructura propia que simplifica sobre la estructura inotify_event.
+
+  # mask
+Contiene al tipo de evento que registra un evento.
+
+  # cookie
+Contiene un cookie que identifica a un grupo de eventos. Util para identificar partes de eventos como
+el renombramiento de un archivo. No se usa, pero esta en caso desee utilizarlo.
+
+  # filename
+El nombre del archivo que causa el evento. Es una cadena de C++ para evitar la posibilidad de tener una
+estructura de tamanho vaiable, que ocurre en el caso de la estructura inotify_event.
+
+ # CLASE
+ # module
+Cadena de C que almacena el modulo. Es el resultado de string.c_str(), donde string es una cadena de C++.
+Identifica al modulo del cual forma parte el objeto.
+
+ # watchNames
+Vector que almacena todos los nombres de archivos que se monitorean.
+
+ # notifyfd
+File descriptor de la instancia de inotify
+
+ # pid
+PID de la instancia inotify, que se ejecuta en un subproceso
+
+ # out, log
+Nombres de archivo de archivos de salida y log respectivamente. En el archivo de salida se escriben los
+resultados de agregar watches para cada nombre en watchNames. En el archivo log se escriben los eventos
+que ocurren, y provee una forma de comunicacion entre el proceso padre y el proceso hijo.
+
+ # mask
+Banderas a ser usadas al agregar watches. Determina los eventos que inotify monitorea.
+
+ # eventBuf, n, p
+Variables usadas al extraer eventos.
+
+ # watchedNames
+Array de nombres de archivos que efectivamente se monitorean.
+
+ # nWatchedNames
+Cantidad de elementos en watchedNames.
+
+ # deleted
+Identifica archivos que se eliminaron.
+
+ # METODOS
+ # addWatch
+Agrega el nombre dado a la lista de nombres a monitorear.
+
+ # rmWatch
+Elimina el nombre dado de la lista de nombres a monitorear.
+
+ # setMask
+Asigna el valor de mask.
+
+ # getWatchedName
+Recupera el nombre de archivo asociado con el watchfd dado.
+
+ # getWatchedNameCount
+Retorna la cantidad de archivos efectivamente monitoreados.
+
+ # start
+Inicializa una instancia de inotify, agrega watches a los nombres de archivos en watchNames, y
+llama fork() para crear un subproceso que se ejecuta an segundo plano, que es necesario para
+monitorear continuamente. Los nombres agregados a watchedNames son solo aquellos que pudieron
+abrirse por start y son archivos regulares.
+
+ # stop
+Detiene al subproceso creado con start.
+
+ # isMonitoring
+Retorna true si existe un subproceso que esta monitoreando en segundo plano.
+
+ # eventAvailable
+Retorna true si hay un evento nuevo disponible.
+
+ # extractEvents
+Copia los eventos disponibles a un vector de struct MonitorEvent. Para esto copia los contenidos
+del archivo log asociado y los interpreta.
+
+## CODIGO
+Documentacion del codigo presente completamente en comentarios en monitor.h

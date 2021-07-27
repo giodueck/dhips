@@ -1,0 +1,26 @@
+## DOCUMENTACION ## module.h, module.cpp ##
+
+La clase Module es la clase base para cada modulo.
+modules.h contiene directivas de include para todas las subclases de Module.
+
+## DISENHO
+ # CLASE
+ # active
+Una bandera que es asignada en setup del modulo y es consultada cada vez que se ejecuta run.
+
+ # setup
+setup es sobreescrita por las clases hijas de Module. Se usa para hacer una configuracion o
+inicializacion de variables y estructuras de datos, y para activar el modulo.
+
+ # disable
+Cambia la bandera active a false para desactivar el modulo.
+
+ # run
+run es sobreescrita por las clases hijas de Module. Se usa para comenzar la ejecucion del
+escaneo del objeto detector (que es diferente en todas las subclases, pero presente)
+
+ # stop
+stop es sobreescrita por las clases hijas de Module. Se usa para detener subprocesos si es
+que forman parte del objecto detector.
+
+## CODIGO

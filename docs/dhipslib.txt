@@ -1,0 +1,44 @@
+## DOCUMENTACION ## dhipslib.h, dhipslib.cpp ##
+
+Una libreria de funciones utilizadas en el proyecto que no pertenecen a una parte en especifico.
+Las funciones se prefijan con "dhips_"
+
+## DISENHO
+ # dhips_perror
+Imprime un mensaje de error en stderr con mensaje dado y el contenido de errno, llamando perror().
+
+ # dhips_perror_no_errno
+Imprime un mensaje de error en stderr.
+
+ # dhips_get_pid_by_name
+Recupera el PID de un proceso con el nombre de proceso.
+
+ # dhips_get_name_by_pid
+Recupera el nombre de un proceso con su PID.
+
+ # dhips_send_email
+Ejecuta al programa dhips-send-email para enviar correos a los usuarios con rol de administrador.
+
+## CODIGO
+ # void dhips_perror(const char *msg)
+Parametros:
+    const char *msg: el mensaje de error a imprimir
+
+ # void dhips_perror_no_errno(const char *msg)
+Parametros:
+    const char *msg: el mensaje de error a imprimir
+
+ # void dhips_get_pid_by_name(pid_t *pid, const char *task_name)
+Parametros:
+    pid_t *pid: destino del resultado
+    const char *task_name: nombre del proceso
+
+ # void dhips_get_name_by_pid(pid_t pid, char *task_name)
+Parametros:
+    pid_t pid: pid del proceso
+    char *task_name: destino del resultado
+
+ # void dhips_send_email(const char *subject, const char *msg)
+Parametros:
+    const char *subject: asunto del correo
+    const char *msg: cuerpo del correo

@@ -1,0 +1,22 @@
+## DOCUMENTACION ## defines.h ##
+
+Contiene definiciones utilizadas en el proyecto.
+
+## DISENHO
+ # SCAN_INTERVAL
+El intervalo en segundos que main deja entre llamadas consecutivas de run para cada modulo.
+
+ # SEND_EMAIL_PATH
+El path al programa dhips-send-email. Puede ser src/dhips-send-email.py o el camino absoluto
+al archivo.
+
+ # SEND_EMAIL_COMPILED
+Bandera para determinar la forma de ejecutar el programa dhips-send-email. Si su valor es 0,
+se ejecuta como un script de python3. Si no, se ejecuta como un programa (con el prefijo ./).
+
+ # ALARM_R_DESC
+Las definiciones ALARM son analogas a las IDs de alarma en la base de datos. R es el numero
+de modulo y DESC es un nombre corto.
+
+ # Special definitions
+Las demas definiciones, principalmente para mejorar legibilidad del codigo.

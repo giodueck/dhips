@@ -1,0 +1,29 @@
+## DOCUMENTACION ## preventer.h, preventer.cpp ##
+
+La clase Preventer es la clase base para los componentes preventivos de cada modulo.
+
+## DISENHO
+ # CLASE
+ # filename
+Una cadena constante de C que almacena el path al archivo de log de prevenciones.
+
+ # module
+Una cadena de C++ para identificar el modulo del cual forma parte el objeto. Es una cadena de C++
+porque se simplifica la asignacion de cadenas de tamanho variable, y es una cadena y no un entero
+porque almacena numeros romanos.
+
+ # log
+Escribe a prevencion.log un mensaje detallado con toda la informacion de una prevencion y envia un
+correo a los administradores.
+
+ # act
+act es sobreescrita por las clases hijas de Preventer. Se usa para ejecutar una accion de prevencion,
+y puede tomar un argumento para identificar la accion que toma. log es llamada desde aqui.
+
+## CODIGO
+ # int main(int argc, char *argv[])
+Parametros:
+    int argc: asdf
+    char *argv[]: asdf
+Retorno:
+    0 cuando termina correctamente

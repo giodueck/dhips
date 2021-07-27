@@ -1,8 +1,9 @@
 #ifndef DHIPS_DEFINES_H
 #define DHIPS_DEFINES_H
 
-// send-email python program
 #define SCAN_INTERVAL 2
+
+// dhips-send-email python program
 #define SEND_EMAIL_PATH "src/dhips-send-email.py"
 #define SEND_EMAIL_COMPILED 0
 // #define SEND_EMAIL_PATH "/full/path/to/dhips-send-email"

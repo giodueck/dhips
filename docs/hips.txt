@@ -2,6 +2,20 @@
 
 El archivo base y la posicion de inicio del programa
 
+## COMPONENTES
+hips.cpp
+detector.cpp
+preventer.cpp
+module.cpp
+dhipslib.cpp
+pgsql.c
+startup.cpp
+monitor.cpp
+m_i.cpp
+m_ii.cpp
+m_iii.cpp
+m_vii.cpp
+
 ## DISENHO
  # GENERAL
 La declaracion de cada modulo y el globalLogger, ademas de la bandera killed se hace global
