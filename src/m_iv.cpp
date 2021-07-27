@@ -41,6 +41,7 @@ int ModuleIV::DetectorIV::scan()
     char buf[BUFSIZ];
     char *tok;
     bool there = false;
+    int aux;
     std::vector<int> newSshIpsFailures, newWebIpsFailures;
 
     // set up nome new counters
@@ -53,11 +54,19 @@ int ModuleIV::DetectorIV::scan()
     // sample lines: 
     // Jul 27 15:39:30 localhost.localdomain sshd[1704]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.0.13  user=root
     // Jul 27 15:40:38 localhost.localdomain sshd[1710]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.0.13
+    // Jul 27 18:19:36 localhost.localdomain sshd[5037]: PAM 2 more authentication failures; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.0.13  user=root
 
     // parse output
     while (fgets(buf, BUFSIZ, jp))
     {
-        tok = strtok(buf, ";");
+        tok = strtok(buf, "]");
+        tok = strtok(NULL, ": ");
+        tok = strtok(NULL, ": ");
+        if ((aux = atoi(tok)))
+            aux--;
+        else aux = 0;
+
+        tok = strtok(NULL, ";");
         for (int i = 0; i < 6; i++)
         {
             tok = strtok(NULL, " \n");
@@ -73,7 +82,7 @@ int ModuleIV::DetectorIV::scan()
             if (strcmp(tok, sshIps[j].c_str()) == 0)
             {
                 there = true;
-                newSshIpsFailures[j]++;
+                newSshIpsFailures[j] += aux + 1;
                 break;
             }
         }
@@ -82,7 +91,7 @@ int ModuleIV::DetectorIV::scan()
         if (!there)
         {
             sshIps.push_back(std::string(tok));
-            newSshIpsFailures.push_back(1);
+            newSshIpsFailures.push_back(aux + 1);
         }
     }
     pclose(jp);
