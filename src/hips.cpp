@@ -95,7 +95,7 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
         mod_i.setup();
         chars = 1;
         modules += "I";
-    }
+    } else mod_i.disable();
     if (pg_module_enabled(2) == 1)
     {
         while (chars--) cout << '\b';
@@ -105,7 +105,7 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
         chars = 2;
         if (modules.length()) modules += ", ";
         modules += "II";
-    }
+    } else mod_ii.disable();
     if (pg_module_enabled(3) == 1)
     {
         while (chars--) cout << '\b';
@@ -115,7 +115,7 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
         chars = 3;
         if (modules.length()) modules += ", ";
         modules += "III";
-    }
+    } else mod_iii.disable();
     if (pg_module_enabled(7) == 1)
     {
         while (chars--) cout << '\b';
@@ -125,7 +125,7 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
         chars = 3;
         if (modules.length()) modules += ", ";
         modules += "VII";
-    }
+    } else mod_vii.disable();
 
     while (chars--) cout << '\b';
     cout << "done\n";
