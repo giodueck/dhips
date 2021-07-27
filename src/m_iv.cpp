@@ -124,8 +124,17 @@ int ModuleIV::DetectorIV::scan()
             if (sshIpsFailures.size() >= newSshIpsFailures.size())
             {
                 if (newSshIpsFailures[i] > sshIpsFailures[i] && sshIpsFailures[i] <= sshWarnThreshold)
-                    log(ALARM_IV_SSH_WARN, sshIps[i].c_str());
-            } else log(ALARM_IV_SSH_WARN, sshIps[i].c_str());
+                {
+                    char msg[32];
+                    sprintf(msg, "Total: %d", newSshIpsFailures[i]);
+                    log(ALARM_IV_SSH_WARN, sshIps[i].c_str(), msg);
+                }
+            } else
+            {
+                char msg[32];
+                sprintf(msg, "Total: %d", newSshIpsFailures[i]);
+                log(ALARM_IV_SSH_WARN, sshIps[i].c_str(), msg);
+            }
         }
 
         sshIpsFailures = newSshIpsFailures;
