@@ -98,17 +98,32 @@ int ModuleIV::DetectorIV::scan()
 
     for (int i = 0; i < sshIps.size(); i++)
     {
-        // if newly over warn threshold log warning
-        if (newSshIpsFailures[i] > sshWarnThreshold && sshIpsFailures.size() >= i && newSshIpsFailures[i] > sshIpsFailures[i])
+        // ignore-list
+        there = false;
+        for (int j = 0; j < sshIgnoreIps.size(); j++)
         {
-            log(ALARM_IV_SSH_WARN, sshIps[i].c_str());
+            if (strcmp(sshIgnoreIps[j].c_str(), sshIps[i].c_str()) == 0)
+                there = true;
         }
+        if (there) break;
 
         // if newly over block threshold log adn take action
-        if (newSshIpsFailures[i] > sshBlockThreshold && sshIpsFailures.size() >= i && newSshIpsFailures[i] > sshIpsFailures[i])
+        if (newSshIpsFailures[i] > sshBlockThreshold && sshIpsFailures.size() > i && newSshIpsFailures[i] > sshIpsFailures[i])
         {
             log(ALARM_IV_SSH_BLOCK, sshIps[i].c_str(), "[Action taken]");
             preventer.act(0);
+            sshIgnoreIps.push_back(sshIps[i]);
+            break;
+        }
+
+        // if newly over warn threshold log warning
+        if (newSshIpsFailures[i] > sshWarnThreshold)
+        {
+            if (sshIpsFailures.size() >= newSshIpsFailures.size())
+            {
+                if (newSshIpsFailures[i] > sshIpsFailures[i])
+                    log(ALARM_IV_SSH_WARN, sshIps[i].c_str());
+            } else log(ALARM_IV_SSH_WARN, sshIps[i].c_str());
         }
 
         sshIpsFailures = newSshIpsFailures;
