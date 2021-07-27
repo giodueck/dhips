@@ -140,7 +140,7 @@ void ModuleIV::DetectorIV::PreventerIV::setIp(const char *ip)
 
 int ModuleIV::DetectorIV::PreventerIV::act(int action)
 {
-    if (action = 0 && strlen(ip))
+    if (action = 0 && ip)
     {
         // block IP with an iptables rule
         char cmd[512];
