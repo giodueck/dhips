@@ -43,6 +43,7 @@ int ModuleIV::DetectorIV::scan()
     bool there = false;
     std::vector<int> newSshIpsFailures, newWebIpsFailures;
 
+    // set up nome new counters
     for (int i = 0; i < sshIps.size(); i++)
         newSshIpsFailures.push_back(0);
     
@@ -59,7 +60,7 @@ int ModuleIV::DetectorIV::scan()
         tok = strtok(buf, ";");
         for (int i = 0; i < 6; i++)
         {
-            tok = strtok(NULL, " ");
+            tok = strtok(NULL, " \n");
         }
         
         // tok is the IP
@@ -79,7 +80,10 @@ int ModuleIV::DetectorIV::scan()
 
         // store if not there
         if (!there)
+        {
             sshIps.push_back(std::string(tok));
+            newSshIpsFailures.push_back(1);
+        }
     }
     pclose(jp);
 
