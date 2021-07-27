@@ -126,12 +126,12 @@ int Detector::log(int id, const char *location, const char *msg)
 
 int Detector::setup()
 {
-    cout << "Detector::setup() overloading didn't work\n";
+    cout << "Detector::setup() overriding didn't work\n";
     return -1;
 }
 
 int Detector::scan()
 {
-    cout << "Detector::scan() overloading didn't work\n";
+    cout << "Detector::scan() overriding didn't work\n";
     return -1;
 }

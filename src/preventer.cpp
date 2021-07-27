@@ -62,6 +62,6 @@ int Preventer::log(const char *msg)
 
 int Preventer::act(int action)
 {
-    printf("Preventer::act() overloading didn't work\n");
+    printf("Preventer::act() overriding didn't work\n");
     return -1;
 }

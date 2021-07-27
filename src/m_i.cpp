@@ -238,7 +238,7 @@ void ModuleI::setup()
 {
     active = true;
     if (detector.setup() == -1)
-        cout << "Overloading didn't work\n";
+        cout << "Overriding didn't work\n";
 }
 
 void ModuleI::run()

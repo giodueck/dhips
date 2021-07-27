@@ -45,6 +45,7 @@ class Detector
         R: int corresponding to an enum AlarmType for the alarm if successful, negatives otherwise
         P:  char *msg: an additional optional message or observation
             char *location: the IP address that originated the alarm, or localhost
+            char *additional: an additional optional message or observation
     */
     int log(const char *msg, const char *location, const char *additional = NULL);
 

@@ -1,0 +1,65 @@
+## DOCUMENTACION ## detector.h, detector.cpp ##
+
+La clase Detector es la clase base para los detectores de cada modulo.
+
+## DISENHO
+ # AlarmType
+Esta declaracion enum es una parte del disenho inicial de Detector, en el cual la idea detras
+de las alarmas era tener varias categorias diferentes (esto esta presente en notepad.txt como
+tambien en la base de datos), pero la funcionalidad nunca llego a ser implementada por completo.
+
+ # CLASE
+ # filename
+Una cadena constante de C que almacena el path al archivo de log de alarmas.
+
+ # module
+Una cadena de C++ para identificar el modulo del cual forma parte el objeto. Es una cadena de C++
+porque se simplifica la asignacion de cadenas de tamanho variable, y es una cadena y no un entero
+porque almacena numeros romanos.
+
+ # log
+Las funciones log todas hacen lo mismo, con algunas pocas diferencias. La tarea principal es
+escribir a alarmas.log un mensaje detallado con toda la informacion de una alarma y enviar un correo
+a los administradores.
+Para alarmas de ejecucion generadas por la ejecucion de main no se envian correos.
+
+ # setup
+setup es sobreescrita por las clases hijas de Detector. Se usa para hacer una configuracion o
+inicializacion de variables y estructuras de datos.
+
+ # scan
+scan es sobreescrita por las clases hijas de Detector. Se usa para ejecutar un escaneo, es decir,
+se verifican areas de interes para el modulo. En caso de encontrar algo que genere una alarma, log
+se llama desde aqui. Si la alarma genera un acto de prevencion, este tambien se llama desde aqui.
+El objeto Preventer que ejecuta el acto debe ser creado y asignado en las clases hijas por separado.
+
+ # function
+asdf
+
+## CODIGO
+ # Detector(string module)
+Parametros:
+    string module: la cadena a asignar a Detector::module
+
+ # int log(const char *module, int id, const char *location, const char *msg = NULL)
+Parametros:
+    const char *module: La cadena de modulo
+    int id: el id de la alarma (guardado en la base de datos)
+    const char *location: el lugar desde es cual se origina la alarma
+    const char *msg: informacion adicional u observaciones
+Retorno:
+    (int)AlarmType correspondiente a la alarma si termina correctamente, negativos en caso de error
+
+ # int log(int id, const char *location, const char *msg = NULL)
+Parametros:
+    int id: el id de la alarma (guardado en la base de datos)
+    const char *location: el lugar desde es cual se origina la alarma
+    const char *msg: informacion adicional u observaciones
+Retorno:
+    (int)AlarmType correspondiente a la alarma si termina correctamente, negativos en caso de error
+
+ # int log(const char *msg, const char *location, const char *additional = NULL)
+Parametros:
+    const char *location: el lugar desde es cual se origina la alarma
+    const char *msg: description de la alarma
+    const char *aditional: informacion adicional u observaciones

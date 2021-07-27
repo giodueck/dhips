@@ -1,5 +1,7 @@
 ## DOCUMENTACION ## DHIPS - EJECUCION DEL PROGRAMA ##
 
+main() de dhips se encuentra en hips.cpp. 
+
 ## INICIO
 Para iniciar el programa correr el ejecutable 'dhips'.
 Para el correcto funcionamiento, el programa debe ejecutarse como root, o con 'sudo'.
@@ -32,7 +34,10 @@ el programa se detenga de forma inesperada.
 ## DETENCION
 Para detener la ejecucion, un manejador de la senhal SIGINT cierra todos los subprocesos
 abiertos y llama exit();. El manejo de otras senhales de sistema no esta implementado, por
-lo que puede cerrarse de manera incorrecta.
+lo que puede cerrarse de manera incorrecta si se usan.
+La detencion en medio de una tarea de ejecucion (esto es cuando una notificacion en consola
+no termina con la palabra 'done' o es la notificacion 'Starting') causa cierre incorrecto o
+errores.
 
 ## ERRORES
 Mensajes de error apareceran en consola con un mesaje que da una ayuda para identificar la

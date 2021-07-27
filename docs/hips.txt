@@ -1,0 +1,53 @@
+## DOCUMENTACION ## hips.cpp ##
+
+El archivo base y la posicion de inicio del programa
+
+## DISENHO
+ # GENERAL
+La declaracion de cada modulo y el globalLogger, ademas de la bandera killed se hace global
+para que todas las funciones sean capaces de acceder, cada uno con un nombre que no se
+repite en otros archivos para evitar errores.
+globalLogger es un objeto Detector y sirve para generar alarmas de ejecucion, que son dife-
+rentes a alarmas regulares.
+
+ # main
+El programa se ejecuta en 3 etapas. La primera es la de inicializacion, en la que los
+modulos se inicializan, la segunda es la de ejecucion, en la que cada modulo realiza un
+escaneo en su dominio (y genera alarmas y prevenciones) en un ciclo semi-infinito, y la
+tercera, en la que el programa se prepara para terminar. Aunque main toma los argumentos
+usuales (argc, argv), el programa no toma argumentos.
+
+ # init
+Esta funcion inicializa los modulos si estan activados. Genera alarmas de ejecucion, que no
+provocan el envio de correos por no ser verdaderas alarmas, pero si aparecen en alarmas.log,
+y por lo tanto en la interfaz web. Genera alarmas diferentes dependiendo de los argumentos dados.
+
+ # cp_to_www
+Copia los archivos alarmas.log y prevencion.log al directorio raiz de la pagina web, especifi-
+camente a /var/www/log/, para que sea facilmente accesible para la pagina. Es llamada regularmente
+para mantener los logs consistentes.
+
+ # break_handler
+Se ejecuta cada vez que el programa recibe la senhal SIGINT (CTRL+C desde la consola). Cambia el
+valor de una bandera que permite a main terminar la ejecucion si se encuentra en su segunda etapa.
+
+## CODIGO
+ # int main(int argc, char *argv[])
+Parametros:
+    Aunque main toma los argumentos usuales (argc, argv), el programa no toma argumentos.
+Retorno:
+    0 cuando termina correctamente
+
+ # static void init(string outmsg, string logmsg, const char *addmsg = NULL)
+Parametros:
+    string outmsg: mensaje de notificacion a stdout
+    string logmsg: alarma de notificacion
+    const char *addmsg: mensaje adicional a incluir en la alarma de notificacion
+
+ # static int cp_to_www()
+Retorno:
+    0 cuando termina correctamente
+
+ # static void break_handler(int sig)
+Parametros:
+    int sig: el codigo de la senhal, no se usa en la funcion pero es parte del estandar
