@@ -227,6 +227,9 @@ int main()
     case 3:
         conf3(qs);
         break;
+    case 4:
+        // conf4(qs);
+        break;
     case 7:
         conf7(qs);
         break;

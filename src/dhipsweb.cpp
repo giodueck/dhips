@@ -377,6 +377,40 @@ int show_config_iii(char *user, int session)
     return 0;
 }
 
+int show_config_iv(char *user, int session)
+{
+    cout << "<p>Access log monitor</p>";
+    
+    print_table_style();
+
+    // show form with data from 
+    cout << "<form action=\"/cgi-bin/config\" method=\"post\">";
+
+    // toggle module
+    cout << "<input type=\"submit\" name=\"apply\" value=\"Apply configuration\"><br><br>";
+
+    cout << "<input type=\"checkbox\" name=\"enabled\" " << ((pg_module_enabled(4) == 1) ? "checked" : "") << ">";
+    cout << "<label for=\"enabled\"> Enabled</label><br>";
+
+    // // Add or remove a sniffer
+    // cout << "<label for=\"procname\"><br>To add or remove a sniffer from the watchlist specify the process name</label><br>";
+    // cout << "<input type=\"text\" name=\"procname\" required><br>";
+    // // specify action
+    // cout << "<label for=\"add\">Add</label>";
+    // cout << "<input type=\"radio\" name=\"action\" value=\"add\">";
+    // cout << "<input type=\"radio\" name=\"action\" value=\"remove\">";
+    // cout << "<label for=\"remove\">Remove</label><br>";
+
+    // hidden info
+    cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
+    cout << "<input type=\"hidden\" name=\"session\" value=" << session << ">";
+    cout << "<input type=\"hidden\" name=\"mod\" value=4>";
+
+    cout << "</form>";
+
+    return 0;
+}
+
 int show_config_vii(char *user, int session)
 {
     cout << "<p>Tmp directory monitor</p>";
@@ -438,7 +472,7 @@ int show_config(int module, char *user, int session)
             show_config_iii(user, session);
             break;
         case 4:
-            not_available(user, session);
+            show_config_iv(user, session);
             break;
         case 5:
             not_available(user, session);

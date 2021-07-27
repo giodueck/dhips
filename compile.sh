@@ -2,7 +2,7 @@
 
 # dhips
 echo "Compiling dhips"
-g++ -g src/hips.cpp src/detector.cpp src/preventer.cpp src/module.cpp src/dhipslib.cpp src/pgsql.c src/startup.cpp src/monitor.cpp src/m_i.cpp src/m_ii.cpp src/m_iii.cpp src/m_vii.cpp -o dhips -I/root/hips/dhips/headers -I/usr/include/postgresql -lcrypt -lpq
+g++ -g src/hips.cpp src/detector.cpp src/preventer.cpp src/module.cpp src/dhipslib.cpp src/pgsql.c src/startup.cpp src/monitor.cpp src/m_i.cpp src/m_ii.cpp src/m_iii.cpp src/m_iv.cpp src/m_vii.cpp -o dhips -I/root/hips/dhips/headers -I/usr/include/postgresql -lcrypt -lpq
 
 # main page
 echo "Compiling main page"

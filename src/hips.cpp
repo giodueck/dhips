@@ -15,6 +15,7 @@ Detector globalLogger;
 ModuleI mod_i;
 ModuleII mod_ii;
 ModuleIII mod_iii;
+ModuleIV mod_iv;
 ModuleVII mod_vii;
 
 static void break_handler(int sig)
@@ -88,6 +89,7 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
     globalLogger.log(logmsg.c_str(), "localhost", addmsg);
     cp_to_www();
     int chars = 0;
+
     if (pg_module_enabled(1) == 1)
     {
         cout << "I";
@@ -96,6 +98,7 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
         chars = 1;
         modules += "I";
     } else mod_i.disable();
+
     if (pg_module_enabled(2) == 1)
     {
         while (chars--) cout << '\b';
@@ -106,6 +109,7 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
         if (modules.length()) modules += ", ";
         modules += "II";
     } else mod_ii.disable();
+
     if (pg_module_enabled(3) == 1)
     {
         while (chars--) cout << '\b';
@@ -116,6 +120,18 @@ static void init(string outmsg, string logmsg, const char *addmsg = NULL)
         if (modules.length()) modules += ", ";
         modules += "III";
     } else mod_iii.disable();
+
+    if (pg_module_enabled(4) == 1)
+    {
+        while (chars--) cout << '\b';
+        cout << "IV";
+        fflush(stdout);
+        mod_iv.setup();
+        chars = 2;
+        if (modules.length()) modules += ", ";
+        modules += "IV";
+    } else mod_iv.disable();
+    
     if (pg_module_enabled(7) == 1)
     {
         while (chars--) cout << '\b';
@@ -159,6 +175,8 @@ int main(int argc, char *argv[])
     mod_i = ModuleI();
     mod_ii = ModuleII();
     mod_iii = ModuleIII();
+    mod_iv = ModuleIV();
+    mod_vii = ModuleVII();
 
     // initialize modules
     pg_set_config_changed(0);
@@ -181,6 +199,7 @@ int main(int argc, char *argv[])
         mod_i.run();
         mod_ii.run();
         mod_iii.run();
+        mod_iv.run();
         mod_vii.run();
         
         cp_to_www();
