@@ -1,0 +1,29 @@
+## DOCUMENTACION ## dhips-send-email.py, config.py ##
+
+Script de envio de correos.
+
+## DISENHO
+ # LENGUAJE
+La eleccion de trabajar con Python3 en lugar de C/C++ en esta tarea fue motivada por la disponi-
+bilidad de librerias estandar. Como C/C++ es un lenguaje con un enfoque en la eficiencia y rapidez
+y el envio de correos por SMTP es bastante lento (y muchas veces usado en aplicaciones web), no
+existe una libreria estandar para ello. Si existen estas librerias para lenguajes como PHP, Python,
+Ruby, entre otros. Como smtplib es una libreria estandar, la opcion mas simple fue usar Python.
+
+ # send_email
+Establece una conexion son el servidor de SMTP de Google (smtp.gmail.com:587) con los credenciales
+dados en el archivo config.py (no incluido en el proyecto por razones obvias, pero las instrucciones
+para su creacion se encuentran en la guia de instalacion bajo la seccion # Correos). Luego compone
+el correo y lo envia con el usuario, para luego cerrar sesion.
+Si alguno de estos procesos falla, se imprime un mensaje de error detallando el motivo del fallo.
+
+ # LLAMADA A system - dhips-send-mail
+El programa cuando es ejecutado por la consola o por la llamada al sistema 'system' toma 3 argumentos,
+que son los mismos que toma la funcion send-mail.
+
+## CODIGO
+ # def send_email(to, subject, msg)
+Parametros:
+    to: la direccion de destino
+    subject: asunto del correo
+    msg: cuerpo del correo

@@ -1,0 +1,54 @@
+## DOCUMENTACION ## web.h, web.c ##
+
+Libreria de utilidades que permiten crear paginas HTML usando C/C++.
+El codigo no es mio ni modificado, excepto por la separacion de las declaraciones de las
+implementaciones de las funciones.
+
+Licencia:
+    Copyright (c) 2020 Gregg Ink
+
+    This software is provided 'as-is', without any express or implied
+    warranty. In no event will the authors be held liable for any damages
+    arising from the use of this software.
+
+    Permission is granted to anyone to use this software for any purpose,
+    including commercial applications, and to alter it and redistribute it
+    freely, subject to the following restrictions:
+
+    1. The origin of this software must not be misrepresented; you must not
+    claim that you wrote the original software. If you use this software
+    in a product, an acknowledgment in the product documentation would be
+    appreciated but is not required.
+    2. Altered source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
+    3. This notice may not be removed or altered from any source distribution.
+
+Links:
+    https://youtu.be/rFaRFCyewpA
+    https://gitlab.com/greggink/youtube_episode_cgi.git
+
+
+## DISENHO
+Para no usar JavaScript o CSS, o buscar una forma de usar servicios como WordPress, decidi usar
+esta libreria y la funcionalidad de cgi-bin de Apache, que permite ejecutar scripts que progra-
+maticamente generan html. Con la ayuda de esta libreria se crearon las diferentes paginas web.
+
+ # FUNCIONES
+Como El codigo no es mio, describo aqui las funciones usadas con mas frecuencia y sus efectos.
+Para una documentacion mas completa seguir los links dados.
+
+ # web_print_header
+Una directiva define en lugar de una funcion, web_print_header escribe la cabecera que permite a 
+Apache interpretar la salida de texto.
+
+ # web_get_query_string
+Recupera la cadena de query incluida en el link que lleva al script actual. Permite usar argumentos
+de query en el codigo.
+
+ # web_get_post_string
+Similar a web_get_query_string, pero con argumentos POST. Permite usar POST requests y usar los
+argumentos en codigo.
+
+ # web_get_from_query_string
+Verifica si un argumento esta presente en los argumentos de la query_string o post_string dada.
+Si lo encuentra, retorna su valor, si no, retorna un puntero NULL.

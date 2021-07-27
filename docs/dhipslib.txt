@@ -18,6 +18,7 @@ Recupera el nombre de un proceso con su PID.
 
  # dhips_send_email
 Ejecuta al programa dhips-send-email para enviar correos a los usuarios con rol de administrador.
+Para ver mas detalles ver docs/dhips-send-email.txt.
 
 ## CODIGO
  # void dhips_perror(const char *msg)

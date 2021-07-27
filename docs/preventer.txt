@@ -21,9 +21,4 @@ act es sobreescrita por las clases hijas de Preventer. Se usa para ejecutar una 
 y puede tomar un argumento para identificar la accion que toma. log es llamada desde aqui.
 
 ## CODIGO
- # int main(int argc, char *argv[])
-Parametros:
-    int argc: asdf
-    char *argv[]: asdf
-Retorno:
-    0 cuando termina correctamente
+Documentacion del codigo presente completamente en comentarios en preventer.h

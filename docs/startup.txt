@@ -1,0 +1,12 @@
+## DOCUMENTACION ## startup.h, startup.cpp ##
+
+Funcion de configuracion inicial del programa
+
+## DISENHO
+ # startup
+Verifica la existencia de la base de datos y algunas tablas esenciales, y verifica la existencia
+de los directorios y archivos necesarios. Si estos ultimos no existen, los crea. startup es
+llamada por main al iniciar la ejecucion de dhips.
+
+## CODIGO
+Documentacion del codigo presente completamente en comentarios en startup.h

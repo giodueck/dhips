@@ -5,4 +5,7 @@ abarcando una parte diferente del proyecto. Contienen consideraciones de
 disenho y codigo, y todo el codigo esta comentado para ser legible (o al 
 menos para facilitar el entendimiento de ciertas funciones o procedimientos).
 
+Para la documentacion del programa HIPS dhips, ver docs/dhips.txt
+Para la documentacion de la interfaz web, ver docs/web-interface.txt
+
 Este proyecto fue creado por Giovanni Dueck.
