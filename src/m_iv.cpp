@@ -48,7 +48,7 @@ int ModuleIV::DetectorIV::scan()
     {
         tok = strtok(buf, ";");
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 6; i++)
         {
             tok = strtok(NULL, " ");
         }
