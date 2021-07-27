@@ -99,13 +99,13 @@ int ModuleIV::DetectorIV::scan()
     for (int i = 0; i < sshIps.size(); i++)
     {
         // if newly over warn threshold log warning
-        if (newSshIpsFailures[i] > sshWarnThreshold && newSshIpsFailures[i] > sshIpsFailures[i])
+        if (newSshIpsFailures[i] > sshWarnThreshold && sshIpsFailures.size() >= i && newSshIpsFailures[i] > sshIpsFailures[i])
         {
             log(ALARM_IV_SSH_WARN, sshIps[i].c_str());
         }
 
         // if newly over block threshold log adn take action
-        if (newSshIpsFailures[i] > sshBlockThreshold && newSshIpsFailures[i] > sshIpsFailures[i])
+        if (newSshIpsFailures[i] > sshBlockThreshold && sshIpsFailures.size() >= i && newSshIpsFailures[i] > sshIpsFailures[i])
         {
             log(ALARM_IV_SSH_BLOCK, sshIps[i].c_str(), "[Action taken]");
             preventer.act(0);
