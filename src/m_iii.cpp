@@ -172,7 +172,7 @@ int ModuleIII::DetectorIII::scan(bool setup)
     for (i = 0; i < sniffers.size(); i++)
     {
         pid = 0;
-        getPidByName(&pid, sniffers[i].c_str());
+        dhips_get_pid_by_name(&pid, sniffers[i].c_str());
         if (pid)
         {
             // sniffer found

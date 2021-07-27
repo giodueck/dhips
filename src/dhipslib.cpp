@@ -23,7 +23,7 @@ void dhips_perror_no_errno(const char *msg)
     cerr << "dhips: " << string(msg) << endl;
 }
 
-void getPidByName(pid_t *pid, const char *task_name)
+void dhips_get_pid_by_name(pid_t *pid, const char *task_name)
 {
     DIR *dir;
     struct dirent *ptr;
@@ -65,7 +65,7 @@ void getPidByName(pid_t *pid, const char *task_name)
     }
 }
 
-void getNameByPid(pid_t pid, char *task_name)
+void dhips_get_name_by_pid(pid_t pid, char *task_name)
 {
     char proc_pid_path[BUFSIZ];
     char buf[BUFSIZ];

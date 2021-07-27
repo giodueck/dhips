@@ -15,10 +15,12 @@ void dhips_perror(const char *msg);
 void dhips_perror_no_errno(const char *msg);
 
 // If a process by the name task_name is found, its pid is copied into *pid
-void getPidByName(pid_t *pid, const char *task_name);
+// https://www.programmersought.com/article/62414586611/
+void dhips_get_pid_by_name(pid_t *pid, const char *task_name);
 
 // If a process with the given pid is found, its name is copied into task_name
-void getNameByPid(pid_t pid, char *task_name);
+// https://www.programmersought.com/article/62414586611/
+void dhips_get_name_by_pid(pid_t pid, char *task_name);
 
 // Send an email to all the administrators with an email address
 void dhips_send_email(const char *subject, const char *msg);

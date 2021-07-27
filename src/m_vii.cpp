@@ -153,7 +153,7 @@ int ModuleVII::DetectorVII::scan()
                 bool wl = false;
                 pid_t pid;
                 pid = (pid_t)atoi(dirs[i]);
-                getNameByPid(pid, name);
+                dhips_get_name_by_pid(pid, name);
                 for (int j = 0; j < whitelistedProcs.size(); j++)
                 {
                     if (strcmp(name, whitelistedProcs[j].c_str()) == 0)
