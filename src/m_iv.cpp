@@ -63,7 +63,7 @@ int ModuleIV::DetectorIV::scan()
         }
         
         // tok is the IP
-        tok = strtok(NULL, "=");
+        tok += 6;
 
         // check if the IP is known
         there = false;
@@ -81,6 +81,7 @@ int ModuleIV::DetectorIV::scan()
         if (!there)
             sshIps.push_back(std::string(tok));
     }
+    pclose(jp);
 
     for (int i = 0; i < sshIps.size(); i++)
     {
@@ -99,8 +100,6 @@ int ModuleIV::DetectorIV::scan()
 
         sshIpsFailures = newSshIpsFailures;
     }
-
-    pclose(jp);
 
     return 0;
 }
