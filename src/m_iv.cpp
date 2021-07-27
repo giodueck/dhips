@@ -120,7 +120,8 @@ int ModuleIV::DetectorIV::scan()
         // if newly over warn threshold log warning
         if (newSshIpsFailures[i] > sshWarnThreshold)
         {
-            if (sshIpsFailures.size() >= newSshIpsFailures.size())
+            // if ip is known and wasn't already warned
+            if (sshIpsFailures.size() >= newSshIpsFailures.size() && sshIpsFailures[i] <= sshWarnThreshold)
             {
                 if (newSshIpsFailures[i] > sshIpsFailures[i])
                     log(ALARM_IV_SSH_WARN, sshIps[i].c_str());
@@ -153,17 +154,6 @@ int ModuleIV::DetectorIV::PreventerIV::act(int action)
         log(msg);
         ip = NULL;
     }
-    // if (target)
-    // {
-    //     // forcibly kill the process with pid = target
-    //     kill(target, SIGKILL);
-
-    //     // log the action
-    //     char msg[1024];
-    //     sprintf(msg, "Killed process \"%s\" with PID %d", targetName, target);
-    //     log(msg);
-    //     target = 0;
-    // }
 
     return 0;
 }
