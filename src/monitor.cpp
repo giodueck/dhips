@@ -140,9 +140,6 @@ int Monitor::start(string logfile, string outfile)
     fclose(fout);
     // Watches are in place, fork and start monitoring
 
-    // create a temporary file to store all the monitor bytes read
-    tmpf = string("/tmp/monitor") + to_string((long)time(0));
-
     // fork
     pid = fork();
     if (pid == -1)
@@ -162,7 +159,6 @@ int Monitor::start(string logfile, string outfile)
 
     // monitor
     struct inotify_event *event;
-    FILE *tmpfd;
     FILE *logfd = fopen(log.c_str(), "w");
     while (1)
     {

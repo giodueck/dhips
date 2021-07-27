@@ -42,7 +42,6 @@ class Monitor
     // output file
     std::string out;
     std::string log;
-    std::string tmpf;
 
     uint32_t mask;
 
