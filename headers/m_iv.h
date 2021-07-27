@@ -33,7 +33,7 @@ class ModuleIV: public Module
         {
             private:
 
-            char *ip;
+            const char *ip;
 
             public:
 

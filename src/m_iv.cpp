@@ -135,7 +135,7 @@ int ModuleIV::DetectorIV::scan()
 
 void ModuleIV::DetectorIV::PreventerIV::setIp(const char *ip)
 {
-    strcpy(this->ip, ip);
+    this->ip = ip;
 }
 
 int ModuleIV::DetectorIV::PreventerIV::act(int action)
@@ -151,7 +151,7 @@ int ModuleIV::DetectorIV::PreventerIV::act(int action)
         char msg[1024];
         sprintf(msg, "Blocked \"%s\" from port 22 (SSH)", ip);
         log(msg);
-        ip[0] = '\0';
+        ip = NULL;
     }
     // if (target)
     // {
