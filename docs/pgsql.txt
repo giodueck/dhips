@@ -1,0 +1,51 @@
+## DOCUMENTACION ## pgsql.h, pgsql.c ##
+
+Una libreria de funciones que actuan de API con PostgreSQL. Se basan en la libreria libpq que
+Postgres provee.
+Las funciones se prefijan con "pg_"
+
+## DISENHO
+ # STATIC
+Algunas funciones estaticas no son accesibles por otros archivos; estas funciones son de utilidad
+para las demas funciones de la libreria. Errores son reportados en stderr con un mensaje
+descriptivo.
+
+ # exit_nicely
+Cierra la conexion a la base de datos. Se llama en el caso que alguna funcion de la libreria
+encuentre un error del cual no puede recuperarse y debe cerrar la conexion.
+
+ # open_conn
+Abre una conexion con la base de datos y retorna el puntero. Usa la opcion 'always-secure search
+path' para proteger a la base de cualquier usuario malintencionado. En el caso que no pueda abrirse
+una conexion, retorna un puntero NULL, y la funcion que llama a open_conn termina sin ejecutarse.
+
+ # LIBRERIA
+La libreria se compone por mas de 30 funciones muy especializadas, que por lo general retornan
+enteros, excepto en un caso en el que se retorna una cadena. Por lo general, si se retornan datos,
+estos se copian a punteros que se toman como argumentos a la funcion. En los casos en los que se
+retornan cadenas, se usan las funciones malloc o realloc de stdlib.h.
+
+La mayoria de las funciones es muy similar entre si, y no vale la pena listar cada una, asi que a
+continuacion se describe la forma en que operan.
+
+Primero la funcion intenta abrir una conexion con la base de datos, e inician un bloque de
+transaccion con el comando "BEGIN". Si alguna de estas operaciones falla, es considerada una falla
+terminal y la funcion retorna un valor de error y escribe a stderr.
+Luego ejecuta un query o una serie de los mismos para recuperar, consultar, agregar, o eliminar
+datos. En gran parte de las funciones, si esta operacion falla, es considerada una falla terminal
+y la funcion retorna un valor de error y escribe a stderr.
+Si estas operaciones se completan con exito, la funcion termina el bloque de transaccion con el
+comando "END", aplicando los cambios a la base de datos, termina la conexion, y retorna el resultado.
+
+A continuacion una breve descripcion de las funciones menos ordinarias.
+
+ # pg_check_db
+Realiza consultas de prueba. Verifica la existencia de algunas tablas esenciales.
+
+ # pg_check_session
+Realiza una consulta, y basada en ella un cambio en una tabla.
+Verifica la existencia de una sesion activa para el usuario dado. En el caso que exista, esta es
+renovada segun el argumento lifetime.
+
+## CODIGO
+Documentacion del codigo presente completamente en comentarios en pgsql.h

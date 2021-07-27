@@ -6,6 +6,7 @@
 #define SBUFSIZ 1024
 
 // Verifies that the database and all the necessary objects exist
+//  Returns 0 if OK, -1 if not
 int pg_check_db();
 
 // Copies the hashed passphrase stored for username into dest

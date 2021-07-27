@@ -8,4 +8,7 @@ menos para facilitar el entendimiento de ciertas funciones o procedimientos).
 Para la documentacion del programa HIPS dhips, ver docs/dhips.txt
 Para la documentacion de la interfaz web, ver docs/web-interface.txt
 
+Para la documentacion del codigo restante, existe un archivo txt con el mismo
+nombre que el archivo source, por ejemplo psql.txt.
+
 Este proyecto fue creado por Giovanni Dueck.
