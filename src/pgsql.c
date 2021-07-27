@@ -1736,3 +1736,100 @@ int pg_rm_monitor_filename(char *filename)
     PQfinish(conn);
     return 0;
 }
+
+int pg_add_targeted_proc(int type, char *procname)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    char *rets;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Delete file from targeted_proc
+    sprintf(cmd, "DELETE FROM public.targeted_proc WHERE name = '%s';", procname);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+    PQclear(res);
+
+    // Add/readd file from targeted_proc
+    sprintf(cmd, "INSERT INTO public.targeted_proc (name, type, active) VALUES ('%s', %d, true);", procname, type);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+    return 0;
+}
+
+int pg_rm_targeted_proc(char *procname)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    char *rets;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Delete file from monitor
+    sprintf(cmd, "DELETE FROM public.targeted_proc WHERE name = '%s';", procname);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    // check if delete was successful
+    rets = PQcmdStatus(res);
+    if (strcmp(rets, "DELETE 0") == 0)
+    {
+        fprintf(stderr, "dhips//pgsql pg_rm_targeted_proc: no data deleted");
+        ret = 1;
+    } else ret = 0;
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+    return ret;
+}

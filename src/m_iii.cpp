@@ -50,6 +50,7 @@ int ModuleIII::DetectorIII::setup()
     // get list of sniffers
     int i = 0;
     char *dest;
+    sniffers.clear();
     do
     {
         // system files

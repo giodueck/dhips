@@ -345,7 +345,7 @@ int show_config_ii(char *user, int session)
 
 int show_config_iii(char *user, int session)
 {
-    cout << "<p>Sniffer and promiscuous mode monitor</p>";
+    cout << "<p>Packet analyzer (sniffer) and promiscuous mode monitor</p>";
     
     print_table_style();
 
@@ -357,6 +357,15 @@ int show_config_iii(char *user, int session)
 
     cout << "<input type=\"checkbox\" name=\"enabled\" " << ((pg_module_enabled(3) == 1) ? "checked" : "") << ">";
     cout << "<label for=\"enabled\"> Enabled</label><br>";
+
+    // Add or remove a sniffer
+    cout << "<label for=\"procname\"><br>To add or remove a sniffer from the watchlist specify the process name</label><br>";
+    cout << "<input type=\"text\" name=\"procname\" required><br>";
+    // specify action
+    cout << "<label for=\"add\">Add</label>";
+    cout << "<input type=\"radio\" name=\"action\" value=\"add\">";
+    cout << "<input type=\"radio\" name=\"action\" value=\"remove\">";
+    cout << "<label for=\"remove\">Remove</label><br>";
 
     // hidden info
     cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
@@ -395,7 +404,7 @@ int show_config_vii(char *user, int session)
 
 int not_available(char *user, int session)
 {
-    cout << "<p>Modulo no implementado</p>";
+    cout << "<p>Module not implemented :/</p>";
 
     return 0;
 }

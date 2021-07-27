@@ -120,4 +120,13 @@ int pg_add_monitor_filename(int type, char *filename);
 //  Returns 0 if successful, 1 if not found, negatives if errors occur
 int pg_rm_monitor_filename(char *filename);
 
+// Adds procname to the targeted_proc table with the given type. If the file is already in the list, it will
+// be deleted and readded
+//  Returns 0 if successful, negatives if errors occur
+int pg_add_targeted_proc(int type, char *procname);
+
+// Removes procname from the targeted_proc table. Type is irrelevant
+//  Returns 0 if successful, 1 if not found, negatives if errors occur
+int pg_rm_targeted_proc(char *procname);
+
 #endif // PGSQL_H

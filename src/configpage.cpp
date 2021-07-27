@@ -43,7 +43,7 @@ void conf1(char **qs)
                 }
             } else if (strcmp(action, "add") == 0)
             {
-                res = pg_add_monitor_filename((strcmp(type, "sys") == 0) ? 1 : 2, filename);
+                res = pg_add_monitor_filename((strcmp(type, "sys") == 0) ? SYSFILE_TYPE : BINARY_TYPE, filename);
                 if (res == 0)
                 {
                     printf("<p>%s added to %s file watchlist</p>", filename, (strcmp(type, "sys") == 0) ? "system" : "binary");
@@ -75,6 +75,50 @@ void conf1(char **qs)
         // enable all
         pg_toggle_monitor_filetype(BINARY_TYPE, 1);
         printf("<p>Binary file monitoring on</p>");
+    }
+
+    return;
+}
+
+void conf3(char **qs)
+{
+    char *procname = web_get_from_query_string(qs, (char*)"procname");
+    char *action = web_get_from_query_string(qs, (char*)"action");
+
+    char *dest;
+    int active;
+    int i = 0, j = 0;
+    int res = 0;
+
+    // check for and apply edit list configuration
+    if (procname)
+    {
+        // if no action specified
+        if (!action)
+        {
+            printf("<p>Select 'Add' to add to the watchlist<br>");
+            printf("or select 'Remove' to remove from the watchlist</p>");
+        } else
+        {
+            if (strcmp(action, "remove") == 0)
+            {
+                res = pg_rm_targeted_proc(procname);
+                if (res == 0)
+                {
+                    printf("<p>%s removed from sniffer watchlist</p>", procname);
+                } else if (res == 1)
+                {
+                    printf("<p>%s not in sniffer watchlist</p>", procname);
+                }
+            } else if (strcmp(action, "add") == 0)
+            {
+                res = pg_add_targeted_proc(SNIFFER_TYPE, procname);
+                if (res == 0)
+                {
+                    printf("<p>%s added to sniffer watchlist</p>", procname);
+                }
+            }
+        }
     }
 
     return;
@@ -116,6 +160,9 @@ int main()
     case 2:
         break;
     case 3:
+        conf3(qs);
+        break;
+    case 7:
         break;
     
     default:

@@ -23,6 +23,10 @@ int ModuleVII::DetectorVII::setup()
     int i = 0, j = 0;
     char *dest;
 
+    // clear exixting lists
+    susExtensions.clear();
+    whitelistedProcs.clear();
+
     // get all targeted file extension names
     do
     {
