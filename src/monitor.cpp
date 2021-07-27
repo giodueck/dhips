@@ -26,6 +26,11 @@ Monitor::Monitor()
     mask = IN_MODIFY | IN_DELETE_SELF;
 }
 
+void Monitor::clearWatchList()
+{
+    watchNames.clear();
+}
+
 bool Monitor::addWatch(const string filename)
 {
     n = watchNames.size();

@@ -63,6 +63,9 @@ class Monitor
     // Constructor
     Monitor(const char *module);
 
+    // Clear current watchlist. Useful for removing filenames that are no longer in the database.
+    void clearWatchList();
+
     // Add file to watch. When calling start, invalid filenames or non-regular files will be ignored
     //  Returns true if filename was added, false if it was already present
     bool addWatch(const std::string filename);
