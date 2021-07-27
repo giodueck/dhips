@@ -90,3 +90,9 @@ create table targeted_ext (
     active boolean not null,
     constraint targeted_ext_pkey primary key (targeted_ext_id)
 );
+
+create table threshold (
+    name text not null,
+    value int not null,
+    constraint threshold_pkey primary key (name)
+);

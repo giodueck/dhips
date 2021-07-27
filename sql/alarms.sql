@@ -11,4 +11,8 @@ insert into alarm values
     (10, 3, 'Promiscous mode off'),
     (11, 4, 'Sniffer found'),
     (12, 4, 'Suspicious file found'),
-    (13, 4, 'Suspicious process found running from /tmp');
+    (13, 4, 'Suspicious process found running from /tmp'),
+    (14, 3, 'Several SSH failures from one IP'),
+    (15, 4, 'Many SSH failures from one IP'),
+    (16, 3, 'Several HTTP failures from one IP'),
+    (17, 4, 'Many HTTP failures from one IP');
