@@ -60,6 +60,9 @@ Cantidad de elementos en watchedNames.
 Identifica archivos que se eliminaron.
 
  # METODOS
+ # clearWatchList
+Limpia la lista de nombres actual. Sirve para reconfigurar el objeto.
+
  # addWatch
 Agrega el nombre dado a la lista de nombres a monitorear.
 
