@@ -33,9 +33,13 @@ class ModuleIV: public Module
         {
             private:
 
+            char *ip;
+
             public:
 
             PreventerIV();
+
+            void setIp(const char* ip);
 
             int act(int action = 0);
         } preventer;

@@ -35,25 +35,69 @@ int ModuleIV::DetectorIV::setup()
 
 int ModuleIV::DetectorIV::scan()
 {
+    /* SSH */
     // check journalctl
     FILE *jp = popen("journalctl -u sshd | grep 'authentication failure'", "r");
     char buf[BUFSIZ];
     char *tok;
+    bool there = false;
+    std::vector<int> newSshIpsFailures, newWebIpsFailures;
+
+    for (int i = 0; i < sshIps.size(); i++)
+        newSshIpsFailures.push_back(0);
+    
+    for (int i = 0; i < webIps.size(); i++)
+        newWebIpsFailures.push_back(0);
 
     // sample lines: 
     // Jul 27 15:39:30 localhost.localdomain sshd[1704]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.0.13  user=root
     // Jul 27 15:40:38 localhost.localdomain sshd[1710]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.0.13
 
+    // parse output
     while (fgets(buf, BUFSIZ, jp))
     {
         tok = strtok(buf, ";");
-
         for (int i = 0; i < 6; i++)
         {
             tok = strtok(NULL, " ");
         }
         
-        printf("%s\n", tok);
+        // tok is the IP
+        tok = strtok(NULL, "=");
+
+        // check if the IP is known
+        there = false;
+        for (int j = 0; j < sshIps.size(); j++)
+        {
+            if (strcmp(tok, sshIps[j].c_str()) == 0)
+            {
+                there = true;
+                newSshIpsFailures[j]++;
+                break;
+            }
+        }
+
+        // store if not there
+        if (!there)
+            sshIps.push_back(std::string(tok));
+    }
+
+    for (int i = 0; i < sshIps.size(); i++)
+    {
+        // if newly over warn threshold log warning
+        if (newSshIpsFailures[i] > sshWarnThreshold && newSshIpsFailures[i] > sshIpsFailures[i])
+        {
+            log(ALARM_IV_SSH_WARN, sshIps[i].c_str());
+        }
+
+        // if newly over block threshold log adn take action
+        if (newSshIpsFailures[i] > sshBlockThreshold && newSshIpsFailures[i] > sshIpsFailures[i])
+        {
+            log(ALARM_IV_SSH_BLOCK, sshIps[i].c_str(), "[Action taken]");
+            preventer.act(0);
+        }
+
+        sshIpsFailures = newSshIpsFailures;
     }
 
     pclose(jp);
@@ -61,8 +105,17 @@ int ModuleIV::DetectorIV::scan()
     return 0;
 }
 
+void ModuleIV::DetectorIV::PreventerIV::setIp(const char *ip)
+{
+    strcpy(this->ip, ip);
+}
+
 int ModuleIV::DetectorIV::PreventerIV::act(int action)
 {
+    if (action = 0)
+    {
+        printf("SSH threshold passed for ip %s\n", ip);
+    }
     // if (target)
     // {
     //     // forcibly kill the process with pid = target
