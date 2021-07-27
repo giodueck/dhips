@@ -10,6 +10,11 @@ void Module::setup()
     printf("Module::setup() overriding didn't work\n");
 }
 
+void Module::disable()
+{
+    active = false;
+}
+
 void Module::run()
 {
     printf("Module::run() overriding didn't work\n");
