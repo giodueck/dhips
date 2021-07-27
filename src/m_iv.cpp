@@ -121,9 +121,9 @@ int ModuleIV::DetectorIV::scan()
         if (newSshIpsFailures[i] > sshWarnThreshold)
         {
             // if ip is known and wasn't already warned
-            if (sshIpsFailures.size() >= newSshIpsFailures.size() && sshIpsFailures[i] <= sshWarnThreshold)
+            if (sshIpsFailures.size() >= newSshIpsFailures.size())
             {
-                if (newSshIpsFailures[i] > sshIpsFailures[i])
+                if (newSshIpsFailures[i] > sshIpsFailures[i] && sshIpsFailures[i] <= sshWarnThreshold)
                     log(ALARM_IV_SSH_WARN, sshIps[i].c_str());
             } else log(ALARM_IV_SSH_WARN, sshIps[i].c_str());
         }
