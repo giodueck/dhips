@@ -125,8 +125,17 @@ int pg_rm_monitor_filename(char *filename);
 //  Returns 0 if successful, negatives if errors occur
 int pg_add_targeted_proc(int type, char *procname);
 
-// Removes procname from the targeted_proc table. Type is irrelevant
+// Removes procname from the targeted_proc table. Type is relevant
 //  Returns 0 if successful, 1 if not found, negatives if errors occur
-int pg_rm_targeted_proc(char *procname);
+int pg_rm_targeted_proc(int type, char *procname);
+
+// Adds ext to the targeted_ext table. If the file is already in the list, it will
+// be deleted and readded
+//  Returns 0 if successful, negatives if errors occur
+int pg_add_targeted_ext(char *ext);
+
+// Removes ext from the targeted_ext table
+//  Returns 0 if successful, 1 if not found, negatives if errors occur
+int pg_rm_targeted_ext(char *ext);
 
 #endif // PGSQL_H

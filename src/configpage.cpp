@@ -102,7 +102,7 @@ void conf3(char **qs)
         {
             if (strcmp(action, "remove") == 0)
             {
-                res = pg_rm_targeted_proc(procname);
+                res = pg_rm_targeted_proc(SNIFFER_TYPE, procname);
                 if (res == 0)
                 {
                     printf("<p>%s removed from sniffer watchlist</p>", procname);
@@ -116,6 +116,71 @@ void conf3(char **qs)
                 if (res == 0)
                 {
                     printf("<p>%s added to sniffer watchlist</p>", procname);
+                }
+            }
+        }
+    }
+
+    return;
+}
+
+void conf7(char **qs)
+{
+    char *name = web_get_from_query_string(qs, (char*)"name");
+    char *action = web_get_from_query_string(qs, (char*)"action");
+    char *type = web_get_from_query_string(qs, (char*)"type");
+
+    char *dest;
+    int active;
+    int i = 0, j = 0;
+    int res = 0;
+
+    // check for and apply edit list configuration
+    if (name)
+    {
+        // if no action specified
+        if (!action || !type)
+        {
+            printf("<p>Select 'Add' and a category to add to the whitelist or watchlist<br>");
+            printf("or select 'Remove' and a category to remove from the whitelist or watchlist</p>");
+        } else if (strcmp(type, "whitelist") == 0)
+        {
+            if (strcmp(action, "remove") == 0)
+            {
+                res = pg_rm_targeted_proc(WHITELISTED_TYPE, name);
+                if (res == 0)
+                {
+                    printf("<p>%s removed from whitelist</p>", name);
+                } else if (res == 1)
+                {
+                    printf("<p>%s not in whitelist</p>", name);
+                }
+            } else if (strcmp(action, "add") == 0)
+            {
+                res = pg_add_targeted_proc(WHITELISTED_TYPE, name);
+                if (res == 0)
+                {
+                    printf("<p>%s added to whitelist</p>", name);
+                }
+            }
+        } else if (strcmp(type, "watchlist") == 0)
+        {
+            if (strcmp(action, "remove") == 0)
+            {
+                res = pg_rm_targeted_ext(name);
+                if (res == 0)
+                {
+                    printf("<p>%s removed from extension watchlist</p>", name);
+                } else if (res == 1)
+                {
+                    printf("<p>%s not in extension watchlist</p>", name);
+                }
+            } else if (strcmp(action, "add") == 0)
+            {
+                res = pg_add_targeted_ext(name);
+                if (res == 0)
+                {
+                    printf("<p>%s added to extension watchlist</p>", name);
                 }
             }
         }
@@ -163,6 +228,7 @@ int main()
         conf3(qs);
         break;
     case 7:
+        conf7(qs);
         break;
     
     default:

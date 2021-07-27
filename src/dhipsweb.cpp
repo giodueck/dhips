@@ -295,7 +295,7 @@ int show_config_i(char *user, int session)
     cout << "<label for=\"enablebin\"> Monitor binary files</label><br>";
 
     // Add or remove a file
-    cout << "<label for=\"filename\"><br>To add or remove a file from the watchlist specify the full path</label><br>";
+    cout << "<label for=\"filename\"><br>To add or remove a file from the watchlist specify the /full/path</label><br>";
     cout << "<input type=\"text\" name=\"filename\" required><br>";
     // specify action
     cout << "<label for=\"add\">Add</label>";
@@ -391,6 +391,21 @@ int show_config_vii(char *user, int session)
 
     cout << "<input type=\"checkbox\" name=\"enabled\" " << ((pg_module_enabled(7) == 1) ? "checked" : "") << ">";
     cout << "<label for=\"enabled\"> Enabled</label><br>";
+
+    // Add or remove from white or watchlist
+    cout << "<label for=\"name\"><br>To add or remove a file extension from the watchlist specify only the extension<br>";
+    cout << "To add or remove a program from the whitelist specify the process name<br></label>";
+    cout << "<input type=\"text\" name=\"name\" required><br>";
+    // specify action
+    cout << "<label for=\"add\">Add</label>";
+    cout << "<input type=\"radio\" name=\"action\" value=\"add\">";
+    cout << "<input type=\"radio\" name=\"action\" value=\"remove\">";
+    cout << "<label for=\"remove\">Remove</label><br>";
+    // specify action type
+    cout << "<label for=\"watchlist\">Extension watchlist</label>";
+    cout << "<input type=\"radio\" name=\"type\" value=\"watchlist\">";
+    cout << "<input type=\"radio\" name=\"type\" value=\"whitelist\">";
+    cout << "<label for=\"whitelist\">Program whitelist</label><br>";
 
     // hidden info
     cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";

@@ -1785,7 +1785,7 @@ int pg_add_targeted_proc(int type, char *procname)
     return 0;
 }
 
-int pg_rm_targeted_proc(char *procname)
+int pg_rm_targeted_proc(int type, char *procname)
 {
     PGconn     *conn;
     PGresult   *res;
@@ -1811,7 +1811,7 @@ int pg_rm_targeted_proc(char *procname)
     PQclear(res);
 
     // Delete file from monitor
-    sprintf(cmd, "DELETE FROM public.targeted_proc WHERE name = '%s';", procname);
+    sprintf(cmd, "DELETE FROM public.targeted_proc WHERE name = '%s' AND type = %d;", procname, type);
     // Set stderr buffer to be buf
     setbuf(stderr, buf);
     res = PQexec(conn, cmd);
@@ -1821,6 +1821,103 @@ int pg_rm_targeted_proc(char *procname)
     if (strcmp(rets, "DELETE 0") == 0)
     {
         fprintf(stderr, "dhips//pgsql pg_rm_targeted_proc: no data deleted");
+        ret = 1;
+    } else ret = 0;
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+    return ret;
+}
+
+int pg_add_targeted_ext(char *ext)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    char *rets;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Delete file from targeted_ext
+    sprintf(cmd, "DELETE FROM public.targeted_ext WHERE name = '%s';", ext);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+    PQclear(res);
+
+    // Add/readd file from targeted_ext
+    sprintf(cmd, "INSERT INTO public.targeted_ext (name, active) VALUES ('%s', true);", ext);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+    return 0;
+}
+
+int pg_rm_targeted_ext(char *ext)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    char *rets;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Delete file from monitor
+    sprintf(cmd, "DELETE FROM public.targeted_ext WHERE name = '%s';", ext);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    // check if delete was successful
+    rets = PQcmdStatus(res);
+    if (strcmp(rets, "DELETE 0") == 0)
+    {
+        fprintf(stderr, "dhips//pgsql pg_rm_targeted_ext: no data deleted");
         ret = 1;
     } else ret = 0;
     PQclear(res);
