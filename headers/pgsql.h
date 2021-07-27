@@ -111,4 +111,13 @@ int pg_get_targeted_ext_name(int index, char **dest);
 //  Returns 0 if successful, 1 if not found, negatives if errors occur
 int pg_get_email(char *user, char **dest);
 
+// Adds filename to the monitor table with the given type. If the file is already in the list, it will
+// be deleted and readded
+//  Returns 0 if successful, negatives if errors occur
+int pg_add_monitor_filename(int type, char *filename);
+
+// Removes filename from the monitor table. Type is irrelevant
+//  Returns 0 if successful, 1 if not found, negatives if errors occur
+int pg_rm_monitor_filename(char *filename);
+
 #endif // PGSQL_H

@@ -1639,3 +1639,100 @@ int pg_get_email(char *user, char **dest)
 
     return ret;
 }
+
+int pg_add_monitor_filename(int type, char *filename)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    char *rets;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Delete file from monitor
+    sprintf(cmd, "DELETE FROM public.monitor WHERE fullfilename = '%s';", filename);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+    PQclear(res);
+
+    // Add/readd file from monitor
+    sprintf(cmd, "INSERT INTO public.monitor (fullfilename, type, active) VALUES ('%s', %d, true);", filename, type);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+    return 0;
+}
+
+int pg_rm_monitor_filename(char *filename)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    char *rets;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Delete file from monitor
+    sprintf(cmd, "DELETE FROM public.monitor WHERE fullfilename = '%s';", filename);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    // check if delete was successful
+    rets = PQcmdStatus(res);
+    if (strcmp(rets, "DELETE 0") == 0)
+    {
+        fprintf(stderr, "dhips//pgsql pg_rm_monitor_filename: no data deleted");
+        ret = 1;
+    }
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+    return 0;
+}

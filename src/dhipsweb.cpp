@@ -273,6 +273,8 @@ void printr(int n)
 
 int show_config_i(char *user, int session)
 {
+    cout << "<p>File monitor</p>";
+
     print_table_style();
 
     // show form with data from 
@@ -292,6 +294,20 @@ int show_config_i(char *user, int session)
     cout << "<input type=\"checkbox\" name=\"enablebin\" checked>";
     cout << "<label for=\"enablebin\"> Monitor binary files</label><br>";
 
+    // Add or remove a file
+    cout << "<label for=\"filename\"><br>To add or remove a file from the watchlist specify the full path</label><br>";
+    cout << "<input type=\"text\" name=\"filename\" required><br>";
+    // specify action
+    cout << "<label for=\"add\">Add</label>";
+    cout << "<input type=\"radio\" name=\"action\" value=\"add\">";
+    cout << "<input type=\"radio\" name=\"action\" value=\"remove\">";
+    cout << "<label for=\"remove\">Remove</label><br>";
+    // specify filetype
+    cout << "<label for=\"bin\">Bin</label>";
+    cout << "<input type=\"radio\" name=\"type\" value=\"bin\">";
+    cout << "<input type=\"radio\" name=\"type\" value=\"sys\">";
+    cout << "<label for=\"sys\">System file</label><br>";
+
     // hidden info
     cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
     cout << "<input type=\"hidden\" name=\"session\" value=" << session << ">";
@@ -304,6 +320,8 @@ int show_config_i(char *user, int session)
 
 int show_config_ii(char *user, int session)
 {
+    cout << "<p>Login monitor</p>";
+    
     print_table_style();
 
     // show form with data from 
@@ -327,6 +345,8 @@ int show_config_ii(char *user, int session)
 
 int show_config_iii(char *user, int session)
 {
+    cout << "<p>Sniffer and promiscuous mode monitor</p>";
+    
     print_table_style();
 
     // show form with data from 
@@ -348,6 +368,38 @@ int show_config_iii(char *user, int session)
     return 0;
 }
 
+int show_config_vii(char *user, int session)
+{
+    cout << "<p>Tmp directory monitor</p>";
+    
+    print_table_style();
+
+    // show form with data from 
+    cout << "<form action=\"/cgi-bin/config\" method=\"post\">";
+
+    // toggle module
+    cout << "<input type=\"submit\" name=\"apply\" value=\"Apply configuration\"><br><br>";
+
+    cout << "<input type=\"checkbox\" name=\"enabled\" " << ((pg_module_enabled(7) == 1) ? "checked" : "") << ">";
+    cout << "<label for=\"enabled\"> Enabled</label><br>";
+
+    // hidden info
+    cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
+    cout << "<input type=\"hidden\" name=\"session\" value=" << session << ">";
+    cout << "<input type=\"hidden\" name=\"mod\" value=7>";
+
+    cout << "</form>";
+
+    return 0;
+}
+
+int not_available(char *user, int session)
+{
+    cout << "<p>Modulo no implementado</p>";
+
+    return 0;
+}
+
 int show_config(int module, char *user, int session)
 {
     switch (module)
@@ -362,18 +414,25 @@ int show_config(int module, char *user, int session)
             show_config_iii(user, session);
             break;
         case 4:
+            not_available(user, session);
             break;
         case 5:
+            not_available(user, session);
             break;
         case 6:
+            not_available(user, session);
             break;
         case 7:
+            show_config_vii(user, session);
             break;
         case 8:
+            not_available(user, session);
             break;
         case 9:
+            not_available(user, session);
             break;
         case 10:
+            not_available(user, session);
             break;
         
         default:

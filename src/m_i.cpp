@@ -20,6 +20,10 @@ int ModuleI::DetectorI::setup()
     int i = 0, j = 0;
     char *dest;
 
+    // clear existing watchlists (if they do)
+    sysFileMonitor->clearWatchList();
+    binMonitor->clearWatchList();
+
     // get all monitoring filenames
     do
     {
