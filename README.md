@@ -21,4 +21,5 @@ Documentacion en el archivo DOCS.txt y en el directorio docs/
 - I: Monitoreo de archivos del sistema y archivos binarios
 - II: Monitoreo de inicio y cierre de sesion
 - III: Monitoreo de modo promiscuo. Monitoreo y control de sniffers
+- IV: Monitoreo de intentos de inicio de sesion por SSH
 - VII: Monitoreo de /tmp. Control de scripts y procesos en /tmp
