@@ -1,0 +1,36 @@
+## DOCUMENTACION ## login.h, login.cpp ##
+
+Funciones relacionadas con usuarios y sesiones
+
+## DISENHO
+ # DEFINES
+ # SESSION_LIFETIME
+Define el tiempo de vida de una sesion, en minutos.
+
+ # verify_session
+Verifica la sesion para el usuario que intenta cargar un recurso web. Si la sesion es valida, la
+renueva, y si no, redirecciona a cgi-bin/login
+
+ # login
+Cuando se inicia sesion, la pagina cgi-bin/main se carga con una POST request. Cuando eso ocurre,
+login verifica los credenciales ingresados. Si son validos carga cgi-bin/main con GET, si no,
+redirecciona a cgi-bin/login con un mensaje de error.
+
+ # get_role
+Funcion intermedia que llama a pg_get_role y retorna su resultado.
+
+ # FORMS
+Varias funciones imprimen forms. Estas toman como argumentos nombre se usuario, sesion y un
+entero que se usa para imprimir errores o mensajes de confirmacion, y retornan 0.
+
+ # change_passwd
+Imprime el form de cambio de contrasenha. Darle submit carga cgi-bin/user_mgmt.
+
+ # add_user
+Imprime el form de agregar usuario. Darle submit carga cgi-bin/user_mgmt.
+
+ # edit_user
+Imprime el form de modificar usuario. Darle submit carga cgi-bin/user_mgmt.
+
+## CODIGO
+Documentacion del codigo presente completamente en comentarios en detector.h

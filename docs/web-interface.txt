@@ -1,0 +1,59 @@
+## DOCUMENTACION ## DHIPS - INTERFAZ WEB ##
+
+## PAGINA LOGIN
+index.html redirecciona a cgi-bin/login, la pagina de inicio de sesion. Esta pagina contiene
+el form que permite iniciar sesion.
+Para iniciar sesion ingresar una combinacion valida de nombre de usuario y contrasenha. Si es
+aceptada, la pagina redirecciona a cgi-bin/main, la pagina principal, y si no se muestra un mensaje
+de error.
+
+## USUARIOS
+El sitio opera con usuarios separados de los usuarios Unix, con tres roles o escalones de privilegio.
+Estos son 'admin', 'user', y 'spectator'. La base de datos se crea con un usuario de cada rol, con
+nombres de usuario iguales a su rol, con la CONTRASENHA=password.
+ES RECOMENDABLE CAMBIAR LAS CONTRASENHAS POR DEFECTO, NO SOLO SON IGUALES Y PREDECIBLES, SINO QUE SUS
+HASHES SON IGUALES TAMBIEN.
+
+Para cambiar una contrasenha iniciar sesion y cambiar la contrasenha a traves de los links inferiores
+en la pagina principal. Un usuario de rol 'admin' tiene la capacidad de cambiar las contrasenhas y
+roles de otros usuarios.
+
+Usuarios tambien pueden opcionalmente tener una direccion de correo, que en realidad solo afecta a los
+usuarios con rol 'admin', que reciben correos cada vez que ocurre una alarma o prevencion.
+
+## PAGINA PRINCIPAL
+Varios links se encuentran en la pagina principal:
+- Alarms: Permite leer todos los logs de alarmas.log, separados en paginas para no tener un muro de texto.
+- Preventions: Permite leer todos los logs de prevencion.log. Similar al link de Alarms.
+- Settings: Permite cambiar la configuracion de cada modulo por separado, como por ejemplo deshabilitar
+    cierto modulo, o cambiar el alance del monitoreo de archivos.
+
+Ademas, algunos links de manejo de usuario y sesion:
+- Log out: Cerrar sesion y volver a la pagina de inicio de sesion.
+- Change password: Cambia la contrasenha del usuario.
+- Add user: Agrega un usuario nuevo. Especifica un nombre se usuario, contrasenha y rol. Solo disponible
+    para el rol 'admin'.
+- Edit user: Cambia la contrasenha o rol de un usuario, o eliminalo. Solo disponible para el rol 'admin'.
+
+Bajo cada pagina tambien se encuentra un link para volver a la pagina principal, 'Home'.
+
+## SESIONES
+El inicio de sesion crea una sesion en la base de datos que tiene un tiempo de vida de 5 minutos. Cada
+accion en el sitio requiere una sesion activa, sin ella el sitio redirecciona a la pagina de inicio de
+sesion.
+
+Una sesion se renueva a 5 minutos de tiempo de vida con cada accion en el sitio, y el link de 'Log out'
+termina la sesion manualmente.
+
+## PAGINA MANEJAR USUARIOS
+cgi-bin/user_mgmt. Al completar y enviar un form de cambio de contrasenha, agregar o editar un usuario,
+se envia una POST request a una pagina que aplica los cambios si la sesion es valida y el usuario tiene
+los privilegios necesarios.
+
+## PAGINA DE CONFIGURACION
+cgi-bin/config. Al completar y enviar un form de cambio de configuracion para algun modulo, se envia una
+POST resquest a una pagina que aplica los cambios si la sesion es valida y el usuario tiene los
+privilegios necesarios.
+
+## PAGINA LOGOUT
+cgi-bin/logout. Termina la sesion y redirecciona a la pagina de inicio de sesion.

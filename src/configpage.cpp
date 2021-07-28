@@ -203,7 +203,7 @@ int main()
     printf("<body>");
     
     // check if logged in
-    if (!user || !session || pg_check_session(user, atoi(session), SESSION_LIFETIME) != 1)
+    if (!user || !session || pg_check_session(user, atoi(session), SESSION_LIFETIME) != 1 || pg_get_role(user) > 1)
     {
         printf("<meta http-equiv=\"refresh\" content=\"0; URL=/cgi-bin/login?u=%s\" />", user);
         printf ("</body>");

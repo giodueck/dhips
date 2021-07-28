@@ -12,12 +12,6 @@
 // the login page
 char **verify_session(int *session, char *user);
 
-// Checks to see if the session for the current user exists and is valid.
-// Use this version to use the query variables
-//  Returns qs. Renews the session if a valid one is found, else returns 1 and redirects to
-// the login page
-// char **verify_session(char **qs, int session, char *user);
-
 // Fetches POST data and uses it to log in.
 // If successful creates a session and reloads the page with a GET request,
 // if not redirects back to login page with an error message for the user
