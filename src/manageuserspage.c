@@ -24,6 +24,7 @@ static void add_user_(char **qs)
     char *npass = web_get_from_query_string(qs, (char*)"npass");
     char *mpass = web_get_from_query_string(qs, (char*)"mpass");
     char *role = web_get_from_query_string(qs, (char*)"role");
+    char *email = web_get_from_query_string(qs, (char*)"email");
     
     // check if password is the same as confirmed
     if (strcmp(npass, mpass))
@@ -35,7 +36,7 @@ static void add_user_(char **qs)
     }
 
     // add user
-    int res = pg_add_user(username, crypt(npass, crypt_gensalt("$6$", 0, NULL, 0)), role);
+    int res = pg_add_user(username, crypt(npass, crypt_gensalt("$6$", 0, NULL, 0)), role, email);
 
     if (res == 0)
     {
@@ -136,6 +137,12 @@ static void edit_user_(char **qs)
         {
             res = -2;
         }
+    } else if (strcmp(action, "Update email") == 0)
+    {
+        char *email = web_get_from_query_string(qs, (char*)"email");
+        printf("Got here");
+        res = pg_set_email(username, email);
+        e = 4;
     }
 
     if (res == 0)
@@ -164,7 +171,7 @@ static void delete_user_(char **qs)
 
     char *username = web_get_from_query_string(qs, (char*)"u");
     
-    // add user
+    // delete user
     int res = pg_delete_user(username);
     if (res == -2) res = -3;
 
@@ -201,7 +208,7 @@ int main()
     if (strcmp(action, "Add user") == 0)
     {
         add_user_(qs);
-    } else if (strcmp(action, "Update password") == 0 || strcmp(action, "Update role") == 0)
+    } else if (strcmp(action, "Update password") == 0 || strcmp(action, "Update role") == 0 || strcmp(action, "Update email") == 0)
     {
         edit_user_(qs);
     } else if (strcmp(action, "Delete user") == 0)

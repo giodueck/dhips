@@ -30,7 +30,7 @@ int pg_change_role(char *user, char *role);
 
 // Adds a user.
 //  Returns 0 if successful, other if not
-int pg_add_user(char *username, char *hash, char *role);
+int pg_add_user(char *username, char *hash, char *role, char *email);
 
 // Removes a user.
 //  Returns 0 if successful, other if not
@@ -111,6 +111,10 @@ int pg_get_targeted_ext_name(int index, char **dest);
 // Copies the email of user into dest
 //  Returns 0 if successful, 1 if not found, negatives if errors occur
 int pg_get_email(char *user, char **dest);
+
+// Updates the users email
+//  Returns 0 if successful, 1 if not found, negatives if errors occur
+int pg_set_email(char *user, char *email);
 
 // Adds filename to the monitor table with the given type. If the file is already in the list, it will
 // be deleted and readded

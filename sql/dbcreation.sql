@@ -15,7 +15,7 @@ create table login (
     constraint role_fkey foreign key ("role") references "role"("role")
 );
 
-insert into login values ('admin',
+insert into login (username, pwd, role) values ('admin',
     '$6$0nLTuzHmB9pJSGFn$KrLO2VIj7ZFhlAtyUnDLgY0nZvjCq1UVZnO8cvZrgvOxp9mxZdS9UDM5AmkWogJMX11pXifQ9KV5dak7dVlW//',
     'admin'),
     ('user', '$6$0nLTuzHmB9pJSGFn$KrLO2VIj7ZFhlAtyUnDLgY0nZvjCq1UVZnO8cvZrgvOxp9mxZdS9UDM5AmkWogJMX11pXifQ9KV5dak7dVlW//',

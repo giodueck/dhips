@@ -170,6 +170,7 @@ int get_role(char *user)
 
 int add_user(char *user, int session, int e)
 {
+    // username and password
     cout << "<form action=\"/cgi-bin/user_mgmt\" method=\"post\">";
     cout << "<label for=\"nuser\">Username<br></label>";
     cout << "<input type=\"text\" name=\"nuser\" required><br>";
@@ -177,6 +178,12 @@ int add_user(char *user, int session, int e)
     cout << "<input type=\"password\" name=\"npass\" required><br>";
     cout << "<label for=\"mpass\">Confirm password<br></label>";
     cout << "<input type=\"password\" name=\"mpass\" required><br>";
+
+    // email
+    cout << "<label for=\"email\">E-Mail<br></label>";
+    cout << "<input type=\"text\" name=\"email\"><br>";
+
+    // role
     cout << "<label for=\"admin\">Admin</label>";
     cout << "<input type=\"radio\" name=\"role\" value=\"admin\" required>";
     cout << "<label for=\"user\"><br>User</label>";
@@ -264,7 +271,13 @@ int edit_user(char *user, int session, int e)
     cout << "<label for=\"spectator\"><br>Spectator</label>";
     cout << "<input type=\"radio\" name=\"role\" value=\"spectator\">";
 
-    cout << "<br><input type=\"submit\" name=\"action\" value=\"Update role\">";
+    cout << "<br><input type=\"submit\" name=\"action\" value=\"Update role\"><br><br>";
+
+    // edit email
+    cout << "<label for=\"email\">E-Mail<br></label>";
+    cout << "<input type=\"text\" name=\"email\">";
+
+    cout << "<br><input type=\"submit\" name=\"action\" value=\"Update email\">";
 
     // delete user
     cout << "<p style=\"color:Red;\">";
@@ -285,6 +298,9 @@ int edit_user(char *user, int session, int e)
         } else if (e == 3)
         {
             cout << "<p>User deleted</p>";
+        } else if (e == 4)
+        {
+            cout << "<p>E-Mail updated</p>";
         } else if (e == -1)
         {
             cout << "<p style=\"color:Tomato;\">";

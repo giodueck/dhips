@@ -242,7 +242,7 @@ int pg_change_role(char *user, char *role)
     return 0;
 }
 
-int pg_add_user(char *username, char *hash, char *role)
+int pg_add_user(char *username, char *hash, char *role, char *email)
 {
     PGconn     *conn;
     PGresult   *res;
@@ -267,8 +267,9 @@ int pg_add_user(char *username, char *hash, char *role)
     }
     PQclear(res);
 
-    // Insert new user
-    sprintf(cmd, "INSERT INTO public.login VALUES ('%s', '%s', '%s');", username, hash, role);
+    // Insert new user. If email == NULL, insert null
+    if (email) sprintf(cmd, "INSERT INTO public.login VALUES ('%s', '%s', '%s', '%s');", username, hash, role, email);
+    else sprintf(cmd, "INSERT INTO public.login VALUES ('%s', '%s', '%s', null);", username, hash, role);
     // Set stderr buffer to be buf
     setbuf(stderr, buf);
     res = PQexec(conn, cmd);
@@ -1606,7 +1607,7 @@ int pg_get_email(char *user, char **dest)
     PQclear(res);
 
     // Retrieve email for user
-    sprintf(cmd, "SELECT email FROM public.login where username = '%s';", user);
+    sprintf(cmd, "SELECT email FROM public.login WHERE username = '%s';", user);
     // Set stderr buffer to be buf
     setbuf(stderr, buf);
     res = PQexec(conn, cmd);
@@ -1626,6 +1627,64 @@ int pg_get_email(char *user, char **dest)
         rets = PQgetvalue(res, 0, 0);
         *dest = (char*)malloc(strlen(rets) + 1);
         strcpy(*dest, rets);
+        ret = 0;
+    } else ret = 1;
+    PQclear(res);
+
+    /* end the transaction */
+    res = PQexec(conn, "END");
+    PQclear(res);
+
+    /* close the connection to the database and cleanup */
+    PQfinish(conn);
+
+    return ret;
+}
+
+int pg_set_email(char *user, char *email)
+{
+    PGconn     *conn;
+    PGresult   *res;
+    char cmd[512] = "";
+    char buf[BUFSIZ];
+
+    char *rets;
+    int ret;
+
+    /* Make a connection to the database */
+    conn = open_conn();
+    if (!conn) return -1;
+
+    /* Start a transaction block */
+    res = PQexec(conn, "BEGIN");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "dhips//pgsql: BEGIN command failed: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+    PQclear(res);
+
+    // Retrieve email for user
+    if (email) sprintf(cmd, "UPDATE public.login SET email = '%s' WHERE username = '%s' RETURNING username;", email, user);
+    else sprintf(cmd, "UPDATE public.login SET email = null WHERE username = '%s' RETURNING username;", user);
+    // Set stderr buffer to be buf
+    setbuf(stderr, buf);
+    res = PQexec(conn, cmd);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        // error retrieving data
+        fprintf(stderr, "dhips//pgsql pg_get_email: no data retrieved: %s\n", PQresultErrorMessage(res));
+        PQclear(res);
+        exit_nicely(conn);
+        return -1;
+    }
+
+    int rows = PQntuples(res);
+    if (rows > 0)
+    {
         ret = 0;
     } else ret = 1;
     PQclear(res);
