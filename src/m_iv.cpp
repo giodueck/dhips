@@ -37,7 +37,7 @@ int ModuleIV::DetectorIV::scan()
 {
     /* SSH */
     // check journalctl
-    FILE *jp = popen("journalctl -u sshd | grep 'authentication failure'", "r");
+    FILE *jp = popen("/usr/bin/journalctl -u sshd | /usr/bin/grep 'authentication failure'", "r");
     char buf[BUFSIZ];
     char *tok;
     bool there = false;

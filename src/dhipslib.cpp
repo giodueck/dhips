@@ -96,7 +96,7 @@ void dhips_send_email(const char *subject, const char *msg)
             char cmd[BUFSIZ] = {0};
             if (SEND_EMAIL_COMPILED == 0)   // use python script
             {
-                sprintf(cmd, "python3 %s %s \"%s\" \"%s\"", SEND_EMAIL_PATH, email, subject, msg);
+                sprintf(cmd, "/usr/bin/python3 %s %s \"%s\" \"%s\"", SEND_EMAIL_PATH, email, subject, msg);
             } else                          // use binary file
             {
                 sprintf(cmd, ".%s %s \"%s\" \"%s\"", SEND_EMAIL_PATH, email, subject, msg);
