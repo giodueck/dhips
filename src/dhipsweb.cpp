@@ -296,7 +296,7 @@ int show_config_i(char *user, int session)
 
     // Add or remove a file
     cout << "<label for=\"filename\"><br>To add or remove a file from the watchlist specify the /full/path</label><br>";
-    cout << "<input type=\"text\" name=\"filename\" required><br>";
+    cout << "<input type=\"text\" name=\"filename\"><br>";
     // specify action
     cout << "<label for=\"add\">Add</label>";
     cout << "<input type=\"radio\" name=\"action\" value=\"add\">";
@@ -360,7 +360,7 @@ int show_config_iii(char *user, int session)
 
     // Add or remove a sniffer
     cout << "<label for=\"procname\"><br>To add or remove a sniffer from the watchlist specify the process name</label><br>";
-    cout << "<input type=\"text\" name=\"procname\" required><br>";
+    cout << "<input type=\"text\" name=\"procname\"><br>";
     // specify action
     cout << "<label for=\"add\">Add</label>";
     cout << "<input type=\"radio\" name=\"action\" value=\"add\">";
@@ -392,15 +392,6 @@ int show_config_iv(char *user, int session)
     cout << "<input type=\"checkbox\" name=\"enabled\" " << ((pg_module_enabled(4) == 1) ? "checked" : "") << ">";
     cout << "<label for=\"enabled\"> Enabled</label><br>";
 
-    // // Add or remove a sniffer
-    // cout << "<label for=\"procname\"><br>To add or remove a sniffer from the watchlist specify the process name</label><br>";
-    // cout << "<input type=\"text\" name=\"procname\" required><br>";
-    // // specify action
-    // cout << "<label for=\"add\">Add</label>";
-    // cout << "<input type=\"radio\" name=\"action\" value=\"add\">";
-    // cout << "<input type=\"radio\" name=\"action\" value=\"remove\">";
-    // cout << "<label for=\"remove\">Remove</label><br>";
-
     // hidden info
     cout << "<input type=\"hidden\" name=\"user\" value=\"" << user << "\">";
     cout << "<input type=\"hidden\" name=\"session\" value=" << session << ">";
@@ -429,7 +420,7 @@ int show_config_vii(char *user, int session)
     // Add or remove from white or watchlist
     cout << "<label for=\"name\"><br>To add or remove a file extension from the watchlist specify only the extension<br>";
     cout << "To add or remove a program from the whitelist specify the process name<br></label>";
-    cout << "<input type=\"text\" name=\"name\" required><br>";
+    cout << "<input type=\"text\" name=\"name\"><br>";
     // specify action
     cout << "<label for=\"add\">Add</label>";
     cout << "<input type=\"radio\" name=\"action\" value=\"add\">";
