@@ -1,0 +1,39 @@
+## DOCUMENTACION ## mainpage.cpp ##
+
+Pagina principal. Compila a cgi-bin/main
+
+## DISENHO
+ # SECCIONES
+La pagina principal se divide en secciones, cada seccion causa que la pagina se vea diferente
+y cumple funciones diferentes. La mayor parte de la impresion de cada seccion se hace con
+funciones en dhipsweb.cpp. Cuando se esta en una seccion, aparece un link en la parte inferior
+de la pagina, 'Home', que lleva a la pagina principal fuera de alguna seccion, o a la seccion
+'Home'.
+Algunas secciones estan condicionadas por el rol del usuario.
+
+ # show_section
+Es la funcion que decide cual seccion mostrar, y se basa en un argumento del query string
+
+ # CAMBIO DE CONTRASENHA
+Permite realizar el cambio de la contrasenha del usuario actual.
+
+ # AGREGAR USUARIO
+Permite agregar y configurar un usuario nuevo.
+
+ # EDITAR USUARIO
+Permite modificar a un usuario existente.
+
+ # ALARMAS, PREVENCIONES
+Estas secciones muestran tablas con registros en los archivos alarmas.log y prevencion.log.
+
+ # CONFIGURACIONES
+Permite cambiar la configuracion de cualquier modulo por separado.
+
+ # LINKS
+Varias funciones tienen la tarea de mostrar links. Estos solo se muestran cuando no se esta en
+ninguna seccion.
+Algunos links estan condicionados por el rol del usuario.
+
+ # show_links
+Llama a las funciones de impresion de links cuando no se esta en ningua seccion, o la seccion
+'Home'.

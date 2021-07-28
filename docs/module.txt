@@ -24,3 +24,6 @@ stop es sobreescrita por las clases hijas de Module. Se usa para detener subproc
 que forman parte del objecto detector.
 
 ## CODIGO
+Documentacion del codigo presente completamente en comentarios en module.h
+Documentacion de la implementacion de cada modulo presente en comentarios en los archivos m_i.h
+al m_vii.h.

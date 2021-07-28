@@ -1,0 +1,31 @@
+## DOCUMENTACION ## dhipsweb.h, dhipsweb.cpp ##
+
+Contiene funciones que muestran las principales secciones de la pagina principal.
+
+## DISENHO
+ # DEFINES
+ # PAGE_SIZE
+Define la cantidad de filas en una tabla en una pagina. Paginas son mas manejables que un sinfin
+de texto, y las diferentes paginas pueden navegarse facilmente.
+
+ # show_alarm_table
+Muestra la tabla de alarmas en la pagina dada. Si la pagina no esta en los limites, muestra la
+pagina mas cercana.
+
+ # show_prevention_table
+Muestra la tabla de prevencion en la pagina dada. Si la pagina no esta en los limites, muestra la
+pagina mas cercana.
+
+ # pagecount
+Retorna la cantidad de paginas en las que se puede partir el archivo dado, ya sea alarmas.log o
+prevencion.log. Se usa para habilitar funcionalidades de limite de paginas y navegacion.
+
+ # show_config
+Muestra el form de configuracion para el modulo dado, (si es que esta disponible).
+
+ # show_config_i - show_config_vii
+Muestra el form de configuracion para el modulo del numero en el nombre. Algunos modulos tienen
+opciones mas extensas. Al darle aplicar, redireccionan a cgi-bin/config con POST.
+
+ # printr
+Funcion muy basica de traduccion de enteros a una cadena con su representacion en numeros romanos.

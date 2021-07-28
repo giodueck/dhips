@@ -1,0 +1,28 @@
+## DOCUMENTACION ## manageuserspage.c ##
+
+Pagina de manejo de usuarios. Compila a cgi-bin/user_mgmt
+
+## DISENHO
+Es cargada por medio de una POST request desde cgi-bin/main. Realiza modificaciones a los
+usuarios segun los argumentos POST y los permisos del usuario que realiza la peticion.
+
+ # add_user_
+Agrega un usuario. Verifica que el usuario es de rol 'admin'.
+
+ # change_pass_
+Cambia la contrasenha del usuario actual.
+
+ # edit_user_
+Modifica a un usuario, verifica si una llamada a change_pass_ es adecuada, y si no, verifica
+que el usuario es de rol 'admin'.
+
+ # delete_user_
+Elimina un usuario. Verifica que el usuario es de rol 'admin'.
+No hay medidas de confirmacion o forma de eliminar el usuario actual, excepto que un
+administrador elimine su propio usuario, lo que causa un error de carga de pagina, pero
+funciona. Admito que esto es una falta.
+
+ # main
+Aplica las configuraciones llamando a una de las funciones anteriores. La funcion adecuada
+redirecciona a la seccion de la que fue llamada la pagina con un mensaje de confirmacion o
+de error.
