@@ -1,5 +1,24 @@
 ## DOCUMENTACION ## PROYECTO DHIPS ##
 
+El proyecto fue escrito primariamente en una combinacion de C/C++, para
+tener el aspecto de orientacion a objetos de C++ y las numerosas librerias
+estandar para C. Una pequenha parte tambien fue hecha en Python 3, tambien
+por la disponibilidad de librerias estandar.
+
+Fue desarrollado en Ubuntu 20.04 (LTS) para el Windows Subsystem for Linux 2,
+y testeado en CentOS 8. Varios componentes no funcionan de forma correcta en
+WSL2 por no ser un verdadero sistema Linux independiente, por lo que se pueden
+encontrar muchos commits con un mensaje que comienza con "dev" en el repositorio
+de GitHub, que son de codigo desarrollado en WSL2 y debuggeado en CentOS 8.
+
+El codigo y la interfaz web esta completamente en ingles, y por falta de tiempo 
+no me tome el tiempo de traducirlo todo. Por esa razon tampoco tengo todos los
+requisitos cumplidos. De la primera lista de 10 requisitos, cumplo los primeros
+3, el 4to y 10mo en parte, y el 7mo. 
+
+Varias observaciones y parte del proceso de disenho se encuentra en el archivo
+notepad.txt, aunque puede no ser representativo del producto final.
+
 La documentacion se encuentra en el directorio docs/, con cada archivo
 abarcando una parte diferente del proyecto. Contienen consideraciones de
 disenho y codigo, y todo el codigo esta comentado para ser legible (o al 
@@ -9,6 +28,7 @@ Para la documentacion del programa HIPS dhips, ver docs/dhips.txt
 Para la documentacion de la interfaz web, ver docs/web-interface.txt
 
 Para la documentacion del codigo restante, existe un archivo txt con el mismo
-nombre que el archivo source, por ejemplo psql.txt para pgsql.h y pgsql.c.
+nombre que el archivo source, por ejemplo psql.txt para pgsql.h y pgsql.c, y
+el codigo esta extensamente comentado.
 
-Este proyecto fue creado por Giovanni Dueck.
+Este proyecto fue desarrollado por Giovanni Dueck.
