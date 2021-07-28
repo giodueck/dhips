@@ -1,0 +1,7 @@
+## DOCUMENTACION ## logoutpage.c ##
+
+Pagina de cierre de sesion. Compila a cgi-bin/logout
+
+## DISENHO
+Llamado a traves de una POST request, lee los argumentos y cierra la sesion abierta.
+Redirecciona a cgi-bin/login.

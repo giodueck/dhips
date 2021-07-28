@@ -1,0 +1,16 @@
+## DOCUMENTACION ## configpage.cpp ##
+
+Pagina de configuracion. Compila a cgi-bin/config
+
+## DISENHO
+Es llamada por medio de POST request por cgi-bin/main para aplicar configuraciones de modulos.
+
+ # conf1, conf3, conf7
+Aplican configuraciones que van mas alla de habilitar o deshabilitar un modulo. Leen los argu-
+mentos de POST.
+
+ # main
+Verifica la sesion y aplica las configuraciones especificadas. Siempre sera solo un modulo a la
+vez. A diferencia de otras paginas como cgi-bin/logout o cgi-bin/user_mgmt no redirecciona al
+terminar la ejecucion, en cambio hay dos links, uno vuelve a la seccion de configuracion de la
+pagina principal, y el segundo es el link de 'Home'.

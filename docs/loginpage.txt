@@ -1,0 +1,18 @@
+## DOCUMENTACION ## loginpage.cpp ##
+
+Pagina de inicio de sesion. Compila a cgi-bin/login
+
+## DEFINES
+Contiene varias directivas define que facilitan la impresion de codigo HTML.
+
+## DISENHO
+ # print_head
+Imprime algunas lineas de HTML
+
+ # print_login_form
+Imprime el form de inicio de sesion. Si la pagina se carga con un argumento de usuario, lo
+carga como valor predeterminado en el campo de usuario. Darle submit carga cgi-bin/main, que
+se encarga de verificar los credenciales.
+
+ # print_error
+Imprime un breve mensaje de error segun el argumento de error presente en la query string.

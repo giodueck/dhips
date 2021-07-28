@@ -57,8 +57,8 @@ User creation and password editing
 
 Roles
 - spectator: Can edit own password and see the logs
-- user: spectator privileges included. Can edit dhips configurations, start/restart process
-- admin: user privileges included. Can add/edit users, edit dhips configurations, start/restart and stop process
+- user: spectator privileges included. Can edit dhips configurations
+- admin: user privileges included. Can add/edit users, edit dhips configurations
 
 HIDPS
 - modules will have detector and preventer objects which will handle log writing and module functionality

@@ -1,6 +1,20 @@
 ## DOCUMENTACION ## DHIPS - EJECUCION DEL PROGRAMA ##
 
-main() de dhips se encuentra en hips.cpp. 
+main() de dhips se encuentra en hips.cpp.
+
+## COMPONENTES
+hips.cpp
+detector.cpp
+preventer.cpp
+module.cpp
+dhipslib.cpp
+pgsql.c
+startup.cpp
+monitor.cpp
+m_i.cpp
+m_ii.cpp
+m_iii.cpp
+m_vii.cpp
 
 ## INICIO
 Para iniciar el programa correr el ejecutable 'dhips'.

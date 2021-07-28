@@ -1,5 +1,31 @@
 ## DOCUMENTACION ## DHIPS - INTERFAZ WEB ##
 
+## COMPONENTES
+ # cgi-bin/main
+mainpage.cpp
+login.cpp
+pgsql.c
+web.c
+dhipsweb.cpp
+dhipslib.cpp
+ # cgi-bin/login
+loginpage.cpp
+web.c
+ # cgi-bin/logout
+logoutpage.c
+web.c
+pgsql.c
+ # cgi-bin/user_mgmt
+manageuserspage.c
+web.c
+pgsql.c
+login.cpp
+ # cgi-bin/config
+configpage.cpp
+web.c
+pgsql.c
+login.cpp
+
 ## PAGINA LOGIN
 index.html redirecciona a cgi-bin/login, la pagina de inicio de sesion. Esta pagina contiene
 el form que permite iniciar sesion.
@@ -20,6 +46,11 @@ roles de otros usuarios.
 
 Usuarios tambien pueden opcionalmente tener una direccion de correo, que en realidad solo afecta a los
 usuarios con rol 'admin', que reciben correos cada vez que ocurre una alarma o prevencion.
+
+## ROLES
+- spectator: puede ver las alarmas y prevenciones.
+- user: tiene los permisos de spectator. Adicionalmente puede acceder a las configuraciones.
+- admin: tiene los permisos de user. Adicionalmente puede agregar y editar usuarios.
 
 ## PAGINA PRINCIPAL
 Varios links se encuentran en la pagina principal:
